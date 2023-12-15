@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageNormalizer", "ImageNormalizer\ImageNormalizer.csproj", "{AA92DD28-26D9-49DD-B83E-6EDE752C5D83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageNormalizer.Test", "ImageNormalizer.Test\ImageNormalizer.Test.csproj", "{8B0BE947-DBC5-4184-B967-FE5AA6822DA1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AA92DD28-26D9-49DD-B83E-6EDE752C5D83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA92DD28-26D9-49DD-B83E-6EDE752C5D83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA92DD28-26D9-49DD-B83E-6EDE752C5D83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA92DD28-26D9-49DD-B83E-6EDE752C5D83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B0BE947-DBC5-4184-B967-FE5AA6822DA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B0BE947-DBC5-4184-B967-FE5AA6822DA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B0BE947-DBC5-4184-B967-FE5AA6822DA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B0BE947-DBC5-4184-B967-FE5AA6822DA1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9BABC32F-E49A-4ABF-98C2-2FCBCFDA3C87}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Title>Image Normalizer</Title>
+		<Product>Image Normalizer</Product>
+		<Copyright>Copyright © Mihnea Rădulescu 2023</Copyright>
+		<AssemblyVersion>1.2023.12.15</AssemblyVersion>
+		<Version>$(AssemblyVersion)</Version>
+		<PublishSingleFile>true</PublishSingleFile>
+		<SelfContained>false</SelfContained>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<DebugType>embedded</DebugType>
+		<ApplicationIcon>ApplicationIcon.ico</ApplicationIcon>
+		<RootNamespace>ImageNormalizer</RootNamespace>
+		<AssemblyName>ImageNormalizer</AssemblyName>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Resource Include="ApplicationIcon.ico">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</Resource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.1" />
+	</ItemGroup>
+
+</Project>
