@@ -1,5 +1,5 @@
 # imagenormalizer
-Image Normalizer is a minimalist command-line batch-processing tool that normalizes images, by performing the following tranformations to each image:
+Image Normalizer is a minimalist command-line batch-processing tool that normalizes images, by performing the following transformations to each image:
 * removes its EXIF data
 * applies a consistent image compression level, based on the specified quality level
 * saves it in the JPEG format
