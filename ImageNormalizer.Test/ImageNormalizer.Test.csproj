@@ -8,8 +8,8 @@
 		<IsTestProject>true</IsTestProject>
 		<Title>Image Normalizer Test</Title>
 		<Product>Image Normalizer Test</Product>
-		<Copyright>Copyright © Mihnea Rădulescu 2023</Copyright>
-		<AssemblyVersion>1.2023.12.15</AssemblyVersion>
+		<Copyright>Copyright © Mihnea Rădulescu 2023 - 2024</Copyright>
+		<AssemblyVersion>1.2024.01.06</AssemblyVersion>
 		<Version>$(AssemblyVersion)</Version>
 		<PublishSingleFile>true</PublishSingleFile>
 		<SelfContained>false</SelfContained>
@@ -51,8 +51,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-		<PackageReference Include="xunit" Version="2.6.3" />
-		<PackageReference Include="xunit.runner.visualstudio" Version="2.5.5">
+		<PackageReference Include="xunit" Version="2.6.5" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.5.6">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>

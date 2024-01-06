@@ -1,8 +1,8 @@
 # imagenormalizer
 Image Normalizer is a minimalist command-line batch-processing tool that normalizes images, by performing the following transformations to each image:
-* removes its EXIF data
-* applies a consistent image compression level, based on the specified quality level
-* saves it in the JPEG format
+* removes its CICP, EXIF, ICC, IPTC and XMP profile data, if present
+* compresses it to the provided image quality level
+* saves it in the JPEG format with the .jpg file extension
 
 Image Normalizer is intended to support the storage of images produced by digital cameras in a consistent and disc space conserving manner.
 

@@ -7,8 +7,8 @@
 		<Nullable>enable</Nullable>
 		<Title>Image Normalizer</Title>
 		<Product>Image Normalizer</Product>
-		<Copyright>Copyright © Mihnea Rădulescu 2023</Copyright>
-		<AssemblyVersion>1.2023.12.15</AssemblyVersion>
+		<Copyright>Copyright © Mihnea Rădulescu 2023 - 2024</Copyright>
+		<AssemblyVersion>1.2024.01.06</AssemblyVersion>
 		<Version>$(AssemblyVersion)</Version>
 		<PublishSingleFile>true</PublishSingleFile>
 		<SelfContained>false</SelfContained>
@@ -26,7 +26,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.1" />
+		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.2" />
 	</ItemGroup>
 
 </Project>
