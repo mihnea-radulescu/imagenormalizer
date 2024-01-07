@@ -9,10 +9,10 @@
 		<Title>Image Normalizer Test</Title>
 		<Product>Image Normalizer Test</Product>
 		<Copyright>Copyright © Mihnea Rădulescu 2023 - 2024</Copyright>
-		<AssemblyVersion>1.2024.01.06</AssemblyVersion>
+		<AssemblyVersion>1.2024.01.07</AssemblyVersion>
 		<Version>$(AssemblyVersion)</Version>
 		<PublishSingleFile>true</PublishSingleFile>
-		<SelfContained>false</SelfContained>
+		<SelfContained>true</SelfContained>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<DebugType>embedded</DebugType>
 		<RootNamespace>ImageNormalizer.Test</RootNamespace>
