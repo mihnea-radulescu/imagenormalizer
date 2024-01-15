@@ -1,11 +1,9 @@
-﻿using ImageNormalizer.Attributes;
-using ImageNormalizer.FileSystemInfo;
+﻿using ImageNormalizer.FileSystemInfo;
 using ImageNormalizer.Logger;
 using ImageNormalizer.Services;
 
 namespace ImageNormalizer.Factories;
 
-[StatelessService]
 public class FileSystemInfoFactory : IFileSystemInfoFactory
 {
 	public FileSystemInfoFactory(

@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using ImageNormalizer.Attributes;
 
 namespace ImageNormalizer.Services;
 
-[StatelessService]
 public class ImageFileExtensionService : IImageFileExtensionService
 {
     public ImageFileExtensionService()

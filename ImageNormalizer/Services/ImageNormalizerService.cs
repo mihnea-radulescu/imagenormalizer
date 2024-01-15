@@ -1,9 +1,7 @@
-﻿using ImageNormalizer.Attributes;
-using ImageNormalizer.Factories;
+﻿using ImageNormalizer.Factories;
 
 namespace ImageNormalizer.Services;
 
-[StatelessService]
 public class ImageNormalizerService : IImageNormalizerService
 {
     public ImageNormalizerService(ITransformImageFactory transformImageFactory)

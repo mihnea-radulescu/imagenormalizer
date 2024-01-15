@@ -1,9 +1,7 @@
 ﻿using System.Text;
-using ImageNormalizer.Attributes;
 
 namespace ImageNormalizer.CommandLine;
 
-[StatelessService]
 public class CommandLineHelp : ICommandLineHelp
 {
     public CommandLineHelp()

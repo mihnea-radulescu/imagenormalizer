@@ -1,9 +1,7 @@
 ﻿using ImageNormalizer.Adapters;
-using ImageNormalizer.Attributes;
 
 namespace ImageNormalizer.Factories;
 
-[StatelessService]
 public class ImageSharpTransformImageFactory : ITransformImageFactory
 {
 	public ImageSharpTransformImageFactory(int outputImageQuality)

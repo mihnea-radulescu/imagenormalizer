@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using ImageNormalizer.Attributes;
 
 namespace ImageNormalizer.CommandLine;
 
-[StatelessService]
 public class CommandLineParser : ICommandLineParser
 {
     public CommandLineArguments? GetCommandLineArguments(IReadOnlyList<string> args)
@@ -47,22 +45,23 @@ public class CommandLineParser : ICommandLineParser
 		return null;
 	}
 
+	#region Private
+
+	private static bool HasExpectedArgumentCount(int argumentCount)
+		=> argumentCount == 2 || argumentCount == 3;
+
+	private static bool AreIdenticalInputDirectoryAndOutputDirectory(
+		string inputDirectory, string outputDirectory)
+			=> inputDirectory.Equals(outputDirectory, StringComparison.InvariantCultureIgnoreCase);
+
+	private static bool ExistsInputDirectory(string inputDirectory)
+		=> Directory.Exists(inputDirectory);
+
 	private static bool HasExpectedOutputImageQuality(
 		string outputImageQualityText, out int outputImageQuality)
 			=> int.TryParse(outputImageQualityText, out outputImageQuality) &&
 			   outputImageQuality >= 1 &&
 			   outputImageQuality <= 100;
-
-	#region Private
-
-	private bool HasExpectedArgumentCount(int argumentCount)
-		=> argumentCount == 2 || argumentCount == 3;
-
-	private bool AreIdenticalInputDirectoryAndOutputDirectory(
-		string inputDirectory, string outputDirectory)
-			=> inputDirectory.Equals(outputDirectory, StringComparison.InvariantCultureIgnoreCase);
-
-	private bool ExistsInputDirectory(string inputDirectory) => Directory.Exists(inputDirectory);
 
 	#endregion
 }

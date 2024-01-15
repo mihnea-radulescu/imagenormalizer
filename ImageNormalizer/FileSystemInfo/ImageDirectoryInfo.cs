@@ -33,8 +33,8 @@ public class ImageDirectoryInfo : FileSystemInfoBase
 
 		var directoryInfo = new DirectoryInfo(InputPath);
 
-		AddSubDirectories(directoryInfo);
 		AddFiles(directoryInfo);
+		AddSubDirectories(directoryInfo);
 
 		foreach (var aFileSystemInfo in _fileSystemInfoCollection)
 		{
@@ -62,21 +62,6 @@ public class ImageDirectoryInfo : FileSystemInfoBase
 
 	private readonly List<IFileSystemInfo> _fileSystemInfoCollection;
 
-	private void AddSubDirectories(DirectoryInfo directoryInfo)
-	{
-		var subDirectories = directoryInfo
-			.GetDirectories()
-			.Select(aDirectory => new ImageDirectoryInfo(
-				_imageFileExtensionService,
-				_imageNormalizerService,
-				_logger,
-				Path.Combine(InputPath, aDirectory.Name),
-				Path.Combine(OutputPath, aDirectory.Name)))
-			.ToList();
-
-		_fileSystemInfoCollection.AddRange(subDirectories);
-	}
-
 	private void AddFiles(DirectoryInfo directoryInfo)
 	{
 		var files = directoryInfo
@@ -93,6 +78,21 @@ public class ImageDirectoryInfo : FileSystemInfoBase
 			.ToList();
 
 		_fileSystemInfoCollection.AddRange(files);
+	}
+
+	private void AddSubDirectories(DirectoryInfo directoryInfo)
+	{
+		var subDirectories = directoryInfo
+			.GetDirectories()
+			.Select(aDirectory => new ImageDirectoryInfo(
+				_imageFileExtensionService,
+				_imageNormalizerService,
+				_logger,
+				Path.Combine(InputPath, aDirectory.Name),
+				Path.Combine(OutputPath, aDirectory.Name)))
+			.ToList();
+
+		_fileSystemInfoCollection.AddRange(subDirectories);
 	}
 
 	#endregion
