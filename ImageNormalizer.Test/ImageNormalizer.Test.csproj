@@ -1,22 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<ImplicitUsings>disable</ImplicitUsings>
-		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
 		<IsTestProject>true</IsTestProject>
-		<Title>Image Normalizer Test</Title>
-		<Product>Image Normalizer Test</Product>
-		<Copyright>Copyright © Mihnea Rădulescu 2023 - 2024</Copyright>
-		<AssemblyVersion>1.2024.01.15</AssemblyVersion>
-		<Version>$(AssemblyVersion)</Version>
-		<PublishSingleFile>true</PublishSingleFile>
-		<SelfContained>true</SelfContained>
+		<Title>Image Normalizer - Test</Title>
+		<Product>Image Normalizer - Test</Product>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-		<DebugType>embedded</DebugType>
-		<RootNamespace>ImageNormalizer.Test</RootNamespace>
-		<AssemblyName>ImageNormalizer.Test</AssemblyName>
 	</PropertyGroup>
 
 	<ItemGroup>

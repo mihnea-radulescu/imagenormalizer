@@ -2,21 +2,10 @@
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFramework>net8.0</TargetFramework>
-		<ImplicitUsings>disable</ImplicitUsings>
-		<Nullable>enable</Nullable>
+		<ApplicationIcon>ApplicationIcon.ico</ApplicationIcon>
 		<Title>Image Normalizer</Title>
 		<Product>Image Normalizer</Product>
-		<Copyright>Copyright © Mihnea Rădulescu 2023 - 2024</Copyright>
-		<AssemblyVersion>1.2024.01.15</AssemblyVersion>
-		<Version>$(AssemblyVersion)</Version>
-		<PublishSingleFile>true</PublishSingleFile>
-		<SelfContained>true</SelfContained>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-		<DebugType>embedded</DebugType>
-		<ApplicationIcon>ApplicationIcon.ico</ApplicationIcon>
-		<RootNamespace>ImageNormalizer</RootNamespace>
-		<AssemblyName>ImageNormalizer</AssemblyName>
 	</PropertyGroup>
 
 	<ItemGroup>
