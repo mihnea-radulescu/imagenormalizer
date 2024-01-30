@@ -9,6 +9,10 @@ public abstract class TestBase
 	protected string GetTestDirectoryPath(string testDirectoryName)
         => Path.Combine(TestDataPath, testDirectoryName);
 
+	protected string GetTestDirectoryPath(
+        string testDirectoryParentName, string testDirectoryChildName)
+		    => Path.Combine(TestDataPath, testDirectoryParentName, testDirectoryChildName);
+
 	protected string GetTestFilePath(string testFileName)
         => Path.Combine(TestDataPath, testFileName);
 

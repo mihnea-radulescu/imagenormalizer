@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace ImageNormalizer.CommandLine;
 
@@ -13,15 +14,30 @@ public class CommandLineParser : ICommandLineParser
 			return null;
 		}
 
-		var inputDirectory = args[0];
-		var outputDirectory = args[1];
+		string inputDirectory;
+		string outputDirectory;
+
+		try
+		{
+			inputDirectory = Path.GetFullPath(args[0]);
+			outputDirectory = Path.GetFullPath(args[1]);
+		}
+		catch
+		{
+			return null;
+		}
+
+		if (!ExistsInputDirectory(inputDirectory))
+		{
+			return null;
+		}
 
 		if (AreIdenticalInputDirectoryAndOutputDirectory(inputDirectory, outputDirectory))
 		{
 			return null;
 		}
 
-		if (!ExistsInputDirectory(inputDirectory))
+		if (AreInParentChildRelationship(inputDirectory, outputDirectory))
 		{
 			return null;
 		}
@@ -50,12 +66,44 @@ public class CommandLineParser : ICommandLineParser
 	private static bool HasExpectedArgumentCount(int argumentCount)
 		=> argumentCount == 2 || argumentCount == 3;
 
+	private static bool ExistsInputDirectory(string inputDirectory)
+		=> Directory.Exists(inputDirectory);
+
 	private static bool AreIdenticalInputDirectoryAndOutputDirectory(
 		string inputDirectory, string outputDirectory)
 			=> inputDirectory.Equals(outputDirectory, StringComparison.InvariantCultureIgnoreCase);
 
-	private static bool ExistsInputDirectory(string inputDirectory)
-		=> Directory.Exists(inputDirectory);
+	private static bool AreInParentChildRelationship(
+		string inputDirectory, string outputDirectory)
+	{
+		var inputDirectoryLower = inputDirectory.ToLowerInvariant();
+		var outputDirectoryLower = outputDirectory.ToLowerInvariant();
+
+		if (outputDirectoryLower.StartsWith(inputDirectoryLower) ||
+			inputDirectoryLower.StartsWith(outputDirectoryLower))
+		{
+			var orderedDirectories = new List<string>
+			{
+				inputDirectoryLower,
+				outputDirectoryLower
+			}
+			.OrderByDescending(aDirectory => aDirectory)
+			.ToList();
+
+			var directoryPathDifference = orderedDirectories[0]
+				.Substring(orderedDirectories[1].Length);
+
+			var areInParentChildRelationship =
+				directoryPathDifference.StartsWith(Path.DirectorySeparatorChar) ||
+				directoryPathDifference.StartsWith(Path.AltDirectorySeparatorChar);
+
+			return areInParentChildRelationship;
+		}
+		else
+		{
+			return false;
+		}
+	}
 
 	private static bool HasExpectedOutputImageQuality(
 		string outputImageQualityText, out int outputImageQuality)

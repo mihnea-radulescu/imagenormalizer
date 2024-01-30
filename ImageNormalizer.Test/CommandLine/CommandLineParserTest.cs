@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.IO;
+using Xunit;
 using ImageNormalizer.CommandLine;
 using ImageNormalizer.Test.TestTypes;
 
@@ -11,8 +12,27 @@ public class CommandLineParserTest : TestBase
         _commandLineParser = new CommandLineParser();
     }
 
-    [Fact]
-	public void GetCommandLineArguments_ValidInputTwoArguments_ReturnsExpectedInstance()
+	[Fact]
+	public void GetCommandLineArguments_ValidInputTwoArgumentsDistinctNameRoot_ReturnsExpectedInstance()
+	{
+		// Arrange
+		var inputDirectory = GetTestDirectoryPath("Subfolder1");
+		var outputDirectory = GetTestDirectoryPath("Subfolder2");
+
+		var args = new[] { inputDirectory, outputDirectory };
+
+		// Act
+		var commandLineArguments = _commandLineParser.GetCommandLineArguments(args);
+
+		// Assert
+		Assert.False(commandLineArguments is null);
+		Assert.Equal(Path.GetFullPath(inputDirectory), commandLineArguments.InputDirectory);
+		Assert.Equal(Path.GetFullPath(outputDirectory), commandLineArguments.OutputDirectory);
+		Assert.Equal(80, commandLineArguments.OutputImageQuality);
+	}
+
+	[Fact]
+	public void GetCommandLineArguments_ValidInputTwoArgumentsCommonNameRoot_ReturnsExpectedInstance()
 	{
 		// Arrange
 		var inputDirectory = GetTestDirectoryPath("Subfolder1");
@@ -25,13 +45,33 @@ public class CommandLineParserTest : TestBase
 
         // Assert
         Assert.False(commandLineArguments is null);
-        Assert.Equal(inputDirectory, commandLineArguments.InputDirectory);
-		Assert.Equal(outputDirectory, commandLineArguments.OutputDirectory);
+        Assert.Equal(Path.GetFullPath(inputDirectory), commandLineArguments.InputDirectory);
+		Assert.Equal(Path.GetFullPath(outputDirectory), commandLineArguments.OutputDirectory);
 		Assert.Equal(80, commandLineArguments.OutputImageQuality);
 	}
 
 	[Fact]
-	public void GetCommandLineArguments_ValidInputThreeArguments_ReturnsExpectedInstance()
+	public void GetCommandLineArguments_ValidInputThreeArgumentsDistinctNameRoot_ReturnsExpectedInstance()
+	{
+		// Arrange
+		var inputDirectory = GetTestDirectoryPath("Subfolder1");
+		var outputDirectory = GetTestDirectoryPath("Subfolder2");
+		var outputImageQuality = 80;
+
+		var args = new[] { inputDirectory, outputDirectory, outputImageQuality.ToString() };
+
+		// Act
+		var commandLineArguments = _commandLineParser.GetCommandLineArguments(args);
+
+		// Assert
+		Assert.False(commandLineArguments is null);
+		Assert.Equal(Path.GetFullPath(inputDirectory), commandLineArguments.InputDirectory);
+		Assert.Equal(Path.GetFullPath(outputDirectory), commandLineArguments.OutputDirectory);
+		Assert.Equal(outputImageQuality, commandLineArguments.OutputImageQuality);
+	}
+
+	[Fact]
+	public void GetCommandLineArguments_ValidInputThreeArgumentsCommonNameRoot_ReturnsExpectedInstance()
 	{
 		// Arrange
 		var inputDirectory = GetTestDirectoryPath("Subfolder1");
@@ -45,8 +85,8 @@ public class CommandLineParserTest : TestBase
 
 		// Assert
 		Assert.False(commandLineArguments is null);
-		Assert.Equal(inputDirectory, commandLineArguments.InputDirectory);
-		Assert.Equal(outputDirectory, commandLineArguments.OutputDirectory);
+		Assert.Equal(Path.GetFullPath(inputDirectory), commandLineArguments.InputDirectory);
+		Assert.Equal(Path.GetFullPath(outputDirectory), commandLineArguments.OutputDirectory);
 		Assert.Equal(outputImageQuality, commandLineArguments.OutputImageQuality);
 	}
 
@@ -90,6 +130,19 @@ public class CommandLineParserTest : TestBase
 	}
 
 	[Fact]
+	public void GetCommandLineArguments_InvalidArguments_ReturnsNull()
+	{
+		// Arrange
+		var args = new[] { "", " " };
+
+		// Act
+		var commandLineArguments = _commandLineParser.GetCommandLineArguments(args);
+
+		// Assert
+		Assert.True(commandLineArguments is null);
+	}
+
+	[Fact]
 	public void GetCommandLineArguments_NonexistentInputDirectory_ReturnsNull()
 	{
 		// Arrange
@@ -111,6 +164,38 @@ public class CommandLineParserTest : TestBase
 		// Arrange
 		var inputDirectory = GetTestDirectoryPath("Subfolder1");
 		var outputDirectory = GetTestDirectoryPath("Subfolder1");
+
+		var args = new[] { inputDirectory, outputDirectory };
+
+		// Act
+		var commandLineArguments = _commandLineParser.GetCommandLineArguments(args);
+
+		// Assert
+		Assert.True(commandLineArguments is null);
+	}
+
+	[Fact]
+	public void GetCommandLineArguments_InputDirectoryIsParentOfOutputDirectory_ReturnsNull()
+	{
+		// Arrange
+		var inputDirectory = GetTestDirectoryPath("Subfolder2");
+		var outputDirectory = GetTestDirectoryPath("Subfolder2", "Subfolder2_1");
+
+		var args = new[] { inputDirectory, outputDirectory };
+
+		// Act
+		var commandLineArguments = _commandLineParser.GetCommandLineArguments(args);
+
+		// Assert
+		Assert.True(commandLineArguments is null);
+	}
+
+	[Fact]
+	public void GetCommandLineArguments_OutputDirectoryIsParentOfInputDirectory_ReturnsNull()
+	{
+		// Arrange
+		var inputDirectory = GetTestDirectoryPath("Subfolder2", "Subfolder2_1");
+		var outputDirectory = GetTestDirectoryPath("Subfolder2");
 
 		var args = new[] { inputDirectory, outputDirectory };
 
