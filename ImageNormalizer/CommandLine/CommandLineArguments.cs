@@ -1,4 +1,4 @@
 ﻿namespace ImageNormalizer.CommandLine;
 
 public record class CommandLineArguments(
-	string InputDirectory, string OutputDirectory, int OutputImageQuality = 75);
+	string InputDirectory, string OutputDirectory, int OutputImageQuality = 80);

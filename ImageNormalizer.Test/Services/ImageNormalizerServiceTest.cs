@@ -64,7 +64,7 @@ public class ImageNormalizerServiceTest : TestBase
 
     #region Private
 
-    private const int OutputImageQuality = 75;
+    private const int OutputImageQuality = 80;
 
 	private readonly ImageNormalizerService _imageNormalizerService;
 

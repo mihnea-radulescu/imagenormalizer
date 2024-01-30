@@ -22,7 +22,7 @@ public class CommandLineHelp : ICommandLineHelp
 		helpTextBuilder.AppendLine();
 
 		helpTextBuilder.AppendLine("OutputImageQuality:");
-        helpTextBuilder.Append("\tOptional - The output image quality, as an integer between 1 and 100 (default is 75).");
+        helpTextBuilder.Append("\tOptional - The output image quality, as an integer between 1 and 100 (default is 80).");
 
 		_helpText = helpTextBuilder.ToString();
     }

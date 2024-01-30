@@ -27,7 +27,7 @@ public class CommandLineParserTest : TestBase
         Assert.False(commandLineArguments is null);
         Assert.Equal(inputDirectory, commandLineArguments.InputDirectory);
 		Assert.Equal(outputDirectory, commandLineArguments.OutputDirectory);
-		Assert.Equal(75, commandLineArguments.OutputImageQuality);
+		Assert.Equal(80, commandLineArguments.OutputImageQuality);
 	}
 
 	[Fact]

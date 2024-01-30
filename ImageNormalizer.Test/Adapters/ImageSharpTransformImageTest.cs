@@ -40,7 +40,7 @@ public class ImageSharpTransformImageTest : TestBase
         // Arrange
         var inputFilePath = GetTestFilePath("InvalidImage.txt");
         var outputFilePath = GetTestFilePath("InvalidImage_normalized.txt");
-		const int outputImageQuality = 75;
+		const int outputImageQuality = 80;
 
 		// Act and Assert
 		using (var imageSharpTransformImage = new ImageSharpTransformImage(
@@ -57,7 +57,7 @@ public class ImageSharpTransformImageTest : TestBase
         // Arrange
         var inputFilePath = GetTestFilePath("NotFoundImage.txt");
         var outputFilePath = GetTestFilePath("NotFoundImage_normalized.txt");
-		const int outputImageQuality = 75;
+		const int outputImageQuality = 80;
 
 		// Act and Assert
 		using (var imageSharpTransformImage = new ImageSharpTransformImage(
@@ -96,7 +96,7 @@ public class ImageSharpTransformImageTest : TestBase
 
 	#region Private
 
-	private const int OutputImageQuality = 75;
+	private const int OutputImageQuality = 80;
 
 	#endregion
 }

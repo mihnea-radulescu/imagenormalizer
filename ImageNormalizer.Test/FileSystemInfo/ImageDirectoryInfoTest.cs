@@ -83,7 +83,7 @@ public class ImageDirectoryInfoTest : TestBase
 
 	#region Private
 
-	private const int OutputImageQuality = 75;
+	private const int OutputImageQuality = 80;
 
 	private readonly IImageFileExtensionService _imageFileExtensionService;
 	private readonly IImageNormalizerService _imageNormalizerService;
