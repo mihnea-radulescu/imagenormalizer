@@ -211,7 +211,7 @@ public class CommandLineParserTest : TestBase
 	{
 		// Arrange
 		var inputDirectory = GetTestDirectoryPath("Subfolder1");
-		var outputDirectory = GetTestDirectoryPath("Subfolder1");
+		var outputDirectory = GetTestDirectoryPath("Subfolder2");
 		var outputImageQuality = 0;
 
 		var args = new[] { inputDirectory, outputDirectory, outputImageQuality.ToString() };
@@ -228,7 +228,7 @@ public class CommandLineParserTest : TestBase
 	{
 		// Arrange
 		var inputDirectory = GetTestDirectoryPath("Subfolder1");
-		var outputDirectory = GetTestDirectoryPath("Subfolder1");
+		var outputDirectory = GetTestDirectoryPath("Subfolder2");
 		var outputImageQuality = 101;
 
 		var args = new[] { inputDirectory, outputDirectory, outputImageQuality.ToString() };
