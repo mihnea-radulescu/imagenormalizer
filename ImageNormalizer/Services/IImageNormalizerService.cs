@@ -2,5 +2,6 @@
 
 public interface IImageNormalizerService
 {
-    void NormalizeImage(string inputFilePath, string outputFilePath);
+	void NormalizeImage(
+		string inputFilePath, string outputFilePath, int outputImageQuality);
 }

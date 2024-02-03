@@ -8,6 +8,7 @@ public abstract class FileSystemInfoBase : IFileSystemInfo
 {
 	public string InputPath { get; }
 	public string OutputPath { get; }
+	public int OutputImageQuality { get; }
 
 	public void BuildFileSystemInfo()
 	{
@@ -29,12 +30,13 @@ public abstract class FileSystemInfoBase : IFileSystemInfo
 
 	#region Protected
 
-	protected readonly ILogger _logger;
+	protected readonly ILogger Logger;
 
 	protected FileSystemInfoBase(
 		ILogger logger,
 		string inputPath,
-		string outputPath)
+		string outputPath,
+		int outputImageQuality)
 	{
 		if (inputPath.Equals(outputPath, StringComparison.InvariantCultureIgnoreCase))
 		{
@@ -42,10 +44,11 @@ public abstract class FileSystemInfoBase : IFileSystemInfo
 				$@"Input path ""{inputPath}"" must be different than output path ""{outputPath}"".");
 		}
 
-		_logger = logger;
+		Logger = logger;
 
 		InputPath = inputPath;
 		OutputPath = outputPath;
+		OutputImageQuality = outputImageQuality;
 	}
 
 	protected abstract void BuildFileSystemInfoSpecific();
@@ -65,7 +68,7 @@ public abstract class FileSystemInfoBase : IFileSystemInfo
 		}
 		catch (TransformImageException tEx)
 		{
-			_logger.Error(tEx);
+			Logger.Error(tEx);
 		}
 	}
 

@@ -8,7 +8,13 @@ Image Normalizer is intended to support the storage of images produced by digita
 
 Image Normalizer targets .NET 8 on Windows, Linux and macOS.
 
-__Usage__: ImageNormalizer _[InputDirectory]_ _[OutputDirectory]_ _[OutputImageQuality]_
-* _InputDirectory_: Required - The input directory containing the images to be processed (recursive processing).
-* _OutputDirectory_: Required - The output directory to place the processed images into.
-* _OutputImageQuality_: Optional - The output image quality, as an integer between 1 and 100 (default is 80).
+__Usage__: ImageNormalizer [--quality <Int32>] [--help] [--version] input-directory output-directory
+
+Arguments:
+* 0: input-directory     The input directory (Required)
+* 1: output-directory    The output directory (Required)
+
+Options:
+* -q, --quality <Int32>    The output image quality (Default: 80)
+* -h, --help               Show help message
+* --version                Show version

@@ -8,9 +8,14 @@ public class ConsoleLogger : ILogger
 	{
 		Console.Out.WriteLine(message);
 	}
+	
+	public void Error(string message)
+	{
+		Console.Error.WriteLine($"Error: {message}");
+	}
 
 	public void Error(Exception ex)
 	{
-		Console.Error.WriteLine(ex);
+		Console.Error.WriteLine($"Error: {ex}");
 	}
 }

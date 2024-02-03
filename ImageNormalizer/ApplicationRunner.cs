@@ -1,69 +1,61 @@
 ﻿using System;
-using System.Collections.Generic;
 using ImageNormalizer.CommandLine;
 using ImageNormalizer.Factories;
-using ImageNormalizer.FileSystemInfo;
 using ImageNormalizer.Logger;
-using ImageNormalizer.Services;
 
 namespace ImageNormalizer;
 
 public class ApplicationRunner : IApplicationRunner
 {
-	public ApplicationRunner(IReadOnlyList<string> args)
-    {
-		_args = args;
+	public ApplicationRunner(
+		IArgumentsFactory argumentsFactory,
+		IArgumentsValidator argumentsValidator,
+		IImageDirectoryInfoFactory imageDirectoryInfoFactory,
+		ILogger logger)
+	{
+		_argumentsFactory = argumentsFactory;
+		_argumentsValidator = argumentsValidator;
+		_imageDirectoryInfoFactory = imageDirectoryInfoFactory;
+		_logger = logger;
 	}
 
-    public void Run()
+    public void Run(string inputDirectory, string outputDirectory, int outputImageQuality)
 	{
-		ILogger logger = new ConsoleLogger();
-		
-		ICommandLineParser commandLineParser = new CommandLineParser();
-		var commandLineArguments = commandLineParser.GetCommandLineArguments(_args);
+		var arguments = _argumentsFactory.Create(
+			inputDirectory, outputDirectory, outputImageQuality);
 
-		if (commandLineArguments is null)
+		var areValidArguments = _argumentsValidator.AreValidArguments(
+			arguments, out string? errorMessage);
+
+		if (!areValidArguments)
 		{
-			ICommandLineHelp commandLineHelp = new CommandLineHelp();
-			var helpText = commandLineHelp.HelpText;
+			_logger.Error(errorMessage!);
 
-			logger.Info(helpText);
+			return;
 		}
-		else
+
+		try
 		{
-			var inputDirectory = commandLineArguments.InputDirectory;
-			var outputDirectory = commandLineArguments.OutputDirectory;
-			var outputImageQuality = commandLineArguments.OutputImageQuality;
-			
-			IImageFileExtensionService imageFileExtensionService = new ImageFileExtensionService();
+			var imageDirectoryInfo = _imageDirectoryInfoFactory.Create(
+				arguments.InputDirectory,
+				arguments.OutputDirectory,
+				arguments.OutputImageQuality);
 
-			ITransformImageFactory transformImageFactory =
-				new ImageSharpTransformImageFactory(outputImageQuality);
-			IImageNormalizerService imageNormalizerService =
-				new ImageNormalizerService(transformImageFactory);
-
-			try
-			{
-				var imageDirectoryInfo = new ImageDirectoryInfo(
-					imageFileExtensionService,
-					imageNormalizerService,
-					logger,
-					inputDirectory,
-					outputDirectory);
-
-				imageDirectoryInfo.BuildFileSystemInfo();
-				imageDirectoryInfo.NormalizeFileSystemInfo();
-			}
-			catch (Exception ex)
-			{
-				logger.Error(ex);
-			}
+			imageDirectoryInfo.BuildFileSystemInfo();
+			imageDirectoryInfo.NormalizeFileSystemInfo();
+		}
+		catch (Exception ex)
+		{
+			_logger.Error(ex);
 		}
 	}
 
 	#region Private
 
-	private readonly IReadOnlyList<string> _args;
+	private readonly IArgumentsFactory _argumentsFactory;
+	private readonly IArgumentsValidator _argumentsValidator;
+	private readonly IImageDirectoryInfoFactory _imageDirectoryInfoFactory;
+	private readonly ILogger _logger;
 
 	#endregion
 }

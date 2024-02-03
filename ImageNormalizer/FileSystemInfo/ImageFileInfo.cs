@@ -9,8 +9,9 @@ public class ImageFileInfo : FileSystemInfoBase
 		IImageNormalizerService imageNormalizerService,
 		ILogger logger,
 		string inputPath,
-		string outputPath)
-		: base(logger, inputPath, outputPath)
+		string outputPath,
+		int outputImageQuality)
+		: base(logger, inputPath, outputPath, outputImageQuality)
 	{
 		_imageNormalizerService = imageNormalizerService;
 	}
@@ -23,7 +24,8 @@ public class ImageFileInfo : FileSystemInfoBase
 
 	protected override void NormalizeFileSystemInfoSpecific()
 	{
-		_imageNormalizerService.NormalizeImage(InputPath, OutputPath);
+		_imageNormalizerService.NormalizeImage(
+			InputPath, OutputPath, OutputImageQuality);
 	}
 
 	#endregion

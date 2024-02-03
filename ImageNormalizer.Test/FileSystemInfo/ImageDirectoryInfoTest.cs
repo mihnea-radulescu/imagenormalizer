@@ -18,8 +18,7 @@ public class ImageDirectoryInfoTest : TestBase
     {
 		_imageFileExtensionService = new ImageFileExtensionService();
 
-		ITransformImageFactory transformImageFactory = new ImageSharpTransformImageFactory(
-			OutputImageQuality);
+		ITransformImageFactory transformImageFactory = new ImageSharpTransformImageFactory();
 		_imageNormalizerService = new ImageNormalizerService(transformImageFactory);
 
 		_logger = new NullLogger();
@@ -31,13 +30,15 @@ public class ImageDirectoryInfoTest : TestBase
 		// Arrange
 		var inputDirectory = TestDataPath;
 		var outputDirectory = $"{TestDataPath}_Output";
+		const int outputImageQuality = 80;
 
 		var imageDirectoryInfo = new ImageDirectoryInfo(
 			_imageFileExtensionService,
 			_imageNormalizerService,
 			_logger,
 			inputDirectory,
-			outputDirectory);
+			outputDirectory,
+			outputImageQuality);
 
 		// Act
 		imageDirectoryInfo.BuildFileSystemInfo();
@@ -68,6 +69,7 @@ public class ImageDirectoryInfoTest : TestBase
 		// Arrange
 		var inputDirectory = TestDataPath;
 		var outputDirectory = TestDataPath;
+		const int outputImageQuality = 80;
 
 		// Act and Assert
 		Assert.Throws<ArgumentException>(() =>
@@ -77,13 +79,12 @@ public class ImageDirectoryInfoTest : TestBase
 				_imageNormalizerService,
 				_logger,
 				inputDirectory,
-				outputDirectory);
+				outputDirectory,
+				outputImageQuality);
 		});
 	}
 
 	#region Private
-
-	private const int OutputImageQuality = 80;
 
 	private readonly IImageFileExtensionService _imageFileExtensionService;
 	private readonly IImageNormalizerService _imageNormalizerService;

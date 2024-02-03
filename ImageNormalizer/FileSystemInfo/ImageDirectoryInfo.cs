@@ -13,8 +13,9 @@ public class ImageDirectoryInfo : FileSystemInfoBase
 		IImageNormalizerService imageNormalizerService,
 		ILogger logger,
 		string inputPath,
-		string outputPath)
-		: base(logger, inputPath, outputPath)
+		string outputPath,
+		int outputImageQuality)
+		: base(logger, inputPath, outputPath, outputImageQuality)
 	{
 		_imageFileExtensionService = imageFileExtensionService;
 		_imageNormalizerService = imageNormalizerService;
@@ -26,11 +27,6 @@ public class ImageDirectoryInfo : FileSystemInfoBase
 
 	protected override void BuildFileSystemInfoSpecific()
 	{
-		if (!Directory.Exists(OutputPath))
-		{
-			Directory.CreateDirectory(OutputPath);
-		}
-
 		var directoryInfo = new DirectoryInfo(InputPath);
 
 		AddFiles(directoryInfo);
@@ -44,8 +40,13 @@ public class ImageDirectoryInfo : FileSystemInfoBase
 
 	protected override void NormalizeFileSystemInfoSpecific()
 	{
-		_logger.Info(
-			$@"Processing input directory ""{InputPath}"" into output directory ""{OutputPath}"".");
+		Logger.Info(
+			$@"Processing input directory ""{InputPath}"" into output directory ""{OutputPath}"" at output image quality {OutputImageQuality}.");
+		
+		if (!Directory.Exists(OutputPath))
+		{
+			Directory.CreateDirectory(OutputPath);
+		}
 		
 		foreach (var aFileSystemInfo in _fileSystemInfoCollection)
 		{
@@ -70,11 +71,12 @@ public class ImageDirectoryInfo : FileSystemInfoBase
 								aFile.Extension.ToLowerInvariant()))
 			.Select(aFile => new ImageFileInfo(
 				_imageNormalizerService,
-				_logger,
+				Logger,
 				Path.Combine(InputPath, aFile.Name),
 				Path.Combine(
 					OutputPath,
-					$"{Path.GetFileNameWithoutExtension(aFile.Name)}{_imageFileExtensionService.OutputImageFileExtension}")))
+					$"{Path.GetFileNameWithoutExtension(aFile.Name)}{_imageFileExtensionService.OutputImageFileExtension}"),
+				OutputImageQuality))
 			.ToList();
 
 		_fileSystemInfoCollection.AddRange(files);
@@ -87,9 +89,10 @@ public class ImageDirectoryInfo : FileSystemInfoBase
 			.Select(aDirectory => new ImageDirectoryInfo(
 				_imageFileExtensionService,
 				_imageNormalizerService,
-				_logger,
+				Logger,
 				Path.Combine(InputPath, aDirectory.Name),
-				Path.Combine(OutputPath, aDirectory.Name)))
+				Path.Combine(OutputPath, aDirectory.Name),
+				OutputImageQuality))
 			.ToList();
 
 		_fileSystemInfoCollection.AddRange(subDirectories);

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ImageNormalizer": {
+      "commandName": "Project",
+      "commandLineArgs": "; :"
+    }
+  }
+}

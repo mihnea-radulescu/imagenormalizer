@@ -9,10 +9,11 @@ public class ImageNormalizerService : IImageNormalizerService
         _transformImageFactory = transformImageFactory;
     }
 
-    public void NormalizeImage(string inputFilePath, string outputFilePath)
+    public void NormalizeImage(
+        string inputFilePath, string outputFilePath, int outputImageQuality)
     {
         using (var transformImage = _transformImageFactory.GetTransformImage(
-            inputFilePath, outputFilePath))
+            inputFilePath, outputFilePath, outputImageQuality))
         {
             transformImage.SaveTransformedImage();
         }

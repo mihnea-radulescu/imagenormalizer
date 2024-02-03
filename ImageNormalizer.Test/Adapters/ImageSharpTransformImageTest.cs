@@ -10,8 +10,8 @@ namespace ImageNormalizer.Test.Adapters;
 [UnitTest]
 public class ImageSharpTransformImageTest : TestBase
 {
-    [InlineData("Landscape.jpg", "Landscape_normalized.jpg", OutputImageQuality)]
-    [InlineData("Portrait.jpg", "Portrait_normalized.jpg", OutputImageQuality)]
+    [InlineData("Landscape.jpg", "Landscape_normalized.jpg", 80)]
+    [InlineData("Portrait.jpg", "Portrait_normalized.jpg", 80)]
     [Theory]
     public void SaveTransformedImage_ValidInputImage_SavesOutputImage(
         string inputFileName, string outputFileName, int outputImageQuality)
@@ -68,8 +68,8 @@ public class ImageSharpTransformImageTest : TestBase
 		}
 	}
 
-	[InlineData("Landscape.jpg", "Landscape_normalized.jpg", OutputImageQuality)]
-	[InlineData("Portrait.jpg", "Portrait_normalized.jpg", OutputImageQuality)]
+	[InlineData("Landscape.jpg", "Landscape_normalized.jpg", 80)]
+	[InlineData("Portrait.jpg", "Portrait_normalized.jpg", 80)]
 	[Theory]
 	public void SaveTransformedImage_AlreadyDisposedObject_ThrowsExpectedException(
 		string inputFileName, string outputFileName, int outputImageQuality)
@@ -93,10 +93,4 @@ public class ImageSharpTransformImageTest : TestBase
 		// Tear-down
 		DeleteOutputFile(outputFilePath);
 	}
-
-	#region Private
-
-	private const int OutputImageQuality = 80;
-
-	#endregion
 }

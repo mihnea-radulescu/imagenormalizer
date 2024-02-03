@@ -4,25 +4,27 @@ using ImageNormalizer.Services;
 
 namespace ImageNormalizer.Factories;
 
-public class FileSystemInfoFactory : IFileSystemInfoFactory
+public class ImageDirectoryInfoFactory : IImageDirectoryInfoFactory
 {
-	public FileSystemInfoFactory(
-        IImageFileExtensionService imageFileExtensionService,
-        IImageNormalizerService imageNormalizerService,
-        ILogger logger)
-    {
+	public ImageDirectoryInfoFactory(
+		IImageFileExtensionService imageFileExtensionService,
+		IImageNormalizerService imageNormalizerService,
+		ILogger logger)
+	{
 		_imageFileExtensionService = imageFileExtensionService;
 		_imageNormalizerService = imageNormalizerService;
 		_logger = logger;
 	}
 
-    public IFileSystemInfo GetFileSystemInfo(string inputDirectory, string outputDirectory)
+	public ImageDirectoryInfo Create(
+		string inputDirectory, string outputDirectory, int outputImageQuality)
 		=> new ImageDirectoryInfo(
 			_imageFileExtensionService,
 			_imageNormalizerService,
 			_logger,
 			inputDirectory,
-			outputDirectory);
+			outputDirectory,
+			outputImageQuality);
 
 	#region Private
 

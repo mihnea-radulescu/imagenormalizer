@@ -2,5 +2,5 @@
 
 public interface IApplicationRunner
 {
-	void Run();
+	void Run(string inputDirectory, string outputDirectory, int outputImageQuality);
 }
