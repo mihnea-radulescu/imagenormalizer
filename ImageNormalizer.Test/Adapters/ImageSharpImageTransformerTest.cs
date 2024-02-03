@@ -24,9 +24,11 @@ public class ImageSharpImageTransformerTest : TestBase
         var inputFilePath = GetTestFilePath(inputFileName);
         var outputFilePath = GetTestFilePath(outputFileName);
 
-		// Act
-		_imageSharpImageTransformer.TransformImage(
+        var arguments = new Arguments(
 			inputFilePath, outputFilePath, outputImageQuality);
+
+		// Act
+		_imageSharpImageTransformer.TransformImage(arguments);
 
 		// Assert
 		Assert.True(ExistsOutputFile(outputFilePath));
@@ -43,10 +45,12 @@ public class ImageSharpImageTransformerTest : TestBase
         var outputFilePath = GetTestFilePath("InvalidImage_normalized.txt");
 		const int outputImageQuality = 80;
 
+		var arguments = new Arguments(
+			inputFilePath, outputFilePath, outputImageQuality);
+
 		// Act and Assert
 		Assert.Throws<TransformImageException>(() =>
-			_imageSharpImageTransformer.TransformImage(
-				inputFilePath, outputFilePath, outputImageQuality));
+			_imageSharpImageTransformer.TransformImage(arguments));
 	}
 
     [Fact]
@@ -57,10 +61,12 @@ public class ImageSharpImageTransformerTest : TestBase
         var outputFilePath = GetTestFilePath("NotFoundImage_normalized.txt");
 		const int outputImageQuality = 80;
 
+		var arguments = new Arguments(
+			inputFilePath, outputFilePath, outputImageQuality);
+
 		// Act and Assert
 		Assert.Throws<TransformImageException>(() =>
-			_imageSharpImageTransformer.TransformImage(
-				inputFilePath, outputFilePath, outputImageQuality));
+			_imageSharpImageTransformer.TransformImage(arguments));
 	}
 
 	#region Private

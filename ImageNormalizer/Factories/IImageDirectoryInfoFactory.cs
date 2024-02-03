@@ -4,6 +4,5 @@ namespace ImageNormalizer.Factories;
 
 public interface IImageDirectoryInfoFactory
 {
-	ImageDirectoryInfo Create(
-		string inputDirectory, string outputDirectory, int outputImageQuality);
+	ImageDirectoryInfo Create(Arguments arguments);
 }

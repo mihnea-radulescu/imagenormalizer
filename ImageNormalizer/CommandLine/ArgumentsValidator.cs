@@ -28,8 +28,8 @@ public class ArgumentsValidator : IArgumentsValidator
 	
 	public bool AreValidArguments(Arguments arguments, out string? errorMessage)
 	{
-		var inputDirectory = arguments.InputDirectory;
-		var outputDirectory = arguments.OutputDirectory;
+		var inputDirectory = arguments.InputPath;
+		var outputDirectory = arguments.OutputPath;
 		var outputImageQuality = arguments.OutputImageQuality;
 
 		if (!IsDirectoryPathValid(inputDirectory))

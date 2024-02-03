@@ -12,10 +12,8 @@ public class ImageDirectoryInfo : FileSystemInfoBase
 		IImageFileExtensionService imageFileExtensionService,
 		IImageNormalizerService imageNormalizerService,
 		ILogger logger,
-		string inputPath,
-		string outputPath,
-		int outputImageQuality)
-		: base(logger, inputPath, outputPath, outputImageQuality)
+		Arguments arguments)
+		: base(logger, arguments)
 	{
 		_imageFileExtensionService = imageFileExtensionService;
 		_imageNormalizerService = imageNormalizerService;
@@ -27,7 +25,7 @@ public class ImageDirectoryInfo : FileSystemInfoBase
 
 	protected override void BuildFileSystemInfoSpecific()
 	{
-		var directoryInfo = new DirectoryInfo(InputPath);
+		var directoryInfo = new DirectoryInfo(Arguments.InputPath);
 
 		AddFiles(directoryInfo);
 		AddSubDirectories(directoryInfo);
@@ -41,11 +39,11 @@ public class ImageDirectoryInfo : FileSystemInfoBase
 	protected override void NormalizeFileSystemInfoSpecific()
 	{
 		Logger.Info(
-			$@"Processing input directory ""{InputPath}"" into output directory ""{OutputPath}"" at output image quality {OutputImageQuality}.");
+			$@"Processing input directory ""{Arguments.InputPath}"" into output directory ""{Arguments.OutputPath}"" at output image quality {Arguments.OutputImageQuality}.");
 		
-		if (!Directory.Exists(OutputPath))
+		if (!Directory.Exists(Arguments.OutputPath))
 		{
-			Directory.CreateDirectory(OutputPath);
+			Directory.CreateDirectory(Arguments.OutputPath);
 		}
 		
 		foreach (var aFileSystemInfo in _fileSystemInfoCollection)
@@ -72,11 +70,14 @@ public class ImageDirectoryInfo : FileSystemInfoBase
 			.Select(aFile => new ImageFileInfo(
 				_imageNormalizerService,
 				Logger,
-				Path.Combine(InputPath, aFile.Name),
-				Path.Combine(
-					OutputPath,
-					$"{Path.GetFileNameWithoutExtension(aFile.Name)}{_imageFileExtensionService.OutputImageFileExtension}"),
-				OutputImageQuality))
+				new Arguments(
+					Path.Combine(Arguments.InputPath, aFile.Name),
+					Path.Combine(
+						Arguments.OutputPath,
+						$"{Path.GetFileNameWithoutExtension(aFile.Name)}{_imageFileExtensionService.OutputImageFileExtension}"),
+					Arguments.OutputImageQuality)
+				)
+			)
 			.ToList();
 
 		_fileSystemInfoCollection.AddRange(files);
@@ -90,9 +91,12 @@ public class ImageDirectoryInfo : FileSystemInfoBase
 				_imageFileExtensionService,
 				_imageNormalizerService,
 				Logger,
-				Path.Combine(InputPath, aDirectory.Name),
-				Path.Combine(OutputPath, aDirectory.Name),
-				OutputImageQuality))
+				new Arguments(
+					Path.Combine(Arguments.InputPath, aDirectory.Name),
+					Path.Combine(Arguments.OutputPath, aDirectory.Name),
+					Arguments.OutputImageQuality)
+				)
+			)
 			.ToList();
 
 		_fileSystemInfoCollection.AddRange(subDirectories);

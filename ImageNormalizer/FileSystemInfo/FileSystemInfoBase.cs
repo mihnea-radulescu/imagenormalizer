@@ -6,10 +6,6 @@ namespace ImageNormalizer.FileSystemInfo;
 
 public abstract class FileSystemInfoBase : IFileSystemInfo
 {
-	public string InputPath { get; }
-	public string OutputPath { get; }
-	public int OutputImageQuality { get; }
-
 	public void BuildFileSystemInfo()
 	{
 		ExecuteAction(BuildFileSystemInfoSpecific);
@@ -31,24 +27,21 @@ public abstract class FileSystemInfoBase : IFileSystemInfo
 	#region Protected
 
 	protected readonly ILogger Logger;
+	protected readonly Arguments Arguments;
 
 	protected FileSystemInfoBase(
 		ILogger logger,
-		string inputPath,
-		string outputPath,
-		int outputImageQuality)
+		Arguments arguments)
 	{
-		if (inputPath.Equals(outputPath, StringComparison.InvariantCultureIgnoreCase))
+		Logger = logger;
+		Arguments = arguments;
+
+		if (Arguments.InputPath.Equals(
+				Arguments.OutputPath, StringComparison.InvariantCultureIgnoreCase))
 		{
 			throw new ArgumentException(
-				$@"Input path ""{inputPath}"" must be different than output path ""{outputPath}"".");
+				$@"Input path ""{Arguments.InputPath}"" must be different than output path ""{Arguments.OutputPath}"".");
 		}
-
-		Logger = logger;
-
-		InputPath = inputPath;
-		OutputPath = outputPath;
-		OutputImageQuality = outputImageQuality;
 	}
 
 	protected abstract void BuildFileSystemInfoSpecific();

@@ -36,10 +36,7 @@ public class ApplicationRunner : IApplicationRunner
 
 		try
 		{
-			var imageDirectoryInfo = _imageDirectoryInfoFactory.Create(
-				arguments.InputDirectory,
-				arguments.OutputDirectory,
-				arguments.OutputImageQuality);
+			var imageDirectoryInfo = _imageDirectoryInfoFactory.Create(arguments);
 
 			imageDirectoryInfo.BuildFileSystemInfo();
 			imageDirectoryInfo.NormalizeFileSystemInfo();

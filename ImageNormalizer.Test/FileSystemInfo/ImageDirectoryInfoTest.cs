@@ -32,13 +32,14 @@ public class ImageDirectoryInfoTest : TestBase
 		var outputDirectory = $"{TestDataPath}_Output";
 		const int outputImageQuality = 80;
 
+		var arguments = new Arguments(
+			inputDirectory, outputDirectory, outputImageQuality);
+
 		var imageDirectoryInfo = new ImageDirectoryInfo(
 			_imageFileExtensionService,
 			_imageNormalizerService,
 			_logger,
-			inputDirectory,
-			outputDirectory,
-			outputImageQuality);
+			arguments);
 
 		// Act
 		imageDirectoryInfo.BuildFileSystemInfo();
@@ -71,6 +72,9 @@ public class ImageDirectoryInfoTest : TestBase
 		var outputDirectory = TestDataPath;
 		const int outputImageQuality = 80;
 
+		var arguments = new Arguments(
+			inputDirectory, outputDirectory, outputImageQuality);
+
 		// Act and Assert
 		Assert.Throws<ArgumentException>(() =>
 		{
@@ -78,9 +82,7 @@ public class ImageDirectoryInfoTest : TestBase
 				_imageFileExtensionService,
 				_imageNormalizerService,
 				_logger,
-				inputDirectory,
-				outputDirectory,
-				outputImageQuality);
+				arguments);
 		});
 	}
 

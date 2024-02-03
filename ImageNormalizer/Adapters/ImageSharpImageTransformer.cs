@@ -8,29 +8,29 @@ namespace ImageNormalizer.Adapters;
 
 public class ImageSharpImageTransformer : IImageTransformer
 {
-	public void TransformImage(
-		string inputFileName, string outputFileName, int outputImageQuality)
+	public void TransformImage(Arguments arguments)
 	{
-		using (var loadedImage = LoadImage(inputFileName))
+		using (var loadedImage = LoadImage(arguments))
 		{
 			ClearMetadata(loadedImage);
-			SaveImage(loadedImage, inputFileName, outputFileName, outputImageQuality);
+			SaveImage(loadedImage, arguments);
 		}
 	}
 
 	#region Private
 
-	private static Image LoadImage(string inputFileName)
+	private static Image LoadImage(Arguments arguments)
 	{
 		try
 		{
-			var loadedImage = Image.Load(inputFileName);
+			var loadedImage = Image.Load(arguments.InputPath);
 
 			return loadedImage;
 		}
 		catch (Exception ex)
 		{
-			throw new TransformImageException(@$"Could not load image ""{inputFileName}"".", ex);
+			throw new TransformImageException(
+				@$"Could not load image ""{arguments.InputPath}"".", ex);
 		}
 	}
 
@@ -45,22 +45,21 @@ public class ImageSharpImageTransformer : IImageTransformer
 		imageMetadata.XmpProfile = null;
 	}
 
-	private static void SaveImage(
-		Image loadedImage, string inputFileName, string outputFileName, int outputImageQuality)
+	private static void SaveImage(Image loadedImage, Arguments arguments)
 	{
 		IImageEncoder encoder = new JpegEncoder
 		{
-			Quality = outputImageQuality
+			Quality = arguments.OutputImageQuality
 		};
 
 		try
 		{
-			loadedImage!.Save(outputFileName, encoder);
+			loadedImage!.Save(arguments.OutputPath, encoder);
 		}
 		catch (Exception ex)
 		{
 			throw new TransformImageException(
-				@$"Could not save image ""{inputFileName}"" to ""{outputFileName}"".", ex);
+				@$"Could not save image ""{arguments.InputPath}"" to ""{arguments.OutputPath}"".", ex);
 		}
 	}
 

@@ -1,9 +1,9 @@
 using Xunit;
+using ImageNormalizer.Adapters;
 using ImageNormalizer.Exceptions;
 using ImageNormalizer.Services;
 using ImageNormalizer.Test.TestTypes;
 using ImageNormalizer.Test.TestTypes.Attributes;
-using ImageNormalizer.Adapters;
 
 namespace ImageNormalizer.Test.Services;
 
@@ -27,9 +27,11 @@ public class ImageNormalizerServiceTest : TestBase
         var inputFilePath = GetTestFilePath(inputFileName);
         var outputFilePath = GetTestFilePath(outputFileName);
 
+		var arguments = new Arguments(
+			inputFilePath, outputFilePath, outputImageQuality);
+
 		// Act
-		_imageNormalizerService.NormalizeImage(
-            inputFilePath, outputFilePath, outputImageQuality);
+		_imageNormalizerService.NormalizeImage(arguments);
 
 		// Assert
 		Assert.True(ExistsOutputFile(outputFilePath));
@@ -46,10 +48,12 @@ public class ImageNormalizerServiceTest : TestBase
         var outputFilePath = GetTestFilePath("InvalidImage_normalized.txt");
 		const int outputImageQuality = 80;
 
+		var arguments = new Arguments(
+			inputFilePath, outputFilePath, outputImageQuality);
+
 		// Act and Assert
 		Assert.Throws<TransformImageException>(() =>
-            _imageNormalizerService.NormalizeImage(
-                inputFilePath, outputFilePath, outputImageQuality));
+            _imageNormalizerService.NormalizeImage(arguments));
     }
 
     [Fact]
@@ -60,10 +64,12 @@ public class ImageNormalizerServiceTest : TestBase
         var outputFilePath = GetTestFilePath("NotFoundImage_normalized.txt");
 		const int outputImageQuality = 80;
 
+		var arguments = new Arguments(
+			inputFilePath, outputFilePath, outputImageQuality);
+
 		// Act and Assert
 		Assert.Throws<TransformImageException>(() =>
-            _imageNormalizerService.NormalizeImage(
-                inputFilePath, outputFilePath, outputImageQuality));
+            _imageNormalizerService.NormalizeImage(arguments));
     }
 
     #region Private

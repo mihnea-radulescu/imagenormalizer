@@ -9,10 +9,9 @@ public class ImageNormalizerService : IImageNormalizerService
 		_imageTransformer = imageTransformer;
 	}
 
-    public void NormalizeImage(
-        string inputFilePath, string outputFilePath, int outputImageQuality)
+    public void NormalizeImage(Arguments arguments)
     {
-        _imageTransformer.TransformImage(inputFilePath, outputFilePath, outputImageQuality);
+        _imageTransformer.TransformImage(arguments);
 	}
 
 	#region Private

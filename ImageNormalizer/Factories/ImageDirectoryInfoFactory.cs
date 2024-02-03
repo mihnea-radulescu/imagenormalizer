@@ -16,15 +16,12 @@ public class ImageDirectoryInfoFactory : IImageDirectoryInfoFactory
 		_logger = logger;
 	}
 
-	public ImageDirectoryInfo Create(
-		string inputDirectory, string outputDirectory, int outputImageQuality)
+	public ImageDirectoryInfo Create(Arguments arguments)
 		=> new ImageDirectoryInfo(
 			_imageFileExtensionService,
 			_imageNormalizerService,
 			_logger,
-			inputDirectory,
-			outputDirectory,
-			outputImageQuality);
+			arguments);
 
 	#region Private
 
