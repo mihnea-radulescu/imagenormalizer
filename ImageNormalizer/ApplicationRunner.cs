@@ -19,10 +19,14 @@ public class ApplicationRunner : IApplicationRunner
 		_logger = logger;
 	}
 
-    public void Run(string inputDirectory, string outputDirectory, int outputImageQuality)
+    public void Run(
+		string inputDirectory,
+		string outputDirectory,
+		int outputMaximumImageSize,
+		int outputImageQuality)
 	{
 		var arguments = _argumentsFactory.Create(
-			inputDirectory, outputDirectory, outputImageQuality);
+			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality);
 
 		var areValidArguments = _argumentsValidator.AreValidArguments(
 			arguments, out string? errorMessage);

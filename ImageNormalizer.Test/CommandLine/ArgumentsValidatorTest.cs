@@ -17,9 +17,11 @@ public class ArgumentsValidatorTest : TestBase
 		// Arrange
 		var inputDirectory = GetTestDirectoryPath("Subfolder1");
 		var outputDirectory = GetTestDirectoryPath("Subfolder2");
+		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 80;
 
-		var arguments = new Arguments(inputDirectory, outputDirectory, outputImageQuality);
+		var arguments = new Arguments(
+			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality);
 
 		// Act
 		var areValidArguments = _argumentsValidator.AreValidArguments(
@@ -36,9 +38,11 @@ public class ArgumentsValidatorTest : TestBase
 		// Arrange
 		var inputDirectory = GetTestDirectoryPath("Subfolder1");
 		var outputDirectory = GetTestDirectoryPath("Subfolder1_Output");
+		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 80;
 
-		var arguments = new Arguments(inputDirectory, outputDirectory, outputImageQuality);
+		var arguments = new Arguments(
+			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality);
 
 		// Act
 		var areValidArguments = _argumentsValidator.AreValidArguments(
@@ -55,9 +59,11 @@ public class ArgumentsValidatorTest : TestBase
 		// Arrange
 		var inputDirectory = ";";
 		var outputDirectory = GetTestDirectoryPath("Subfolder1_Output");
+		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 80;
 
-		var arguments = new Arguments(inputDirectory, outputDirectory, outputImageQuality);
+		var arguments = new Arguments(
+			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality);
 
 		// Act
 		var areValidArguments = _argumentsValidator.AreValidArguments(
@@ -77,9 +83,11 @@ public class ArgumentsValidatorTest : TestBase
 		// Arrange
 		var inputDirectory = GetTestDirectoryPath("Subfolder1");
 		var outputDirectory = ";";
+		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 80;
 
-		var arguments = new Arguments(inputDirectory, outputDirectory, outputImageQuality);
+		var arguments = new Arguments(
+			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality);
 
 		// Act
 		var areValidArguments = _argumentsValidator.AreValidArguments(
@@ -99,9 +107,11 @@ public class ArgumentsValidatorTest : TestBase
 		// Arrange
 		var inputDirectory = "nonexistent_folder";
 		var outputDirectory = GetTestDirectoryPath("Subfolder1");
+		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 80;
 
-		var arguments = new Arguments(inputDirectory, outputDirectory, outputImageQuality);
+		var arguments = new Arguments(
+			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality);
 
 		// Act
 		var areValidArguments = _argumentsValidator.AreValidArguments(
@@ -121,9 +131,11 @@ public class ArgumentsValidatorTest : TestBase
 		// Arrange
 		var inputDirectory = GetTestDirectoryPath("Subfolder1");
 		var outputDirectory = GetTestDirectoryPath("Subfolder1");
+		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 80;
 
-		var arguments = new Arguments(inputDirectory, outputDirectory, outputImageQuality);
+		var arguments = new Arguments(
+			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality);
 
 		// Act
 		var areValidArguments = _argumentsValidator.AreValidArguments(
@@ -144,9 +156,11 @@ public class ArgumentsValidatorTest : TestBase
 		// Arrange
 		var inputDirectory = GetTestDirectoryPath("Subfolder2");
 		var outputDirectory = GetTestDirectoryPath("Subfolder2", "Subfolder2_1");
+		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 80;
 
-		var arguments = new Arguments(inputDirectory, outputDirectory, outputImageQuality);
+		var arguments = new Arguments(
+			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality);
 
 		// Act
 		var areValidArguments = _argumentsValidator.AreValidArguments(
@@ -167,9 +181,11 @@ public class ArgumentsValidatorTest : TestBase
 		// Arrange
 		var inputDirectory = GetTestDirectoryPath("Subfolder2", "Subfolder2_1");
 		var outputDirectory = GetTestDirectoryPath("Subfolder2");
+		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 80;
 
-		var arguments = new Arguments(inputDirectory, outputDirectory, outputImageQuality);
+		var arguments = new Arguments(
+			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality);
 
 		// Act
 		var areValidArguments = _argumentsValidator.AreValidArguments(
@@ -185,14 +201,64 @@ public class ArgumentsValidatorTest : TestBase
 	}
 
 	[Fact]
+	public void AreValidArguments_OutputMaximumImageSizeIsBelowThreshold_ReturnsFalseWithExpectedErrorMessage()
+	{
+		// Arrange
+		var inputDirectory = GetTestDirectoryPath("Subfolder1");
+		var outputDirectory = GetTestDirectoryPath("Subfolder2");
+		const int outputMaximumImageSize = 9;
+		const int outputImageQuality = 80;
+
+		var arguments = new Arguments(
+			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality);
+
+		// Act
+		var areValidArguments = _argumentsValidator.AreValidArguments(
+			arguments, out string? errorMessage);
+
+		// Assert
+		Assert.False(areValidArguments);
+		Assert.NotNull(errorMessage);
+		Assert.Equal(
+			"The output maximum image size is outside of the expected range.",
+			errorMessage);
+	}
+
+	[Fact]
+	public void AreValidArguments_OutputMaximumImageSizeIsAboveThreshold_ReturnsFalseWithExpectedErrorMessage()
+	{
+		// Arrange
+		var inputDirectory = GetTestDirectoryPath("Subfolder1");
+		var outputDirectory = GetTestDirectoryPath("Subfolder2");
+		const int outputMaximumImageSize = 10001;
+		const int outputImageQuality = 80;
+
+		var arguments = new Arguments(
+			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality);
+
+		// Act
+		var areValidArguments = _argumentsValidator.AreValidArguments(
+			arguments, out string? errorMessage);
+
+		// Assert
+		Assert.False(areValidArguments);
+		Assert.NotNull(errorMessage);
+		Assert.Equal(
+			"The output maximum image size is outside of the expected range.",
+			errorMessage);
+	}
+
+	[Fact]
 	public void AreValidArguments_OutputImageQualityIsBelowThreshold_ReturnsFalseWithExpectedErrorMessage()
 	{
 		// Arrange
 		var inputDirectory = GetTestDirectoryPath("Subfolder1");
 		var outputDirectory = GetTestDirectoryPath("Subfolder2");
+		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 0;
 
-		var arguments = new Arguments(inputDirectory, outputDirectory, outputImageQuality);
+		var arguments = new Arguments(
+			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality);
 
 		// Act
 		var areValidArguments = _argumentsValidator.AreValidArguments(
@@ -212,9 +278,11 @@ public class ArgumentsValidatorTest : TestBase
 		// Arrange
 		var inputDirectory = GetTestDirectoryPath("Subfolder1");
 		var outputDirectory = GetTestDirectoryPath("Subfolder2");
+		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 101;
 
-		var arguments = new Arguments(inputDirectory, outputDirectory, outputImageQuality);
+		var arguments = new Arguments(
+			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality);
 
 		// Act
 		var areValidArguments = _argumentsValidator.AreValidArguments(

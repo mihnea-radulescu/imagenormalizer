@@ -1,13 +1,14 @@
 ﻿using System;
 using System.IO;
 using Xunit;
+using ImageNormalizer.Adapters;
 using ImageNormalizer.FileSystemInfo;
+using ImageNormalizer.ImageResizing;
 using ImageNormalizer.Logger;
 using ImageNormalizer.Services;
 using ImageNormalizer.Test.TestTypes;
 using ImageNormalizer.Test.TestTypes.Attributes;
 using ImageNormalizer.Test.TestTypes.Stubs;
-using ImageNormalizer.Adapters;
 
 namespace ImageNormalizer.Test.FileSystemInfo;
 
@@ -18,7 +19,10 @@ public class ImageDirectoryInfoTest : TestBase
     {
 		_imageFileExtensionService = new ImageFileExtensionService();
 
-		IImageTransformer imageTransformer = new ImageSharpImageTransformer();
+		IImageResizeCalculator imageResizeCalculator = new ImageResizeCalculator();
+		IImageTransformer imageTransformer = new ImageSharpImageTransformer(
+			imageResizeCalculator);
+
 		_imageNormalizerService = new ImageNormalizerService(imageTransformer);
 
 		_logger = new NullLogger();
@@ -30,10 +34,11 @@ public class ImageDirectoryInfoTest : TestBase
 		// Arrange
 		var inputDirectory = TestDataPath;
 		var outputDirectory = $"{TestDataPath}_Output";
+		const int outputMaximumImageSize = 960;
 		const int outputImageQuality = 80;
 
 		var arguments = new Arguments(
-			inputDirectory, outputDirectory, outputImageQuality);
+			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality);
 
 		var imageDirectoryInfo = new ImageDirectoryInfo(
 			_imageFileExtensionService,
@@ -70,10 +75,11 @@ public class ImageDirectoryInfoTest : TestBase
 		// Arrange
 		var inputDirectory = TestDataPath;
 		var outputDirectory = TestDataPath;
+		const int outputMaximumImageSize = 960;
 		const int outputImageQuality = 80;
 
 		var arguments = new Arguments(
-			inputDirectory, outputDirectory, outputImageQuality);
+			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality);
 
 		// Act and Assert
 		Assert.Throws<ArgumentException>(() =>

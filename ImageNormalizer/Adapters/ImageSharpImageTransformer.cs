@@ -2,22 +2,32 @@
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Processing;
 using ImageNormalizer.Exceptions;
+using ImageNormalizer.ImageResizing;
 
 namespace ImageNormalizer.Adapters;
 
 public class ImageSharpImageTransformer : IImageTransformer
 {
-	public void TransformImage(Arguments arguments)
+	public ImageSharpImageTransformer(IImageResizeCalculator imageResizeCalculator)
+    {
+		_imageResizeCalculator = imageResizeCalculator;
+	}
+
+    public void TransformImage(Arguments arguments)
 	{
 		using (var loadedImage = LoadImage(arguments))
 		{
 			ClearMetadata(loadedImage);
+			ResizeImage(loadedImage, arguments);
 			SaveImage(loadedImage, arguments);
 		}
 	}
 
 	#region Private
+
+	private readonly IImageResizeCalculator _imageResizeCalculator;
 
 	private static Image LoadImage(Arguments arguments)
 	{
@@ -43,6 +53,30 @@ public class ImageSharpImageTransformer : IImageTransformer
 		imageMetadata.IccProfile = null;
 		imageMetadata.IptcProfile = null;
 		imageMetadata.XmpProfile = null;
+	}
+
+	private void ResizeImage(Image loadedImage, Arguments arguments)
+	{
+		var loadedImageSize = new ImageSize(loadedImage.Width, loadedImage.Height);
+		
+		if (!_imageResizeCalculator.ShouldResize(loadedImageSize, arguments))
+		{
+			return;
+		}
+
+		var resizedImageSize = _imageResizeCalculator.GetResizedImageSize(
+			loadedImageSize, arguments);
+
+		try
+		{
+			loadedImage.Mutate(context => context.Resize(
+				resizedImageSize.Width, resizedImageSize.Height));
+		}
+		catch (Exception ex)
+		{
+			throw new TransformImageException(
+				@$"Could not resize image ""{arguments.InputPath}"" to {resizedImageSize.Width} x {resizedImageSize.Height}.", ex);
+		}
 	}
 
 	private static void SaveImage(Image loadedImage, Arguments arguments)

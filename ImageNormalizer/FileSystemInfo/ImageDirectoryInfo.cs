@@ -39,7 +39,7 @@ public class ImageDirectoryInfo : FileSystemInfoBase
 	protected override void NormalizeFileSystemInfoSpecific()
 	{
 		Logger.Info(
-			$@"Processing input directory ""{Arguments.InputPath}"" into output directory ""{Arguments.OutputPath}"" at output image quality {Arguments.OutputImageQuality}.");
+			$@"Processing input directory ""{Arguments.InputPath}"" into output directory ""{Arguments.OutputPath}"" resizing to output maximum image width/height ""{Arguments.OutputMaximumImageSize}"" at output image quality ""{Arguments.OutputImageQuality}"".");
 		
 		if (!Directory.Exists(Arguments.OutputPath))
 		{
@@ -75,6 +75,7 @@ public class ImageDirectoryInfo : FileSystemInfoBase
 					Path.Combine(
 						Arguments.OutputPath,
 						$"{Path.GetFileNameWithoutExtension(aFile.Name)}{_imageFileExtensionService.OutputImageFileExtension}"),
+					Arguments.OutputMaximumImageSize,
 					Arguments.OutputImageQuality)
 				)
 			)
@@ -94,6 +95,7 @@ public class ImageDirectoryInfo : FileSystemInfoBase
 				new Arguments(
 					Path.Combine(Arguments.InputPath, aDirectory.Name),
 					Path.Combine(Arguments.OutputPath, aDirectory.Name),
+					Arguments.OutputMaximumImageSize,
 					Arguments.OutputImageQuality)
 				)
 			)

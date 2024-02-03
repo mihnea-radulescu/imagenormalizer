@@ -3,5 +3,8 @@
 public interface IArgumentsFactory
 {
 	Arguments Create(
-		string inputDirectory, string outputDirectory, int outputImageQuality);
+		string inputDirectory,
+		string outputDirectory,
+		int outputMaximumImageSize,
+		int outputImageQuality);
 }

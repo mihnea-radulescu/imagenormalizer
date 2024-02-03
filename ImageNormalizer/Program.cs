@@ -1,10 +1,11 @@
 ﻿using Cocona;
 using Microsoft.Extensions.DependencyInjection;
+using ImageNormalizer.Adapters;
 using ImageNormalizer.CommandLine;
+using ImageNormalizer.Factories;
+using ImageNormalizer.ImageResizing;
 using ImageNormalizer.Logger;
 using ImageNormalizer.Services;
-using ImageNormalizer.Factories;
-using ImageNormalizer.Adapters;
 
 namespace ImageNormalizer;
 
@@ -29,6 +30,7 @@ public class Program
 		services.AddSingleton<ILogger, ConsoleLogger>();
 		services.AddSingleton<IArgumentsValidator, ArgumentsValidator>();
 		services.AddSingleton<IImageFileExtensionService, ImageFileExtensionService>();
+		services.AddSingleton<IImageResizeCalculator, ImageResizeCalculator>();
 		services.AddSingleton<IImageTransformer, ImageSharpImageTransformer>();
 		services.AddSingleton<IImageNormalizerService, ImageNormalizerService>();
 		services.AddSingleton<IImageDirectoryInfoFactory, ImageDirectoryInfoFactory>();
@@ -41,12 +43,14 @@ public class Program
 			(
 				[Argument(Description = "The input directory")] string inputDirectory,
 				[Argument(Description = "The output directory")] string outputDirectory,
+				[Option("max-width-height", ['m'], Description = "The output maximum image width/height")] int outputMaximumImageSize = 3840,
 				[Option("quality", ['q'], Description = "The output image quality")] int outputImageQuality = 80
 			) =>
 			{
 				var applicationRunner = app.Services.GetService<IApplicationRunner>();
 
-				applicationRunner!.Run(inputDirectory, outputDirectory, outputImageQuality);
+				applicationRunner!.Run(
+					inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality);
 			});
 	}
 
