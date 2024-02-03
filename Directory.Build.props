@@ -9,7 +9,7 @@
 		<Version>$(AssemblyVersion)</Version>
 		<PublishReadyToRun>true</PublishReadyToRun>
 		<PublishSingleFile>true</PublishSingleFile>
-		<PublishTrimmed>true</PublishTrimmed>
+		<PublishTrimmed>false</PublishTrimmed>
 		<SelfContained>true</SelfContained>
 		<DebugType>embedded</DebugType>
 	</PropertyGroup>
