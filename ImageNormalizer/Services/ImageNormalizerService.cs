@@ -1,27 +1,23 @@
-﻿using ImageNormalizer.Factories;
+﻿using ImageNormalizer.Adapters;
 
 namespace ImageNormalizer.Services;
 
 public class ImageNormalizerService : IImageNormalizerService
 {
-    public ImageNormalizerService(ITransformImageFactory transformImageFactory)
+	public ImageNormalizerService(IImageTransformer imageTransformer)
     {
-        _transformImageFactory = transformImageFactory;
-    }
+		_imageTransformer = imageTransformer;
+	}
 
     public void NormalizeImage(
         string inputFilePath, string outputFilePath, int outputImageQuality)
     {
-        using (var transformImage = _transformImageFactory.GetTransformImage(
-            inputFilePath, outputFilePath, outputImageQuality))
-        {
-            transformImage.SaveTransformedImage();
-        }
-    }
+        _imageTransformer.TransformImage(inputFilePath, outputFilePath, outputImageQuality);
+	}
 
 	#region Private
 
-	private readonly ITransformImageFactory _transformImageFactory;
+	private readonly IImageTransformer _imageTransformer;
 
-    #endregion
+	#endregion
 }

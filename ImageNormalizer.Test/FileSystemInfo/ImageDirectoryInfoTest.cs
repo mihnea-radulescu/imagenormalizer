@@ -1,13 +1,13 @@
 ﻿using System;
 using System.IO;
 using Xunit;
-using ImageNormalizer.Factories;
 using ImageNormalizer.FileSystemInfo;
 using ImageNormalizer.Logger;
 using ImageNormalizer.Services;
 using ImageNormalizer.Test.TestTypes;
 using ImageNormalizer.Test.TestTypes.Attributes;
 using ImageNormalizer.Test.TestTypes.Stubs;
+using ImageNormalizer.Adapters;
 
 namespace ImageNormalizer.Test.FileSystemInfo;
 
@@ -18,8 +18,8 @@ public class ImageDirectoryInfoTest : TestBase
     {
 		_imageFileExtensionService = new ImageFileExtensionService();
 
-		ITransformImageFactory transformImageFactory = new ImageSharpTransformImageFactory();
-		_imageNormalizerService = new ImageNormalizerService(transformImageFactory);
+		IImageTransformer imageTransformer = new ImageSharpImageTransformer();
+		_imageNormalizerService = new ImageNormalizerService(imageTransformer);
 
 		_logger = new NullLogger();
 	}

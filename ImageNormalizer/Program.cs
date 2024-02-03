@@ -4,6 +4,7 @@ using ImageNormalizer.CommandLine;
 using ImageNormalizer.Logger;
 using ImageNormalizer.Services;
 using ImageNormalizer.Factories;
+using ImageNormalizer.Adapters;
 
 namespace ImageNormalizer;
 
@@ -28,7 +29,7 @@ public class Program
 		services.AddSingleton<ILogger, ConsoleLogger>();
 		services.AddSingleton<IArgumentsValidator, ArgumentsValidator>();
 		services.AddSingleton<IImageFileExtensionService, ImageFileExtensionService>();
-		services.AddSingleton<ITransformImageFactory, ImageSharpTransformImageFactory>();
+		services.AddSingleton<IImageTransformer, ImageSharpImageTransformer>();
 		services.AddSingleton<IImageNormalizerService, ImageNormalizerService>();
 		services.AddSingleton<IImageDirectoryInfoFactory, ImageDirectoryInfoFactory>();
 		services.AddSingleton<IApplicationRunner, ApplicationRunner>();

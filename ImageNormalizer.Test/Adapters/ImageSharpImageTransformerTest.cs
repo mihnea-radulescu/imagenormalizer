@@ -1,26 +1,23 @@
 using Xunit;
+using ImageNormalizer.Adapters;
 using ImageNormalizer.Exceptions;
-using ImageNormalizer.Services;
 using ImageNormalizer.Test.TestTypes;
 using ImageNormalizer.Test.TestTypes.Attributes;
-using ImageNormalizer.Adapters;
 
-namespace ImageNormalizer.Test.Services;
+namespace ImageNormalizer.Test.Adapters;
 
-[IntegrationTest]
-public class ImageNormalizerServiceTest : TestBase
+[UnitTest]
+public class ImageSharpImageTransformerTest : TestBase
 {
-    public ImageNormalizerServiceTest()
+    public ImageSharpImageTransformerTest()
     {
-        IImageTransformer imageTransformer = new ImageSharpImageTransformer();
-
-        _imageNormalizerService = new ImageNormalizerService(imageTransformer);
+        _imageSharpImageTransformer = new ImageSharpImageTransformer();
     }
 
     [InlineData("Landscape.jpg", "Landscape_normalized.jpg", 80)]
     [InlineData("Portrait.jpg", "Portrait_normalized.jpg", 80)]
     [Theory]
-    public void NormalizeImage_ValidInputImage_SavesOutputImage(
+    public void SaveTransformedImage_ValidInputImage_SavesOutputImage(
         string inputFileName, string outputFileName, int outputImageQuality)
     {
         // Arrange
@@ -28,18 +25,18 @@ public class ImageNormalizerServiceTest : TestBase
         var outputFilePath = GetTestFilePath(outputFileName);
 
 		// Act
-		_imageNormalizerService.NormalizeImage(
-            inputFilePath, outputFilePath, outputImageQuality);
+		_imageSharpImageTransformer.TransformImage(
+			inputFilePath, outputFilePath, outputImageQuality);
 
 		// Assert
 		Assert.True(ExistsOutputFile(outputFilePath));
 
-        // Tear-down
+		// Tear-down
 		DeleteOutputFile(outputFilePath);
 	}
 
     [Fact]
-    public void NormalizeImage_InvalidInputImage_ThrowsExpectedException()
+    public void SaveTransformedImage_InvalidInputImage_ThrowsExpectedException()
     {
         // Arrange
         var inputFilePath = GetTestFilePath("InvalidImage.txt");
@@ -48,12 +45,12 @@ public class ImageNormalizerServiceTest : TestBase
 
 		// Act and Assert
 		Assert.Throws<TransformImageException>(() =>
-            _imageNormalizerService.NormalizeImage(
-                inputFilePath, outputFilePath, outputImageQuality));
-    }
+			_imageSharpImageTransformer.TransformImage(
+				inputFilePath, outputFilePath, outputImageQuality));
+	}
 
     [Fact]
-    public void NormalizeImage_NotFoundInputImage_ThrowsExpectedException()
+    public void SaveTransformedImage_NotFoundInputImage_ThrowsExpectedException()
     {
         // Arrange
         var inputFilePath = GetTestFilePath("NotFoundImage.txt");
@@ -62,13 +59,13 @@ public class ImageNormalizerServiceTest : TestBase
 
 		// Act and Assert
 		Assert.Throws<TransformImageException>(() =>
-            _imageNormalizerService.NormalizeImage(
-                inputFilePath, outputFilePath, outputImageQuality));
-    }
+			_imageSharpImageTransformer.TransformImage(
+				inputFilePath, outputFilePath, outputImageQuality));
+	}
 
-    #region Private
+	#region Private
 
-	private readonly ImageNormalizerService _imageNormalizerService;
+	private readonly ImageSharpImageTransformer _imageSharpImageTransformer;
 
 	#endregion
 }
