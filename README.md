@@ -9,14 +9,14 @@ Image Normalizer is intended to support the storage of images produced by digita
 
 Image Normalizer targets .NET 8 on Windows, Linux and macOS.
 
-__Usage__: ImageNormalizer [--max-width-height <Int32>] [--quality <Int32>] [--help] [--version] input-directory output-directory
+__Usage__: ImageNormalizer [--max-width-height] [--quality] [--help] [--version] input-directory output-directory
 
 Arguments:
-* 0: input-directory     The input directory (Required)
-* 1: output-directory    The output directory (Required)
+* 0: input-directory - The input directory (Required)
+* 1: output-directory - The output directory (Required)
 
 Options:
-* -m, --max-width-height <Int32>    The output maximum image width/height (Default: 3840)
-* -q, --quality <Int32>             The output image quality (Default: 80)
-* -h, --help                        Show help message
-* --version                         Show version
+* -m, --max-width-height - The output maximum image width/height (Default: 3840)
+* -q, --quality - The output image quality (Default: 80)
+* -h, --help - Show help message
+* --version - Show version
