@@ -1,8 +1,10 @@
 ﻿using Xunit;
 using ImageNormalizer.ImageResizing;
+using ImageNormalizer.Test.TestTypes.Attributes;
 
 namespace ImageNormalizer.Test.ImageResizing;
 
+[UnitTest]
 public class ImageResizeCalculatorTest
 {
     public ImageResizeCalculatorTest()
