@@ -5,29 +5,41 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
 using ImageNormalizer.Exceptions;
 using ImageNormalizer.ImageResizing;
+using ImageNormalizer.Logger;
 
 namespace ImageNormalizer.Adapters;
 
 public class ImageSharpImageTransformer : IImageTransformer
 {
-	public ImageSharpImageTransformer(IImageResizeCalculator imageResizeCalculator)
+	public ImageSharpImageTransformer(
+		IImageResizeCalculator imageResizeCalculator,
+		ILogger logger)
     {
 		_imageResizeCalculator = imageResizeCalculator;
+		_logger = logger;
 	}
 
     public void TransformImage(Arguments arguments)
 	{
-		using (var loadedImage = LoadImage(arguments))
+		try
 		{
-			ClearMetadata(loadedImage);
-			ResizeImage(loadedImage, arguments);
-			SaveImage(loadedImage, arguments);
+			using (var loadedImage = LoadImage(arguments))
+			{
+				ClearMetadata(loadedImage);
+				ResizeImage(loadedImage, arguments);
+				SaveImage(loadedImage, arguments);
+			}
+		}
+		catch (Exception ex)
+		{
+			_logger.Error(ex);
 		}
 	}
 
 	#region Private
 
 	private readonly IImageResizeCalculator _imageResizeCalculator;
+	private readonly ILogger _logger;
 
 	private static Image LoadImage(Arguments arguments)
 	{

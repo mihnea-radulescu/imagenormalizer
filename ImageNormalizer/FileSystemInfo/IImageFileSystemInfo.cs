@@ -1,6 +1,6 @@
 ﻿namespace ImageNormalizer.FileSystemInfo;
 
-public interface IFileSystemInfo
+public interface IImageFileSystemInfo
 {
 	void BuildFileSystemInfo();
 	void NormalizeFileSystemInfo();

@@ -9,10 +9,12 @@ public class ImageDirectoryInfoFactory : IImageDirectoryInfoFactory
 	public ImageDirectoryInfoFactory(
 		IImageFileExtensionService imageFileExtensionService,
 		IImageNormalizerService imageNormalizerService,
+		IDirectoryService directoryService,
 		ILogger logger)
 	{
 		_imageFileExtensionService = imageFileExtensionService;
 		_imageNormalizerService = imageNormalizerService;
+		_directoryService = directoryService;
 		_logger = logger;
 	}
 
@@ -20,6 +22,7 @@ public class ImageDirectoryInfoFactory : IImageDirectoryInfoFactory
 		=> new ImageDirectoryInfo(
 			_imageFileExtensionService,
 			_imageNormalizerService,
+			_directoryService,
 			_logger,
 			arguments);
 
@@ -27,6 +30,7 @@ public class ImageDirectoryInfoFactory : IImageDirectoryInfoFactory
 
 	private readonly IImageFileExtensionService _imageFileExtensionService;
 	private readonly IImageNormalizerService _imageNormalizerService;
+	private readonly IDirectoryService _directoryService;
 	private readonly ILogger _logger;
 
 	#endregion

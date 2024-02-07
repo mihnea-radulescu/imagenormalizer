@@ -1,9 +1,11 @@
 ﻿using Xunit;
 using ImageNormalizer.CommandLine;
 using ImageNormalizer.Test.TestTypes;
+using ImageNormalizer.Test.TestTypes.Attributes;
 
 namespace ImageNormalizer.Test.CommandLine;
 
+[UnitTest]
 public class ArgumentsValidatorTest : TestBase
 {
     public ArgumentsValidatorTest()

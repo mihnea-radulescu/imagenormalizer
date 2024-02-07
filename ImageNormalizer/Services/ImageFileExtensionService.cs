@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ImageNormalizer.Services;
 
@@ -6,8 +7,8 @@ public class ImageFileExtensionService : IImageFileExtensionService
 {
     public ImageFileExtensionService()
     {
-        _imageFileExtensions = new HashSet<string>
-        {
+        _imageFileExtensions = new HashSet<string>(
+        [
 			".bmp",
 			".gif",
 			".ico",
@@ -15,7 +16,8 @@ public class ImageFileExtensionService : IImageFileExtensionService
 			".png",
 			".tif", ".tiff",
 			".webp"
-		};
+		],
+		StringComparer.OrdinalIgnoreCase);
     }
 
     public HashSet<string> ImageFileExtensions => _imageFileExtensions;

@@ -1,7 +1,9 @@
+using NSubstitute;
 using Xunit;
 using ImageNormalizer.Adapters;
 using ImageNormalizer.Exceptions;
 using ImageNormalizer.ImageResizing;
+using ImageNormalizer.Logger;
 using ImageNormalizer.Test.TestTypes;
 using ImageNormalizer.Test.TestTypes.Attributes;
 
@@ -12,11 +14,16 @@ public class ImageSharpImageTransformerTest : TestBase
 {
     public ImageSharpImageTransformerTest()
     {
-		IImageResizeCalculator imageResizeCalculator = new ImageResizeCalculator();
+		IImageResizeCalculator imageResizeCalculator = Substitute.For<IImageResizeCalculator>();
+		imageResizeCalculator
+			.ShouldResize(Arg.Any<ImageSize>(), Arg.Any<Arguments>())
+			.Returns(false);
+
+		_logger = Substitute.For<ILogger>();
 
 		_imageSharpImageTransformer = new ImageSharpImageTransformer(
-			imageResizeCalculator);
-    }
+			imageResizeCalculator, _logger);
+	}
 
     [InlineData("Landscape.jpg", "Landscape_normalized.jpg", 3840, 80)]
     [InlineData("Portrait.jpg", "Portrait_normalized.jpg", 3840, 80)]
@@ -45,7 +52,7 @@ public class ImageSharpImageTransformerTest : TestBase
 	}
 
     [Fact]
-    public void SaveTransformedImage_InvalidInputImage_ThrowsExpectedException()
+    public void SaveTransformedImage_InvalidInputImage_LogsException()
     {
         // Arrange
         var inputFilePath = GetTestFilePath("InvalidImage.txt");
@@ -56,13 +63,15 @@ public class ImageSharpImageTransformerTest : TestBase
 		var arguments = new Arguments(
 			inputFilePath, outputFilePath, outputMaximumImageSize, outputImageQuality);
 
-		// Act and Assert
-		Assert.Throws<TransformImageException>(() =>
-			_imageSharpImageTransformer.TransformImage(arguments));
+		// Act
+		_imageSharpImageTransformer.TransformImage(arguments);
+
+		// Assert
+		_logger.Received(1).Error(Arg.Any<TransformImageException>());
 	}
 
     [Fact]
-    public void SaveTransformedImage_NotFoundInputImage_ThrowsExpectedException()
+    public void SaveTransformedImage_NotFoundInputImage_LogsException()
     {
         // Arrange
         var inputFilePath = GetTestFilePath("NotFoundImage.txt");
@@ -73,12 +82,16 @@ public class ImageSharpImageTransformerTest : TestBase
 		var arguments = new Arguments(
 			inputFilePath, outputFilePath, outputMaximumImageSize, outputImageQuality);
 
-		// Act and Assert
-		Assert.Throws<TransformImageException>(() =>
-			_imageSharpImageTransformer.TransformImage(arguments));
+		// Act
+		_imageSharpImageTransformer.TransformImage(arguments);
+
+		// Assert
+		_logger.Received(1).Error(Arg.Any<TransformImageException>());
 	}
 
 	#region Private
+
+	private readonly ILogger _logger;
 
 	private readonly ImageSharpImageTransformer _imageSharpImageTransformer;
 

@@ -1,5 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
+using NSubstitute;
 using Xunit;
 using ImageNormalizer.Adapters;
 using ImageNormalizer.FileSystemInfo;
@@ -8,7 +8,6 @@ using ImageNormalizer.Logger;
 using ImageNormalizer.Services;
 using ImageNormalizer.Test.TestTypes;
 using ImageNormalizer.Test.TestTypes.Attributes;
-using ImageNormalizer.Test.TestTypes.Stubs;
 
 namespace ImageNormalizer.Test.FileSystemInfo;
 
@@ -20,12 +19,13 @@ public class ImageDirectoryInfoTest : TestBase
 		_imageFileExtensionService = new ImageFileExtensionService();
 
 		IImageResizeCalculator imageResizeCalculator = new ImageResizeCalculator();
+
+		_logger = Substitute.For<ILogger>();
+
 		IImageTransformer imageTransformer = new ImageSharpImageTransformer(
-			imageResizeCalculator);
-
+			imageResizeCalculator, _logger);
 		_imageNormalizerService = new ImageNormalizerService(imageTransformer);
-
-		_logger = new NullLogger();
+		_directoryService = new DirectoryService();
 	}
 
     [Fact]
@@ -43,6 +43,7 @@ public class ImageDirectoryInfoTest : TestBase
 		var imageDirectoryInfo = new ImageDirectoryInfo(
 			_imageFileExtensionService,
 			_imageNormalizerService,
+			_directoryService,
 			_logger,
 			arguments);
 
@@ -69,33 +70,11 @@ public class ImageDirectoryInfoTest : TestBase
 		DeleteOutputDirectory(outputDirectory);
 	}
 
-	[Fact]
-	public void Constructor_InputPathEqualsOutputPath_ThrowsExpectedException()
-	{
-		// Arrange
-		var inputDirectory = TestDataPath;
-		var outputDirectory = TestDataPath;
-		const int outputMaximumImageSize = 960;
-		const int outputImageQuality = 80;
-
-		var arguments = new Arguments(
-			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality);
-
-		// Act and Assert
-		Assert.Throws<ArgumentException>(() =>
-		{
-			var imageDirectoryInfo = new ImageDirectoryInfo(
-				_imageFileExtensionService,
-				_imageNormalizerService,
-				_logger,
-				arguments);
-		});
-	}
-
 	#region Private
 
 	private readonly IImageFileExtensionService _imageFileExtensionService;
 	private readonly IImageNormalizerService _imageNormalizerService;
+	private readonly IDirectoryService _directoryService;
 	private readonly ILogger _logger;
 
 	#endregion

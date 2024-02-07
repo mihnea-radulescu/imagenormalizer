@@ -1,107 +1,164 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using ImageNormalizer.Logger;
 using ImageNormalizer.Services;
 
 namespace ImageNormalizer.FileSystemInfo;
 
-public class ImageDirectoryInfo : FileSystemInfoBase
+public class ImageDirectoryInfo : IImageFileSystemInfo
 {
+	static ImageDirectoryInfo()
+	{
+		ParallelOptions = new ParallelOptions
+		{
+			MaxDegreeOfParallelism = Environment.ProcessorCount
+		};
+	}
+	
 	public ImageDirectoryInfo(
 		IImageFileExtensionService imageFileExtensionService,
 		IImageNormalizerService imageNormalizerService,
+		IDirectoryService directoryService,
 		ILogger logger,
 		Arguments arguments)
-		: base(logger, arguments)
 	{
 		_imageFileExtensionService = imageFileExtensionService;
 		_imageNormalizerService = imageNormalizerService;
+		_directoryService = directoryService;
+		_logger = logger;
 
-		_fileSystemInfoCollection = new List<IFileSystemInfo>();
+		_arguments = arguments;
+
+		_imageFileInfoCollection = new List<ImageFileInfo>();
+		_imageSubDirectoryInfoCollection = new List<ImageDirectoryInfo>();
+
+		_hasBuiltFileSystemInfo = false;
 	}
 
-	#region Protected
-
-	protected override void BuildFileSystemInfoSpecific()
+	public void BuildFileSystemInfo()
 	{
-		var directoryInfo = new DirectoryInfo(Arguments.InputPath);
+		IReadOnlyList<string> files;
+		IReadOnlyList<string> subDirectories;
 
-		AddFiles(directoryInfo);
-		AddSubDirectories(directoryInfo);
-
-		foreach (var aFileSystemInfo in _fileSystemInfoCollection)
+		try
 		{
-			aFileSystemInfo.BuildFileSystemInfo();
+			files = _directoryService.GetFiles(_arguments.InputPath);
+			subDirectories = _directoryService.GetSubDirectories(_arguments.InputPath);
 		}
+		catch (Exception ex)
+		{
+			_logger.Error(ex);
+
+			return;
+		}
+
+		AddFiles(files);
+		AddSubDirectories(subDirectories);
+
+		foreach (var anImageSubDirectoryInfo in _imageSubDirectoryInfoCollection)
+		{
+			anImageSubDirectoryInfo.BuildFileSystemInfo();
+		}
+
+		_hasBuiltFileSystemInfo = true;
 	}
 
-	protected override void NormalizeFileSystemInfoSpecific()
+	public void NormalizeFileSystemInfo()
 	{
-		Logger.Info(
-			$@"Processing input directory ""{Arguments.InputPath}"" into output directory ""{Arguments.OutputPath}"" resizing to output maximum image width/height ""{Arguments.OutputMaximumImageSize}"" at output image quality ""{Arguments.OutputImageQuality}"".");
-		
-		if (!Directory.Exists(Arguments.OutputPath))
+		if (!_hasBuiltFileSystemInfo)
 		{
-			Directory.CreateDirectory(Arguments.OutputPath);
+			_logger.Error(
+				$"{nameof(BuildFileSystemInfo)} needs to be called prior to {nameof(NormalizeFileSystemInfo)}.");
+
+			return;
 		}
-		
-		foreach (var aFileSystemInfo in _fileSystemInfoCollection)
+
+		try
 		{
-			aFileSystemInfo.NormalizeFileSystemInfo();
+			_directoryService.CreateDirectory(_arguments.OutputPath);
+		}
+		catch (Exception ex)
+		{
+			_logger.Error(ex);
+
+			return;
+		}
+
+		_logger.Info(
+			$@"Processing input directory ""{_arguments.InputPath}"" into output directory ""{_arguments.OutputPath}"" resizing to output maximum image width/height ""{_arguments.OutputMaximumImageSize}"" at output image quality ""{_arguments.OutputImageQuality}"".");
+
+		Parallel.ForEach(
+			_imageFileInfoCollection,
+			ParallelOptions,
+			anImageFileInfo =>
+			{
+				anImageFileInfo.NormalizeFileSystemInfo();
+			});
+
+		foreach (var anImageSubDirectoryInfo in _imageSubDirectoryInfoCollection)
+		{
+			anImageSubDirectoryInfo.NormalizeFileSystemInfo();
 		}
 	}
-
-	#endregion
 
 	#region Private
 
+	private static readonly ParallelOptions ParallelOptions;
+
 	private readonly IImageFileExtensionService _imageFileExtensionService;
 	private readonly IImageNormalizerService _imageNormalizerService;
+	private readonly IDirectoryService _directoryService;
+	private readonly ILogger _logger;
 
-	private readonly List<IFileSystemInfo> _fileSystemInfoCollection;
+	private readonly Arguments _arguments;
 
-	private void AddFiles(DirectoryInfo directoryInfo)
+	private readonly List<ImageFileInfo> _imageFileInfoCollection;
+	private readonly List<ImageDirectoryInfo> _imageSubDirectoryInfoCollection;
+
+	private bool _hasBuiltFileSystemInfo;
+
+	private void AddFiles(IReadOnlyList<string> files)
 	{
-		var files = directoryInfo
-			.GetFiles()
+		var imageFiles = files
 			.Where(aFile => _imageFileExtensionService.ImageFileExtensions.Contains(
-								aFile.Extension.ToLowerInvariant()))
+								Path.GetExtension(aFile)))
 			.Select(aFile => new ImageFileInfo(
 				_imageNormalizerService,
-				Logger,
 				new Arguments(
-					Path.Combine(Arguments.InputPath, aFile.Name),
+					Path.Combine(_arguments.InputPath, aFile),
 					Path.Combine(
-						Arguments.OutputPath,
-						$"{Path.GetFileNameWithoutExtension(aFile.Name)}{_imageFileExtensionService.OutputImageFileExtension}"),
-					Arguments.OutputMaximumImageSize,
-					Arguments.OutputImageQuality)
+						_arguments.OutputPath,
+						$"{Path.GetFileNameWithoutExtension(aFile)}{_imageFileExtensionService.OutputImageFileExtension}"),
+					_arguments.OutputMaximumImageSize,
+					_arguments.OutputImageQuality)
 				)
 			)
 			.ToList();
 
-		_fileSystemInfoCollection.AddRange(files);
+		_imageFileInfoCollection.AddRange(imageFiles);
 	}
 
-	private void AddSubDirectories(DirectoryInfo directoryInfo)
+	private void AddSubDirectories(IReadOnlyList<string> subDirectories)
 	{
-		var subDirectories = directoryInfo
-			.GetDirectories()
+		var imageSubDirectories = subDirectories
 			.Select(aDirectory => new ImageDirectoryInfo(
 				_imageFileExtensionService,
 				_imageNormalizerService,
-				Logger,
+				_directoryService,
+				_logger,
 				new Arguments(
-					Path.Combine(Arguments.InputPath, aDirectory.Name),
-					Path.Combine(Arguments.OutputPath, aDirectory.Name),
-					Arguments.OutputMaximumImageSize,
-					Arguments.OutputImageQuality)
+					Path.Combine(_arguments.InputPath, aDirectory),
+					Path.Combine(_arguments.OutputPath, aDirectory),
+					_arguments.OutputMaximumImageSize,
+					_arguments.OutputImageQuality)
 				)
 			)
 			.ToList();
 
-		_fileSystemInfoCollection.AddRange(subDirectories);
+		_imageSubDirectoryInfoCollection.AddRange(imageSubDirectories);
 	}
 
 	#endregion

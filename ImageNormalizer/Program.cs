@@ -33,6 +33,7 @@ public class Program
 		services.AddSingleton<IImageResizeCalculator, ImageResizeCalculator>();
 		services.AddSingleton<IImageTransformer, ImageSharpImageTransformer>();
 		services.AddSingleton<IImageNormalizerService, ImageNormalizerService>();
+		services.AddSingleton<IDirectoryService, DirectoryService>();
 		services.AddSingleton<IImageDirectoryInfoFactory, ImageDirectoryInfoFactory>();
 		services.AddSingleton<IApplicationRunner, ApplicationRunner>();
 	}

@@ -1,7 +1,9 @@
+using NSubstitute;
 using Xunit;
 using ImageNormalizer.Adapters;
 using ImageNormalizer.Exceptions;
 using ImageNormalizer.ImageResizing;
+using ImageNormalizer.Logger;
 using ImageNormalizer.Services;
 using ImageNormalizer.Test.TestTypes;
 using ImageNormalizer.Test.TestTypes.Attributes;
@@ -14,8 +16,11 @@ public class ImageNormalizerServiceTest : TestBase
     public ImageNormalizerServiceTest()
     {
         IImageResizeCalculator imageResizeCalculator = new ImageResizeCalculator();
-        IImageTransformer imageTransformer = new ImageSharpImageTransformer(
-            imageResizeCalculator);
+
+		_logger = Substitute.For<ILogger>();
+
+		IImageTransformer imageTransformer = new ImageSharpImageTransformer(
+            imageResizeCalculator, _logger);
 
         _imageNormalizerService = new ImageNormalizerService(imageTransformer);
     }
@@ -47,7 +52,7 @@ public class ImageNormalizerServiceTest : TestBase
 	}
 
     [Fact]
-    public void NormalizeImage_InvalidInputImage_ThrowsExpectedException()
+    public void NormalizeImage_InvalidInputImage_LogsException()
     {
         // Arrange
         var inputFilePath = GetTestFilePath("InvalidImage.txt");
@@ -58,13 +63,15 @@ public class ImageNormalizerServiceTest : TestBase
 		var arguments = new Arguments(
 			inputFilePath, outputFilePath, outputMaximumImageSize, outputImageQuality);
 
-		// Act and Assert
-		Assert.Throws<TransformImageException>(() =>
-            _imageNormalizerService.NormalizeImage(arguments));
-    }
+		// Act
+		_imageNormalizerService.NormalizeImage(arguments);
+
+		// Assert
+		_logger.Received(1).Error(Arg.Any<TransformImageException>());
+	}
 
     [Fact]
-    public void NormalizeImage_NotFoundInputImage_ThrowsExpectedException()
+    public void NormalizeImage_NotFoundInputImage_LogsException()
     {
         // Arrange
         var inputFilePath = GetTestFilePath("NotFoundImage.txt");
@@ -75,12 +82,16 @@ public class ImageNormalizerServiceTest : TestBase
 		var arguments = new Arguments(
 			inputFilePath, outputFilePath, outputMaximumImageSize, outputImageQuality);
 
-		// Act and Assert
-		Assert.Throws<TransformImageException>(() =>
-            _imageNormalizerService.NormalizeImage(arguments));
-    }
+		// Act
+		_imageNormalizerService.NormalizeImage(arguments);
 
-    #region Private
+		// Assert
+		_logger.Received(1).Error(Arg.Any<TransformImageException>());
+	}
+
+	#region Private
+
+	private readonly ILogger _logger;
 
 	private readonly ImageNormalizerService _imageNormalizerService;
 

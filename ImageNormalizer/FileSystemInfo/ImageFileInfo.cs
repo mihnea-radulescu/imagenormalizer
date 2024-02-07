@@ -1,35 +1,32 @@
-﻿using ImageNormalizer.Logger;
-using ImageNormalizer.Services;
+﻿using ImageNormalizer.Services;
 
 namespace ImageNormalizer.FileSystemInfo;
 
-public class ImageFileInfo : FileSystemInfoBase
+public class ImageFileInfo : IImageFileSystemInfo
 {
 	public ImageFileInfo(
 		IImageNormalizerService imageNormalizerService,
-		ILogger logger,
 		Arguments arguments)
-		: base(logger, arguments)
 	{
 		_imageNormalizerService = imageNormalizerService;
+
+		_arguments = arguments;
 	}
 
-	#region Protected
-
-	protected override void BuildFileSystemInfoSpecific()
+	public void BuildFileSystemInfo()
 	{
 	}
 
-	protected override void NormalizeFileSystemInfoSpecific()
+	public void NormalizeFileSystemInfo()
 	{
-		_imageNormalizerService.NormalizeImage(Arguments);
+		_imageNormalizerService.NormalizeImage(_arguments);
 	}
-
-	#endregion
 
 	#region Private
 
 	private readonly IImageNormalizerService _imageNormalizerService;
+
+	private readonly Arguments _arguments;
 
 	#endregion
 }
