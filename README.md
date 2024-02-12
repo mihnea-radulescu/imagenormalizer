@@ -7,7 +7,7 @@ Image Normalizer is a minimalist command-line batch-processing tool that resizes
 
 Image Normalizer is intended to support the storage of images produced by digital cameras in a consistent and disc space conserving manner.
 
-Image Normalizer targets .NET 8 on Windows, Linux and macOS.
+Image Normalizer targets .NET 8 on Linux, Windows and macOS.
 
 __Usage__: ImageNormalizer [--max-width-height] [--quality] [--help] [--version] input-directory output-directory
 

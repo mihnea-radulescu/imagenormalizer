@@ -5,7 +5,7 @@
 		<ApplicationIcon>ApplicationIcon.ico</ApplicationIcon>
 		<Title>Image Normalizer</Title>
 		<Product>Image Normalizer</Product>
-		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<RuntimeIdentifier>linux-x64</RuntimeIdentifier>
 	</PropertyGroup>
 
 	<ItemGroup>

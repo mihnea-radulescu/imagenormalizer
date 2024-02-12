@@ -5,7 +5,7 @@
 		<IsTestProject>true</IsTestProject>
 		<Title>Image Normalizer - Test</Title>
 		<Product>Image Normalizer - Test</Product>
-		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<RuntimeIdentifier>linux-x64</RuntimeIdentifier>
 	</PropertyGroup>
 
 	<ItemGroup>
