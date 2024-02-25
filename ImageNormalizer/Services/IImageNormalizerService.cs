@@ -1,4 +1,4 @@
-﻿namespace ImageNormalizer.Services;
+namespace ImageNormalizer.Services;
 
 public interface IImageNormalizerService
 {

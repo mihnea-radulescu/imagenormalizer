@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ImageNormalizer.CommandLine;
 using ImageNormalizer.Factories;
 using ImageNormalizer.Logger;

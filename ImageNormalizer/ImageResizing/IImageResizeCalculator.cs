@@ -1,4 +1,4 @@
-﻿namespace ImageNormalizer.ImageResizing;
+namespace ImageNormalizer.ImageResizing;
 
 public interface IImageResizeCalculator
 {

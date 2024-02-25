@@ -1,4 +1,4 @@
-﻿using Xunit;
+using Xunit;
 using ImageNormalizer.CommandLine;
 using ImageNormalizer.Test.TestTypes;
 using ImageNormalizer.Test.TestTypes.Attributes;

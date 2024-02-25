@@ -1,4 +1,4 @@
-﻿using ImageNormalizer.Services;
+using ImageNormalizer.Services;
 
 namespace ImageNormalizer.FileSystemInfo;
 

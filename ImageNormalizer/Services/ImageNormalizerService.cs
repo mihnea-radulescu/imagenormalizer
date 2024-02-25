@@ -1,4 +1,4 @@
-﻿using ImageNormalizer.Adapters;
+using ImageNormalizer.Adapters;
 
 namespace ImageNormalizer.Services;
 

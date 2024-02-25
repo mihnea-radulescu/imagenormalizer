@@ -1,4 +1,4 @@
-﻿namespace ImageNormalizer.FileSystemInfo;
+namespace ImageNormalizer.FileSystemInfo;
 
 public interface IImageFileSystemInfo
 {

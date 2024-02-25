@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using NSubstitute;
 using Xunit;
 using ImageNormalizer.Adapters;

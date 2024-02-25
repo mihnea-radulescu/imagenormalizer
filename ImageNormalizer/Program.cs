@@ -1,4 +1,4 @@
-﻿using Cocona;
+using Cocona;
 using Microsoft.Extensions.DependencyInjection;
 using ImageNormalizer.Adapters;
 using ImageNormalizer.CommandLine;

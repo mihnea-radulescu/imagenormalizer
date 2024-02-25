@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Jpeg;

@@ -1,4 +1,4 @@
-﻿namespace ImageNormalizer.Adapters;
+namespace ImageNormalizer.Adapters;
 
 public interface IImageTransformer
 {

@@ -1,4 +1,4 @@
-﻿namespace ImageNormalizer;
+namespace ImageNormalizer;
 
 public interface IApplicationRunner
 {

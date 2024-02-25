@@ -1,4 +1,4 @@
-﻿using ImageNormalizer.FileSystemInfo;
+using ImageNormalizer.FileSystemInfo;
 
 namespace ImageNormalizer.Factories;
 

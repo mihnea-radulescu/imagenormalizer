@@ -1,4 +1,4 @@
-﻿namespace ImageNormalizer.CommandLine;
+namespace ImageNormalizer.CommandLine;
 
 public interface IArgumentsValidator
 {
