@@ -1,5 +1,5 @@
 # imagenormalizer
-Image Normalizer is a command-line batch-processing tool that resizes and compresses images, transforming each image by:
+Image Normalizer is a cross-platform command-line batch-processing tool that resizes and compresses images, transforming each image by:
 * removing its CICP, EXIF, ICC, IPTC and XMP profile data, if present
 * resizing it to fit within the maximum width/height supplied, if necessary
 * compressing it to the provided image quality level
