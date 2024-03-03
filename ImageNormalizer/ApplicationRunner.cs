@@ -23,10 +23,11 @@ public class ApplicationRunner : IApplicationRunner
 		string inputDirectory,
 		string outputDirectory,
 		int outputMaximumImageSize,
-		int outputImageQuality)
+		int outputImageQuality,
+		int maxDegreeOfParallelism)
 	{
 		var arguments = _argumentsFactory.Create(
-			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality);
+			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality, maxDegreeOfParallelism);
 
 		var areValidArguments = _argumentsValidator.AreValidArguments(
 			arguments, out string? errorMessage);

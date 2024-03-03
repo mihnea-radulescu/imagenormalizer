@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Cocona;
 using Microsoft.Extensions.DependencyInjection;
 using ImageNormalizer.Adapters;
@@ -9,7 +10,7 @@ using ImageNormalizer.Services;
 
 namespace ImageNormalizer;
 
-public class Program
+public static class Program
 {
 	public static void Main(string[] args)
 	{
@@ -42,16 +43,29 @@ public class Program
 	{
 		app.AddCommand(
 			(
-				[Argument(Description = "The input directory")] string inputDirectory,
-				[Argument(Description = "The output directory")] string outputDirectory,
-				[Option("max-width-height", ['m'], Description = "The output maximum image width/height")] int outputMaximumImageSize = 3840,
-				[Option("quality", ['q'], Description = "The output image quality")] int outputImageQuality = 80
+				[Argument(Description = "The input directory")]
+				string inputDirectory,
+				
+				[Argument(Description = "The output directory")]
+				string outputDirectory,
+				
+				[Option("max-width-height", ['m'], Description = "The output maximum image width/height")]
+				[Range(1, 15360)]
+				int outputMaximumImageSize = 3840,
+				
+				[Option("quality", ['q'], Description = "The output image quality")]
+				[Range(1, 100)]
+				int outputImageQuality = 80,
+				
+				[Option("max-degree-of-parallelism", ['p'], Description = "The maximum degree of parallelism, upper-bounded by processor count")]
+				[Range(1, 128)]
+				int maxDegreeOfParallelism = 16
 			) =>
 			{
 				var applicationRunner = app.Services.GetService<IApplicationRunner>();
 
 				applicationRunner!.Run(
-					inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality);
+					inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality, maxDegreeOfParallelism);
 			});
 	}
 

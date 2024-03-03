@@ -1,3 +1,3 @@
 namespace ImageNormalizer.ImageResizing;
 
-public record class ImageSize(int Width, int Height);
+public record ImageSize(int Width, int Height);

@@ -25,21 +25,22 @@ public class ImageSharpImageTransformerTest : TestBase
 			imageResizeCalculator, _logger);
 	}
 
-    [InlineData("Landscape.jpg", "Landscape_normalized.jpg", 3840, 80)]
-    [InlineData("Portrait.jpg", "Portrait_normalized.jpg", 3840, 80)]
+    [InlineData("Landscape.jpg", "Landscape_normalized.jpg", 3840, 80, 16)]
+    [InlineData("Portrait.jpg", "Portrait_normalized.jpg", 3840, 80, 16)]
     [Theory]
     public void SaveTransformedImage_ValidInputImage_SavesOutputImage(
         string inputFileName,
         string outputFileName,
         int outputMaximumImageSize,
-        int outputImageQuality)
+        int outputImageQuality,
+        int maxDegreeOfParallelism)
     {
         // Arrange
         var inputFilePath = GetTestFilePath(inputFileName);
         var outputFilePath = GetTestFilePath(outputFileName);
 
         var arguments = new Arguments(
-			inputFilePath, outputFilePath, outputMaximumImageSize, outputImageQuality);
+			inputFilePath, outputFilePath, outputMaximumImageSize, outputImageQuality, maxDegreeOfParallelism);
 
 		// Act
 		_imageSharpImageTransformer.TransformImage(arguments);
@@ -59,9 +60,10 @@ public class ImageSharpImageTransformerTest : TestBase
         var outputFilePath = GetTestFilePath("InvalidImage_normalized.txt");
 		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 80;
+		const int maxDegreeOfParallelism = 16;
 
 		var arguments = new Arguments(
-			inputFilePath, outputFilePath, outputMaximumImageSize, outputImageQuality);
+			inputFilePath, outputFilePath, outputMaximumImageSize, outputImageQuality, maxDegreeOfParallelism);
 
 		// Act
 		_imageSharpImageTransformer.TransformImage(arguments);
@@ -78,9 +80,10 @@ public class ImageSharpImageTransformerTest : TestBase
         var outputFilePath = GetTestFilePath("NotFoundImage_normalized.txt");
 		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 80;
+		const int maxDegreeOfParallelism = 16;
 
 		var arguments = new Arguments(
-			inputFilePath, outputFilePath, outputMaximumImageSize, outputImageQuality);
+			inputFilePath, outputFilePath, outputMaximumImageSize, outputImageQuality, maxDegreeOfParallelism);
 
 		// Act
 		_imageSharpImageTransformer.TransformImage(arguments);

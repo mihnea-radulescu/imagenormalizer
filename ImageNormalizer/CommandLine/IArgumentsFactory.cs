@@ -6,5 +6,6 @@ public interface IArgumentsFactory
 		string inputDirectory,
 		string outputDirectory,
 		int outputMaximumImageSize,
-		int outputImageQuality);
+		int outputImageQuality,
+		int maxDegreeOfParallelism);
 }

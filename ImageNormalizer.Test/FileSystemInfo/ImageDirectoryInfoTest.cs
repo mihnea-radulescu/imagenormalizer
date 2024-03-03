@@ -36,9 +36,10 @@ public class ImageDirectoryInfoTest : TestBase
 		var outputDirectory = $"{TestDataPath}_Output";
 		const int outputMaximumImageSize = 960;
 		const int outputImageQuality = 80;
+		const int maxDegreeOfParallelism = 16;
 
 		var arguments = new Arguments(
-			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality);
+			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality, maxDegreeOfParallelism);
 
 		var imageDirectoryInfo = new ImageDirectoryInfo(
 			_imageFileExtensionService,

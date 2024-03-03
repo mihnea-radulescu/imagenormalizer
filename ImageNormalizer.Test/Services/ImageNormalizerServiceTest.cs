@@ -25,21 +25,22 @@ public class ImageNormalizerServiceTest : TestBase
         _imageNormalizerService = new ImageNormalizerService(imageTransformer);
     }
 
-    [InlineData("Landscape.jpg", "Landscape_normalized.jpg", 3840, 80)]
-    [InlineData("Portrait.jpg", "Portrait_normalized.jpg", 3840, 80)]
+    [InlineData("Landscape.jpg", "Landscape_normalized.jpg", 3840, 80, 16)]
+    [InlineData("Portrait.jpg", "Portrait_normalized.jpg", 3840, 80, 16)]
     [Theory]
     public void NormalizeImage_ValidInputImage_SavesOutputImage(
 		string inputFileName,
 		string outputFileName,
 		int outputMaximumImageSize,
-		int outputImageQuality)
+		int outputImageQuality,
+		int maxDegreeOfParallelism)
 	{
         // Arrange
         var inputFilePath = GetTestFilePath(inputFileName);
         var outputFilePath = GetTestFilePath(outputFileName);
 
 		var arguments = new Arguments(
-			inputFilePath, outputFilePath, outputMaximumImageSize, outputImageQuality);
+			inputFilePath, outputFilePath, outputMaximumImageSize, outputImageQuality, maxDegreeOfParallelism);
 
 		// Act
 		_imageNormalizerService.NormalizeImage(arguments);
@@ -59,9 +60,10 @@ public class ImageNormalizerServiceTest : TestBase
         var outputFilePath = GetTestFilePath("InvalidImage_normalized.txt");
 		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 80;
+		const int maxDegreeOfParallelism = 16;
 
 		var arguments = new Arguments(
-			inputFilePath, outputFilePath, outputMaximumImageSize, outputImageQuality);
+			inputFilePath, outputFilePath, outputMaximumImageSize, outputImageQuality, maxDegreeOfParallelism);
 
 		// Act
 		_imageNormalizerService.NormalizeImage(arguments);
@@ -78,9 +80,10 @@ public class ImageNormalizerServiceTest : TestBase
         var outputFilePath = GetTestFilePath("NotFoundImage_normalized.txt");
 		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 80;
+		const int maxDegreeOfParallelism = 16;
 
 		var arguments = new Arguments(
-			inputFilePath, outputFilePath, outputMaximumImageSize, outputImageQuality);
+			inputFilePath, outputFilePath, outputMaximumImageSize, outputImageQuality, maxDegreeOfParallelism);
 
 		// Act
 		_imageNormalizerService.NormalizeImage(arguments);

@@ -10,14 +10,6 @@ namespace ImageNormalizer.FileSystemInfo;
 
 public class ImageDirectoryInfo : IImageFileSystemInfo
 {
-	static ImageDirectoryInfo()
-	{
-		ParallelOptions = new ParallelOptions
-		{
-			MaxDegreeOfParallelism = Environment.ProcessorCount
-		};
-	}
-	
 	public ImageDirectoryInfo(
 		IImageFileExtensionService imageFileExtensionService,
 		IImageNormalizerService imageNormalizerService,
@@ -31,6 +23,10 @@ public class ImageDirectoryInfo : IImageFileSystemInfo
 		_logger = logger;
 
 		_arguments = arguments;
+		_parallelOptions = new ParallelOptions
+		{
+			MaxDegreeOfParallelism = _arguments.MaxDegreeOfParallelism
+		};
 
 		_imageFileInfoCollection = new List<ImageFileInfo>();
 		_imageSubDirectoryInfoCollection = new List<ImageDirectoryInfo>();
@@ -88,11 +84,11 @@ public class ImageDirectoryInfo : IImageFileSystemInfo
 		}
 
 		_logger.Info(
-			$@"Processing input directory ""{_arguments.InputPath}"" into output directory ""{_arguments.OutputPath}"" resizing to output maximum image width/height ""{_arguments.OutputMaximumImageSize}"" at output image quality ""{_arguments.OutputImageQuality}"".");
-
+			$@"Processing input directory ""{_arguments.InputPath}"" into output directory ""{_arguments.OutputPath}"", resizing to output maximum image width/height {_arguments.OutputMaximumImageSize}, at output image quality {_arguments.OutputImageQuality}, using maximum degree of parallelism {_arguments.MaxDegreeOfParallelism}.");
+		
 		Parallel.ForEach(
 			_imageFileInfoCollection,
-			ParallelOptions,
+			_parallelOptions,
 			anImageFileInfo =>
 			{
 				anImageFileInfo.NormalizeFileSystemInfo();
@@ -105,13 +101,12 @@ public class ImageDirectoryInfo : IImageFileSystemInfo
 	}
 
 	#region Private
-
-	private static readonly ParallelOptions ParallelOptions;
-
+	
 	private readonly IImageFileExtensionService _imageFileExtensionService;
 	private readonly IImageNormalizerService _imageNormalizerService;
 	private readonly IDirectoryService _directoryService;
 	private readonly ILogger _logger;
+	private readonly ParallelOptions _parallelOptions;
 
 	private readonly Arguments _arguments;
 
@@ -133,7 +128,8 @@ public class ImageDirectoryInfo : IImageFileSystemInfo
 						_arguments.OutputPath,
 						$"{Path.GetFileNameWithoutExtension(aFile)}{_imageFileExtensionService.OutputImageFileExtension}"),
 					_arguments.OutputMaximumImageSize,
-					_arguments.OutputImageQuality)
+					_arguments.OutputImageQuality,
+					_arguments.MaxDegreeOfParallelism)
 				)
 			)
 			.ToList();
@@ -153,7 +149,8 @@ public class ImageDirectoryInfo : IImageFileSystemInfo
 					Path.Combine(_arguments.InputPath, aDirectory),
 					Path.Combine(_arguments.OutputPath, aDirectory),
 					_arguments.OutputMaximumImageSize,
-					_arguments.OutputImageQuality)
+					_arguments.OutputImageQuality,
+					_arguments.MaxDegreeOfParallelism)
 				)
 			)
 			.ToList();

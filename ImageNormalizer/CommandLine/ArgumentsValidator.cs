@@ -30,8 +30,6 @@ public class ArgumentsValidator : IArgumentsValidator
 	{
 		var inputDirectory = arguments.InputPath;
 		var outputDirectory = arguments.OutputPath;
-		var outputMaximumImageSize = arguments.OutputMaximumImageSize;
-		var outputImageQuality = arguments.OutputImageQuality;
 
 		if (!IsDirectoryPathValid(inputDirectory))
 		{
@@ -63,25 +61,13 @@ public class ArgumentsValidator : IArgumentsValidator
 			return false;
 		}
 
-		if (!HasExpectedOutputMaximumImageSize(outputMaximumImageSize))
-		{
-			errorMessage = "The output maximum image size is outside of the expected range.";
-			return false;
-		}
-
-		if (!HasExpectedOutputImageQuality(outputImageQuality))
-		{
-			errorMessage = "The output image quality is outside of the expected range.";
-			return false;
-		}
-
 		errorMessage = null;
 		return true;
 	}
 
 	#region Private
 
-	private static HashSet<char> InvalidChars;
+	private static readonly HashSet<char> InvalidChars;
 
 	private static bool IsDirectoryPathValid(string directoryPath)
 	{
@@ -134,12 +120,6 @@ public class ArgumentsValidator : IArgumentsValidator
 			return false;
 		}
 	}
-
-	private static bool HasExpectedOutputMaximumImageSize(int outputMaximumImageSize)
-		=> outputMaximumImageSize is >= 10 and <= 10000;
-
-	private static bool HasExpectedOutputImageQuality(int outputImageQuality)
-		=> outputImageQuality is >= 1 and <= 100;
 
 	#endregion
 }

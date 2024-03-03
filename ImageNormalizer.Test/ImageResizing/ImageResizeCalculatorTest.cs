@@ -17,7 +17,7 @@ public class ImageResizeCalculatorTest
     {
         // Arrange
         var imageSize = new ImageSize(1920, 1080);
-        var arguments = new Arguments("a", "b", 3840, 0);
+        var arguments = new Arguments("a", "b", 3840, 80, 16);
 
         // Act
         var shouldResize = _imageResizeCalculator.ShouldResize(imageSize, arguments);
@@ -31,7 +31,7 @@ public class ImageResizeCalculatorTest
 	{
 		// Arrange
 		var imageSize = new ImageSize(4000, 1080);
-		var arguments = new Arguments("a", "b", 3840, 0);
+		var arguments = new Arguments("a", "b", 3840, 80, 16);
 
 		// Act
 		var shouldResize = _imageResizeCalculator.ShouldResize(imageSize, arguments);
@@ -45,7 +45,7 @@ public class ImageResizeCalculatorTest
 	{
 		// Arrange
 		var imageSize = new ImageSize(1920, 4000);
-		var arguments = new Arguments("a", "b", 3840, 0);
+		var arguments = new Arguments("a", "b", 3840, 80, 16);
 
 		// Act
 		var shouldResize = _imageResizeCalculator.ShouldResize(imageSize, arguments);
@@ -59,7 +59,7 @@ public class ImageResizeCalculatorTest
 	{
 		// Arrange
 		var imageSize = new ImageSize(1920, 1080);
-		var arguments = new Arguments("a", "b", 3840, 0);
+		var arguments = new Arguments("a", "b", 3840, 80, 16);
 
 		// Act
 		var resizedImageSize = _imageResizeCalculator.GetResizedImageSize(imageSize, arguments);
@@ -85,7 +85,7 @@ public class ImageResizeCalculatorTest
 	{
 		// Arrange
 		var imageSize = new ImageSize(imageWidth, imageHeight);
-		var arguments = new Arguments("a", "b", outputMaximumImageSize, 0);
+		var arguments = new Arguments("a", "b", outputMaximumImageSize, 80, 16);
 
 		// Act
 		var resizedImageSize = _imageResizeCalculator.GetResizedImageSize(imageSize, arguments);
