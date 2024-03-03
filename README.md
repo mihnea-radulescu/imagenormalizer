@@ -18,6 +18,6 @@ Arguments:
 Options:
 * -m, --max-width-height - The output maximum image width/height (Default: 3840)
 * -q, --quality - The output image quality (Default: 80)
-* -p, --max-degree-of-parallelism - The maximum degree of parallelism, upper-bounded by processor count (Default: 16)
+* -p, --max-degree-of-parallelism - The maximum degree of parallel image processing, upper-bounded by processor count (Default: 16)
 * -h, --help - Show help message
 * --version - Show version

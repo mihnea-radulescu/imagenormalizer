@@ -57,7 +57,7 @@ public static class Program
 				[Range(1, 100)]
 				int outputImageQuality = 80,
 				
-				[Option("max-degree-of-parallelism", ['p'], Description = "The maximum degree of parallelism, upper-bounded by processor count")]
+				[Option("max-degree-of-parallelism", ['p'], Description = "The maximum degree of parallel image processing, upper-bounded by processor count")]
 				[Range(1, 128)]
 				int maxDegreeOfParallelism = 16
 			) =>
