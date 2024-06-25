@@ -46,7 +46,7 @@ public static class Program
 				[Argument(Description = "The input directory")]
 				string inputDirectory,
 				
-				[Argument(Description = "The output directory")]
+				[Argument(Description = "The output directory, to be created, if it does not exist")]
 				string outputDirectory,
 				
 				[Option("max-width-height", ['m'], Description = "The output maximum image width/height")]
@@ -59,7 +59,7 @@ public static class Program
 				
 				[Option("max-degree-of-parallelism", ['p'], Description = "The maximum degree of parallel image processing, upper-bounded by processor count")]
 				[Range(1, 128)]
-				int maxDegreeOfParallelism = 16
+				int maxDegreeOfParallelism = 4
 			) =>
 			{
 				var applicationRunner = app.Services.GetService<IApplicationRunner>();

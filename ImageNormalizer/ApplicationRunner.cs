@@ -29,8 +29,7 @@ public class ApplicationRunner : IApplicationRunner
 		var arguments = _argumentsFactory.Create(
 			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality, maxDegreeOfParallelism);
 
-		var areValidArguments = _argumentsValidator.AreValidArguments(
-			arguments, out string? errorMessage);
+		var areValidArguments = _argumentsValidator.AreValidArguments(arguments, out string? errorMessage);
 
 		if (!areValidArguments)
 		{
@@ -38,7 +37,11 @@ public class ApplicationRunner : IApplicationRunner
 
 			return;
 		}
-
+		
+		_logger.Info(
+			$@"Normalizing images from input directory ""{arguments.InputPath}"" to output directory ""{arguments.OutputPath}"", resizing to output maximum image width/height {arguments.OutputMaximumImageSize}, at output image quality {arguments.OutputImageQuality}, using maximum degree of parallelism {arguments.MaxDegreeOfParallelism}.");
+		_logger.NewLine();
+		
 		try
 		{
 			var imageDirectoryInfo = _imageDirectoryInfoFactory.Create(arguments);

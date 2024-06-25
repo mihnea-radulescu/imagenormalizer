@@ -13,11 +13,11 @@ __Usage__: ImageNormalizer [--max-width-height] [--quality] [--max-degree-of-par
 
 Arguments:
 * 0: input-directory - The input directory (Required)
-* 1: output-directory - The output directory (Required)
+* 1: output-directory - The output directory, to be created, if it does not exist (Required)
 
 Options:
 * -m, --max-width-height - The output maximum image width/height (Default: 3840)
 * -q, --quality - The output image quality (Default: 80)
-* -p, --max-degree-of-parallelism - The maximum degree of parallel image processing, upper-bounded by processor count (Default: 16)
+* -p, --max-degree-of-parallelism - The maximum degree of parallel image processing, upper-bounded by processor count (Default: 4)
 * -h, --help - Show help message
 * --version - Show version

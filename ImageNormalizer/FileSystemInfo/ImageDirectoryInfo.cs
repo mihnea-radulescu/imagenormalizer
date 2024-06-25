@@ -84,7 +84,7 @@ public class ImageDirectoryInfo : IImageFileSystemInfo
 		}
 
 		_logger.Info(
-			$@"Processing input directory ""{_arguments.InputPath}"" into output directory ""{_arguments.OutputPath}"", resizing to output maximum image width/height {_arguments.OutputMaximumImageSize}, at output image quality {_arguments.OutputImageQuality}, using maximum degree of parallelism {_arguments.MaxDegreeOfParallelism}.");
+			$@"Processing images from input directory ""{_arguments.InputPath}"" to output directory ""{_arguments.OutputPath}"".");
 		
 		Parallel.ForEach(
 			_imageFileInfoCollection,
