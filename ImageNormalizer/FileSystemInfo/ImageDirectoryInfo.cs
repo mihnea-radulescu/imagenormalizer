@@ -101,6 +101,8 @@ public class ImageDirectoryInfo : IImageFileSystemInfo
 	}
 
 	#region Private
+
+	private static readonly HashSet<string> ExcludedDirectories = [ "__MACOSX" ];
 	
 	private readonly IImageFileExtensionService _imageFileExtensionService;
 	private readonly IImageNormalizerService _imageNormalizerService;
@@ -120,6 +122,7 @@ public class ImageDirectoryInfo : IImageFileSystemInfo
 		var imageFiles = files
 			.Where(aFile => _imageFileExtensionService.ImageFileExtensions.Contains(
 								Path.GetExtension(aFile)))
+			.OrderBy(aFile => aFile)
 			.Select(aFile => new ImageFileInfo(
 				_imageNormalizerService,
 				new Arguments(
@@ -140,6 +143,8 @@ public class ImageDirectoryInfo : IImageFileSystemInfo
 	private void AddSubDirectories(IReadOnlyList<string> subDirectories)
 	{
 		var imageSubDirectories = subDirectories
+			.Where(aDirectory => !ExcludedDirectories.Contains(aDirectory))
+			.OrderBy(aDirectory => aDirectory)
 			.Select(aDirectory => new ImageDirectoryInfo(
 				_imageFileExtensionService,
 				_imageNormalizerService,
