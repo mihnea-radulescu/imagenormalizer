@@ -13,9 +13,11 @@ public class ImageSharpImageTransformer : IImageTransformer
 {
 	public ImageSharpImageTransformer(
 		IImageResizeCalculator imageResizeCalculator,
+		IImageOrientationHandler imageOrientationHandler,
 		ILogger logger)
     {
 		_imageResizeCalculator = imageResizeCalculator;
+		_imageOrientationHandler = imageOrientationHandler;
 		_logger = logger;
 	}
 
@@ -25,6 +27,7 @@ public class ImageSharpImageTransformer : IImageTransformer
 		{
 			using (var loadedImage = LoadImage(arguments))
 			{
+				ApplyImageOrientation(loadedImage);
 				ClearMetadata(loadedImage);
 				ResizeImage(loadedImage, arguments);
 				SaveImage(loadedImage, arguments);
@@ -39,7 +42,15 @@ public class ImageSharpImageTransformer : IImageTransformer
 	#region Private
 
 	private readonly IImageResizeCalculator _imageResizeCalculator;
+	private readonly IImageOrientationHandler _imageOrientationHandler;
 	private readonly ILogger _logger;
+
+	private void ApplyImageOrientation(Image loadedImage)
+	{
+		var imageOrientation = _imageOrientationHandler.GetImageOrientation(loadedImage);
+
+		_imageOrientationHandler.ApplyImageOrientation(loadedImage, imageOrientation);
+	}
 
 	private static Image LoadImage(Arguments arguments)
 	{
@@ -58,7 +69,7 @@ public class ImageSharpImageTransformer : IImageTransformer
 
 	private static void ClearMetadata(Image loadedImage)
 	{
-		var imageMetadata = loadedImage!.Metadata;
+		var imageMetadata = loadedImage.Metadata;
 
 		imageMetadata.CicpProfile = null;
 		imageMetadata.ExifProfile = null;
@@ -100,7 +111,7 @@ public class ImageSharpImageTransformer : IImageTransformer
 
 		try
 		{
-			loadedImage!.Save(arguments.OutputPath, encoder);
+			loadedImage.Save(arguments.OutputPath, encoder);
 		}
 		catch (Exception ex)
 		{

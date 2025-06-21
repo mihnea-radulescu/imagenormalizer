@@ -19,10 +19,15 @@ public class ImageSharpImageTransformerTest : TestBase
 			.ShouldResize(Arg.Any<ImageSize>(), Arg.Any<Arguments>())
 			.Returns(false);
 
+		IImageOrientationHandler imageOrientationHandler = Substitute.For<IImageOrientationHandler>();
+		imageOrientationHandler
+			.GetImageOrientation(Arg.Any<object>())
+			.Returns((ushort)1);
+
 		_logger = Substitute.For<ILogger>();
 
 		_imageSharpImageTransformer = new ImageSharpImageTransformer(
-			imageResizeCalculator, _logger);
+			imageResizeCalculator, imageOrientationHandler, _logger);
 	}
 
     [InlineData("Landscape.jpg", "Landscape_normalized.jpg", 3840, 80, 16)]

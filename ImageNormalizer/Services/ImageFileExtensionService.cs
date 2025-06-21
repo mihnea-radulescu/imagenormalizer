@@ -11,9 +11,11 @@ public class ImageFileExtensionService : IImageFileExtensionService
         [
 			".bmp",
 			".gif",
-			".ico",
-			".jpg", ".jpe", ".jpeg",
+			".jpe", ".jpeg", ".jpg",
+			".pbm",
 			".png",
+			".qoi",
+			".tga",
 			".tif", ".tiff",
 			".webp"
 		],
