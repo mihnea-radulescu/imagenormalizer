@@ -17,15 +17,10 @@ public class ImageNormalizerServiceTest : TestBase
     {
         IImageResizeCalculator imageResizeCalculator = new ImageResizeCalculator();
 
-		IImageOrientationHandler imageOrientationHandler = Substitute.For<IImageOrientationHandler>();
-		imageOrientationHandler
-			.GetImageOrientation(Arg.Any<object>())
-			.Returns((ushort)1);
-
 		_logger = Substitute.For<ILogger>();
 
 		IImageTransformer imageTransformer = new ImageSharpImageTransformer(
-            imageResizeCalculator, imageOrientationHandler, _logger);
+			imageResizeCalculator, _logger);
 
         _imageNormalizerService = new ImageNormalizerService(imageTransformer);
     }

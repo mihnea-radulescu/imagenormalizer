@@ -13,11 +13,9 @@ public class ImageSharpImageTransformer : IImageTransformer
 {
 	public ImageSharpImageTransformer(
 		IImageResizeCalculator imageResizeCalculator,
-		IImageOrientationHandler imageOrientationHandler,
 		ILogger logger)
     {
 		_imageResizeCalculator = imageResizeCalculator;
-		_imageOrientationHandler = imageOrientationHandler;
 		_logger = logger;
 	}
 
@@ -42,15 +40,7 @@ public class ImageSharpImageTransformer : IImageTransformer
 	#region Private
 
 	private readonly IImageResizeCalculator _imageResizeCalculator;
-	private readonly IImageOrientationHandler _imageOrientationHandler;
 	private readonly ILogger _logger;
-
-	private void ApplyImageOrientation(Image loadedImage)
-	{
-		var imageOrientation = _imageOrientationHandler.GetImageOrientation(loadedImage);
-
-		_imageOrientationHandler.ApplyImageOrientation(loadedImage, imageOrientation);
-	}
 
 	private static Image LoadImage(Arguments arguments)
 	{
@@ -66,6 +56,9 @@ public class ImageSharpImageTransformer : IImageTransformer
 				@$"Could not load image ""{arguments.InputPath}"".", ex);
 		}
 	}
+
+	private static void ApplyImageOrientation(Image loadedImage)
+		=> loadedImage.Mutate(context => context.AutoOrient());
 
 	private static void ClearMetadata(Image loadedImage)
 	{
