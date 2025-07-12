@@ -19,7 +19,7 @@ public class ImageNormalizerServiceTest : TestBase
 
 		_logger = Substitute.For<ILogger>();
 
-		IImageTransformer imageTransformer = new ImageSharpImageTransformer(
+		IImageTransformer imageTransformer = new ImageTransformer(
 			imageResizeCalculator, _logger);
 
         _imageNormalizerService = new ImageNormalizerService(imageTransformer);

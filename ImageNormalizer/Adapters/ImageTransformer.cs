@@ -1,25 +1,21 @@
 using System;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Processing;
+using ImageMagick;
 using ImageNormalizer.Exceptions;
 using ImageNormalizer.ImageResizing;
 using ImageNormalizer.Logger;
 
 namespace ImageNormalizer.Adapters;
 
-public class ImageSharpImageTransformer : IImageTransformer
+public class ImageTransformer : IImageTransformer
 {
-	public ImageSharpImageTransformer(
-		IImageResizeCalculator imageResizeCalculator,
-		ILogger logger)
-    {
+	public ImageTransformer(
+		IImageResizeCalculator imageResizeCalculator, ILogger logger)
+	{
 		_imageResizeCalculator = imageResizeCalculator;
 		_logger = logger;
 	}
 
-    public void TransformImage(Arguments arguments)
+	public void TransformImage(Arguments arguments)
 	{
 		try
 		{
@@ -42,11 +38,11 @@ public class ImageSharpImageTransformer : IImageTransformer
 	private readonly IImageResizeCalculator _imageResizeCalculator;
 	private readonly ILogger _logger;
 
-	private static Image LoadImage(Arguments arguments)
+	private static IMagickImage LoadImage(Arguments arguments)
 	{
 		try
 		{
-			var loadedImage = Image.Load(arguments.InputPath);
+			var loadedImage = new MagickImage(arguments.InputPath);
 
 			return loadedImage;
 		}
@@ -57,24 +53,34 @@ public class ImageSharpImageTransformer : IImageTransformer
 		}
 	}
 
-	private static void ApplyImageOrientation(Image loadedImage)
-		=> loadedImage.Mutate(context => context.AutoOrient());
+	private static void ApplyImageOrientation(IMagickImage loadedImage) => loadedImage.AutoOrient();
 
-	private static void ClearMetadata(Image loadedImage)
+	private static void ClearMetadata(IMagickImage loadedImage)
 	{
-		var imageMetadata = loadedImage.Metadata;
+		var exifProfile = loadedImage.GetExifProfile();
+		var iptcProfile = loadedImage.GetIptcProfile();
+		var xmpProfile = loadedImage.GetXmpProfile();
 
-		imageMetadata.CicpProfile = null;
-		imageMetadata.ExifProfile = null;
-		imageMetadata.IccProfile = null;
-		imageMetadata.IptcProfile = null;
-		imageMetadata.XmpProfile = null;
+		if (exifProfile is not null)
+		{
+			loadedImage.RemoveProfile(exifProfile);
+		}
+
+		if (iptcProfile is not null)
+		{
+			loadedImage.RemoveProfile(iptcProfile);
+		}
+
+		if (xmpProfile is not null)
+		{
+			loadedImage.RemoveProfile(xmpProfile);
+		}
 	}
 
-	private void ResizeImage(Image loadedImage, Arguments arguments)
+	private void ResizeImage(IMagickImage loadedImage, Arguments arguments)
 	{
-		var loadedImageSize = new ImageSize(loadedImage.Width, loadedImage.Height);
-		
+		var loadedImageSize = new ImageSize((int)loadedImage.Width, (int)loadedImage.Height);
+
 		if (!_imageResizeCalculator.ShouldResize(loadedImageSize, arguments))
 		{
 			return;
@@ -85,8 +91,7 @@ public class ImageSharpImageTransformer : IImageTransformer
 
 		try
 		{
-			loadedImage.Mutate(context => context.Resize(
-				resizedImageSize.Width, resizedImageSize.Height));
+			loadedImage.Resize((uint)resizedImageSize.Width, (uint)resizedImageSize.Height);
 		}
 		catch (Exception ex)
 		{
@@ -95,16 +100,13 @@ public class ImageSharpImageTransformer : IImageTransformer
 		}
 	}
 
-	private static void SaveImage(Image loadedImage, Arguments arguments)
+	private static void SaveImage(IMagickImage loadedImage, Arguments arguments)
 	{
-		IImageEncoder encoder = new JpegEncoder
-		{
-			Quality = arguments.OutputImageQuality
-		};
+		loadedImage.Quality = (uint)arguments.OutputImageQuality;
 
 		try
 		{
-			loadedImage.Save(arguments.OutputPath, encoder);
+			loadedImage.Write(arguments.OutputPath, MagickFormat.Jpg);
 		}
 		catch (Exception ex)
 		{

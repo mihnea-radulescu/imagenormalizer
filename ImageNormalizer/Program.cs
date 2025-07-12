@@ -32,7 +32,7 @@ public static class Program
 		services.AddSingleton<IArgumentsValidator, ArgumentsValidator>();
 		services.AddSingleton<IImageFileExtensionService, ImageFileExtensionService>();
 		services.AddSingleton<IImageResizeCalculator, ImageResizeCalculator>();
-		services.AddSingleton<IImageTransformer, ImageSharpImageTransformer>();
+		services.AddSingleton<IImageTransformer, ImageTransformer>();
 		services.AddSingleton<IImageNormalizerService, ImageNormalizerService>();
 		services.AddSingleton<IDirectoryService, DirectoryService>();
 		services.AddSingleton<IImageDirectoryInfoFactory, ImageDirectoryInfoFactory>();
