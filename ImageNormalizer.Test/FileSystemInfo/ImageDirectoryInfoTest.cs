@@ -14,8 +14,8 @@ namespace ImageNormalizer.Test.FileSystemInfo;
 [IntegrationTest]
 public class ImageDirectoryInfoTest : TestBase
 {
-    public ImageDirectoryInfoTest()
-    {
+	public ImageDirectoryInfoTest()
+	{
 		_imageFileExtensionService = new ImageFileExtensionService();
 
 		IImageResizeCalculator imageResizeCalculator = new ImageResizeCalculator();
@@ -28,7 +28,7 @@ public class ImageDirectoryInfoTest : TestBase
 		_directoryService = new DirectoryService();
 	}
 
-    [Fact]
+	[Fact]
 	public void ValidInputStructure_CreatesExpectedOutputStructure()
 	{
 		// Arrange

@@ -7,24 +7,24 @@ namespace ImageNormalizer.Test.ImageResizing;
 [UnitTest]
 public class ImageResizeCalculatorTest
 {
-    public ImageResizeCalculatorTest()
-    {
-        _imageResizeCalculator = new ImageResizeCalculator();
-    }
+	public ImageResizeCalculatorTest()
+	{
+		_imageResizeCalculator = new ImageResizeCalculator();
+	}
 
-    [Fact]
-    public void ShouldResize_ImageMaxSizeBelowResizeThreshold_ReturnsFalse()
-    {
-        // Arrange
-        var imageSize = new ImageSize(1920, 1080);
-        var arguments = new Arguments("a", "b", 3840, 80, 16);
+	[Fact]
+	public void ShouldResize_ImageMaxSizeBelowResizeThreshold_ReturnsFalse()
+	{
+		// Arrange
+		var imageSize = new ImageSize(1920, 1080);
+		var arguments = new Arguments("a", "b", 3840, 80, 16);
 
-        // Act
-        var shouldResize = _imageResizeCalculator.ShouldResize(imageSize, arguments);
+		// Act
+		var shouldResize = _imageResizeCalculator.ShouldResize(imageSize, arguments);
 
-        // Assert
-        Assert.False(shouldResize);
-    }
+		// Assert
+		Assert.False(shouldResize);
+	}
 
 	[Fact]
 	public void ShouldResize_ImageWidthAboveResizeThreshold_ReturnsTrue()
@@ -99,5 +99,5 @@ public class ImageResizeCalculatorTest
 
 	private readonly ImageResizeCalculator _imageResizeCalculator;
 
-    #endregion
+	#endregion
 }

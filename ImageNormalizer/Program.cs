@@ -45,18 +45,18 @@ public static class Program
 			(
 				[Argument(Description = "The input directory")]
 				string inputDirectory,
-				
+
 				[Argument(Description = "The output directory, to be created, if it does not exist")]
 				string outputDirectory,
-				
+
 				[Option("max-width-height", ['m'], Description = "The output maximum image width/height")]
 				[Range(1, 15360)]
 				int outputMaximumImageSize = 3840,
-				
+
 				[Option("quality", ['q'], Description = "The output image quality")]
 				[Range(1, 100)]
 				int outputImageQuality = 80,
-				
+
 				[Option("max-degree-of-parallelism", ['p'], Description = "The maximum degree of parallel image processing, upper-bounded by processor count")]
 				[Range(1, 128)]
 				int maxDegreeOfParallelism = 4

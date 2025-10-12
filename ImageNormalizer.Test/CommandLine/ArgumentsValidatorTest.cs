@@ -8,10 +8,10 @@ namespace ImageNormalizer.Test.CommandLine;
 [UnitTest]
 public class ArgumentsValidatorTest : TestBase
 {
-    public ArgumentsValidatorTest()
-    {
-        _argumentsValidator = new ArgumentsValidator();
-    }
+	public ArgumentsValidatorTest()
+	{
+		_argumentsValidator = new ArgumentsValidator();
+	}
 
 	[Fact]
 	public void AreValidArguments_ValidInputDistinctNameRoot_ReturnsTrueWithNullErrorMessage()
@@ -214,5 +214,5 @@ public class ArgumentsValidatorTest : TestBase
 
 	private readonly ArgumentsValidator _argumentsValidator;
 
-    #endregion
+	#endregion
 }

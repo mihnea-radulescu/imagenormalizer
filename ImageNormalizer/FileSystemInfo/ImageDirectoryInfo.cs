@@ -85,7 +85,7 @@ public class ImageDirectoryInfo : IImageFileSystemInfo
 
 		_logger.Info(
 			$@"Processing images from input directory ""{_arguments.InputPath}"" to output directory ""{_arguments.OutputPath}"".");
-		
+
 		Parallel.ForEach(
 			_imageFileInfoCollection,
 			_parallelOptions,
@@ -103,7 +103,7 @@ public class ImageDirectoryInfo : IImageFileSystemInfo
 	#region Private
 
 	private static readonly HashSet<string> ExcludedDirectories = [ "__MACOSX" ];
-	
+
 	private readonly IImageFileExtensionService _imageFileExtensionService;
 	private readonly IImageNormalizerService _imageNormalizerService;
 	private readonly IDirectoryService _directoryService;

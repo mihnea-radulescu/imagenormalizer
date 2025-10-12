@@ -19,7 +19,7 @@ public class ApplicationRunner : IApplicationRunner
 		_logger = logger;
 	}
 
-    public void Run(
+	public void Run(
 		string inputDirectory,
 		string outputDirectory,
 		int outputMaximumImageSize,
@@ -37,11 +37,11 @@ public class ApplicationRunner : IApplicationRunner
 
 			return;
 		}
-		
+
 		_logger.Info(
 			$@"Normalizing images from input directory ""{arguments.InputPath}"" to output directory ""{arguments.OutputPath}"", resizing to output maximum image width/height {arguments.OutputMaximumImageSize}, at output image quality {arguments.OutputImageQuality}, using maximum degree of parallelism {arguments.MaxDegreeOfParallelism}.");
 		_logger.NewLine();
-		
+
 		try
 		{
 			var imageDirectoryInfo = _imageDirectoryInfoFactory.Create(arguments);

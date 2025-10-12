@@ -6,7 +6,7 @@ namespace ImageNormalizer.Services;
 
 public class DirectoryService : IDirectoryService
 {
-    public IReadOnlyList<string> GetFiles(string directory)
+	public IReadOnlyList<string> GetFiles(string directory)
 	{
 		var directoryInfo = new DirectoryInfo(directory);
 

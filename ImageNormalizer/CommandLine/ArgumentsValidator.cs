@@ -7,7 +7,7 @@ namespace ImageNormalizer.CommandLine;
 
 public class ArgumentsValidator : IArgumentsValidator
 {
-    static ArgumentsValidator()
+	static ArgumentsValidator()
 	{
 		var invalidPathChars = Path.GetInvalidPathChars();
 		var additionalInvalidPathChars = new List<char>
@@ -25,7 +25,7 @@ public class ArgumentsValidator : IArgumentsValidator
 
 		InvalidChars = new HashSet<char>(invalidChars);
 	}
-	
+
 	public bool AreValidArguments(Arguments arguments, out string? errorMessage)
 	{
 		var inputDirectory = arguments.InputPath;
