@@ -60,6 +60,7 @@ public class ImageTransformer : IImageTransformer
 		var exifProfile = loadedImage.GetExifProfile();
 		var iptcProfile = loadedImage.GetIptcProfile();
 		var xmpProfile = loadedImage.GetXmpProfile();
+		var colorProfile = loadedImage.GetColorProfile();
 
 		if (exifProfile is not null)
 		{
@@ -74,6 +75,11 @@ public class ImageTransformer : IImageTransformer
 		if (xmpProfile is not null)
 		{
 			loadedImage.RemoveProfile(xmpProfile);
+		}
+
+		if (colorProfile is not null)
+		{
+			loadedImage.RemoveProfile(colorProfile);
 		}
 	}
 
