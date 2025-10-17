@@ -10,5 +10,5 @@ public class ConsoleLogger : ILogger
 
 	public void Error(string message) => Console.Error.WriteLine($"Error: {message}");
 
-	public void Error(Exception ex) => Console.Error.WriteLine($"Error: {ex}");
+	public void Error(Exception ex) => Console.Error.WriteLine($"Error: {ex.Message}");
 }

@@ -2,29 +2,30 @@ using System.IO;
 using NSubstitute;
 using Xunit;
 using ImageNormalizer.Adapters;
-using ImageNormalizer.FileSystemInfo;
+using ImageNormalizer.ImageFileSystem;
 using ImageNormalizer.ImageResizing;
 using ImageNormalizer.Logger;
 using ImageNormalizer.Services;
 using ImageNormalizer.Test.TestTypes;
 using ImageNormalizer.Test.TestTypes.Attributes;
 
-namespace ImageNormalizer.Test.FileSystemInfo;
+namespace ImageNormalizer.Test.ImageFileSystem;
 
 [IntegrationTest]
-public class ImageDirectoryInfoTest : TestBase
+public class ImageDirectoryTest : TestBase
 {
-	public ImageDirectoryInfoTest()
+	public ImageDirectoryTest()
 	{
+		_logger = Substitute.For<ILogger>();
+
 		_imageFileExtensionService = new ImageFileExtensionService();
 
 		IImageResizeCalculator imageResizeCalculator = new ImageResizeCalculator();
-
-		_logger = Substitute.For<ILogger>();
-
 		IImageTransformer imageTransformer = new ImageTransformer(
-			imageResizeCalculator, _logger);
-		_imageNormalizerService = new ImageNormalizerService(imageTransformer);
+			imageResizeCalculator);
+
+		_imageDataService = new ImageDataService(_logger);
+		_imageNormalizerService = new ImageNormalizerService(imageTransformer, _logger);
 		_directoryService = new DirectoryService();
 	}
 
@@ -41,16 +42,17 @@ public class ImageDirectoryInfoTest : TestBase
 		var arguments = new Arguments(
 			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality, maxDegreeOfParallelism);
 
-		var imageDirectoryInfo = new ImageDirectoryInfo(
+		var imageDirectory = new ImageDirectory(
 			_imageFileExtensionService,
+			_imageDataService,
 			_imageNormalizerService,
 			_directoryService,
 			_logger,
 			arguments);
 
 		// Act
-		imageDirectoryInfo.BuildFileSystemInfo();
-		imageDirectoryInfo.NormalizeFileSystemInfo();
+		imageDirectory.BuildImageDirectory();
+		imageDirectory.NormalizeImages();
 
 		// Assert
 		var nestedLandscape1OutputFile = Path.Combine(outputDirectory, "Subfolder1", "Landscape.jpg");
@@ -74,6 +76,7 @@ public class ImageDirectoryInfoTest : TestBase
 	#region Private
 
 	private readonly IImageFileExtensionService _imageFileExtensionService;
+	private readonly IImageDataService _imageDataService;
 	private readonly IImageNormalizerService _imageNormalizerService;
 	private readonly IDirectoryService _directoryService;
 	private readonly ILogger _logger;

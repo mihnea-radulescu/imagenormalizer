@@ -1,57 +1,33 @@
-using System;
+using System.IO;
 using ImageMagick;
-using ImageNormalizer.Exceptions;
+using ImageNormalizer.Extensions;
 using ImageNormalizer.ImageResizing;
-using ImageNormalizer.Logger;
 
 namespace ImageNormalizer.Adapters;
 
 public class ImageTransformer : IImageTransformer
 {
-	public ImageTransformer(
-		IImageResizeCalculator imageResizeCalculator, ILogger logger)
+	public ImageTransformer(IImageResizeCalculator imageResizeCalculator)
 	{
 		_imageResizeCalculator = imageResizeCalculator;
-		_logger = logger;
 	}
 
-	public void TransformImage(Arguments arguments)
+	public Stream TransformImage(Stream inputImageDataStream, Arguments arguments)
 	{
-		try
+		using (var loadedImage = new MagickImage(inputImageDataStream))
 		{
-			using (var loadedImage = LoadImage(arguments))
-			{
-				ApplyImageOrientation(loadedImage);
-				ClearMetadata(loadedImage);
-				ResizeImage(loadedImage, arguments);
-				SaveImage(loadedImage, arguments);
-			}
-		}
-		catch (Exception ex)
-		{
-			_logger.Error(ex);
+			ApplyImageOrientation(loadedImage);
+			ClearMetadata(loadedImage);
+			ResizeImage(loadedImage, arguments);
+
+			var outputImageDataStream = SaveImage(loadedImage, arguments);
+			return outputImageDataStream;
 		}
 	}
 
 	#region Private
 
 	private readonly IImageResizeCalculator _imageResizeCalculator;
-	private readonly ILogger _logger;
-
-	private static IMagickImage LoadImage(Arguments arguments)
-	{
-		try
-		{
-			var loadedImage = new MagickImage(arguments.InputPath);
-
-			return loadedImage;
-		}
-		catch (Exception ex)
-		{
-			throw new TransformImageException(
-				@$"Could not load image ""{arguments.InputPath}"".", ex);
-		}
-	}
 
 	private static void ApplyImageOrientation(IMagickImage loadedImage) => loadedImage.AutoOrient();
 
@@ -87,38 +63,24 @@ public class ImageTransformer : IImageTransformer
 	{
 		var loadedImageSize = new ImageSize((int)loadedImage.Width, (int)loadedImage.Height);
 
-		if (!_imageResizeCalculator.ShouldResize(loadedImageSize, arguments))
+		if (_imageResizeCalculator.ShouldResize(loadedImageSize, arguments))
 		{
-			return;
-		}
-
-		var resizedImageSize = _imageResizeCalculator.GetResizedImageSize(
+			var resizedImageSize = _imageResizeCalculator.GetResizedImageSize(
 			loadedImageSize, arguments);
 
-		try
-		{
 			loadedImage.Resize((uint)resizedImageSize.Width, (uint)resizedImageSize.Height);
-		}
-		catch (Exception ex)
-		{
-			throw new TransformImageException(
-				@$"Could not resize image ""{arguments.InputPath}"" to {resizedImageSize.Width} x {resizedImageSize.Height}.", ex);
 		}
 	}
 
-	private static void SaveImage(IMagickImage loadedImage, Arguments arguments)
+	private static Stream SaveImage(IMagickImage loadedImage, Arguments arguments)
 	{
 		loadedImage.Quality = (uint)arguments.OutputImageQuality;
 
-		try
-		{
-			loadedImage.Write(arguments.OutputPath, MagickFormat.Jpg);
-		}
-		catch (Exception ex)
-		{
-			throw new TransformImageException(
-				@$"Could not save image ""{arguments.InputPath}"" to ""{arguments.OutputPath}"".", ex);
-		}
+		var outputImageDataStream = new MemoryStream();
+		loadedImage.Write(outputImageDataStream, MagickFormat.Jpg);
+		outputImageDataStream.Reset();
+
+		return outputImageDataStream;
 	}
 
 	#endregion

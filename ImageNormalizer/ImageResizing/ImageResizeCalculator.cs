@@ -8,7 +8,7 @@ public class ImageResizeCalculator : IImageResizeCalculator
 	{
 		var imageMaxSize = GetImageMaxSize(imageSize);
 
-		var shouldResize = (imageMaxSize > arguments.OutputMaximumImageSize);
+		var shouldResize = imageMaxSize > arguments.OutputMaximumImageSize;
 		return shouldResize;
 	}
 

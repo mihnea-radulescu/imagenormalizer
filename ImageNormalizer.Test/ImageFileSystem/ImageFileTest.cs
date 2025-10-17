@@ -1,27 +1,28 @@
 using NSubstitute;
 using Xunit;
 using ImageNormalizer.Adapters;
-using ImageNormalizer.Exceptions;
 using ImageNormalizer.ImageResizing;
 using ImageNormalizer.Logger;
 using ImageNormalizer.Test.TestTypes;
 using ImageNormalizer.Test.TestTypes.Attributes;
+using ImageNormalizer.ImageFileSystem;
+using ImageNormalizer.Services;
 
-namespace ImageNormalizer.Test.Adapters;
+namespace ImageNormalizer.Test.ImageFileSystem;
 
-[UnitTest]
-public class ImageTransformerTest : TestBase
+[IntegrationTest]
+public class ImageFileTest : TestBase
 {
-	public ImageTransformerTest()
+	public ImageFileTest()
 	{
-		IImageResizeCalculator imageResizeCalculator = Substitute.For<IImageResizeCalculator>();
-		imageResizeCalculator
-			.ShouldResize(Arg.Any<ImageSize>(), Arg.Any<Arguments>())
-			.Returns(false);
-
 		_logger = Substitute.For<ILogger>();
 
-		_imageTransformer = new ImageTransformer(imageResizeCalculator, _logger);
+		IImageResizeCalculator imageResizeCalculator = new ImageResizeCalculator();
+		IImageTransformer imageTransformer = new ImageTransformer(
+			imageResizeCalculator);
+
+		_imageDataService = new ImageDataService(_logger);
+		_imageNormalizerService = new ImageNormalizerService(imageTransformer, _logger);
 	}
 
 	[InlineData("Landscape.jpg", "Landscape_normalized.jpg", 3840, 80, 16)]
@@ -45,8 +46,12 @@ public class ImageTransformerTest : TestBase
 			outputImageQuality,
 			maxDegreeOfParallelism);
 
+		var imageFile = new ImageFile(_imageDataService, _imageNormalizerService, arguments);
+
 		// Act
-		_imageTransformer.TransformImage(arguments);
+		imageFile.ReadImageFromDisc();
+		imageFile.NormalizeImage();
+		imageFile.WriteImageToDisc();
 
 		// Assert
 		Assert.True(ExistsOutputFile(outputFilePath));
@@ -72,11 +77,15 @@ public class ImageTransformerTest : TestBase
 			outputImageQuality,
 			maxDegreeOfParallelism);
 
+		var imageFile = new ImageFile(_imageDataService, _imageNormalizerService, arguments);
+
 		// Act
-		_imageTransformer.TransformImage(arguments);
+		imageFile.ReadImageFromDisc();
+		imageFile.NormalizeImage();
+		imageFile.WriteImageToDisc();
 
 		// Assert
-		_logger.Received(1).Error(Arg.Any<TransformImageException>());
+		_logger.Received(1).Error(Arg.Any<string>());
 	}
 
 	[Fact]
@@ -96,18 +105,23 @@ public class ImageTransformerTest : TestBase
 			outputImageQuality,
 			maxDegreeOfParallelism);
 
+		var imageFile = new ImageFile(_imageDataService, _imageNormalizerService, arguments);
+
 		// Act
-		_imageTransformer.TransformImage(arguments);
+		imageFile.ReadImageFromDisc();
+		imageFile.NormalizeImage();
+		imageFile.WriteImageToDisc();
 
 		// Assert
-		_logger.Received(1).Error(Arg.Any<TransformImageException>());
+		_logger.Received(1).Error(Arg.Any<string>());
 	}
 
 	#region Private
 
 	private readonly ILogger _logger;
 
-	private readonly ImageTransformer _imageTransformer;
+	private readonly IImageDataService _imageDataService;
+	private readonly IImageNormalizerService _imageNormalizerService;
 
 	#endregion
 }

@@ -1,4 +1,3 @@
-using System;
 using ImageNormalizer.CommandLine;
 using ImageNormalizer.Factories;
 using ImageNormalizer.Logger;
@@ -10,12 +9,12 @@ public class ApplicationRunner : IApplicationRunner
 	public ApplicationRunner(
 		IArgumentsFactory argumentsFactory,
 		IArgumentsValidator argumentsValidator,
-		IImageDirectoryInfoFactory imageDirectoryInfoFactory,
+		IImageDirectoryFactory imageDirectoryFactory,
 		ILogger logger)
 	{
 		_argumentsFactory = argumentsFactory;
 		_argumentsValidator = argumentsValidator;
-		_imageDirectoryInfoFactory = imageDirectoryInfoFactory;
+		_imageDirectoryFactory = imageDirectoryFactory;
 		_logger = logger;
 	}
 
@@ -27,31 +26,29 @@ public class ApplicationRunner : IApplicationRunner
 		int maxDegreeOfParallelism)
 	{
 		var arguments = _argumentsFactory.Create(
-			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality, maxDegreeOfParallelism);
+			inputDirectory,
+			outputDirectory,
+			outputMaximumImageSize,
+			outputImageQuality,
+			maxDegreeOfParallelism);
 
-		var areValidArguments = _argumentsValidator.AreValidArguments(arguments, out string? errorMessage);
+		var areValidArguments = _argumentsValidator.AreValidArguments(
+			arguments, out string? errorMessage);
 
-		if (!areValidArguments)
+		if (areValidArguments)
+		{
+			_logger.Info(
+				$@"Normalizing images from input directory ""{arguments.InputPath}"" to output directory ""{arguments.OutputPath}"", resizing to output maximum image width/height {arguments.OutputMaximumImageSize}, at output image quality {arguments.OutputImageQuality}, using maximum degree of parallelism {arguments.MaxDegreeOfParallelism}.");
+			_logger.NewLine();
+
+			var imageDirectory = _imageDirectoryFactory.Create(arguments);
+
+			imageDirectory.BuildImageDirectory();
+			imageDirectory.NormalizeImages();
+		}
+		else
 		{
 			_logger.Error(errorMessage!);
-
-			return;
-		}
-
-		_logger.Info(
-			$@"Normalizing images from input directory ""{arguments.InputPath}"" to output directory ""{arguments.OutputPath}"", resizing to output maximum image width/height {arguments.OutputMaximumImageSize}, at output image quality {arguments.OutputImageQuality}, using maximum degree of parallelism {arguments.MaxDegreeOfParallelism}.");
-		_logger.NewLine();
-
-		try
-		{
-			var imageDirectoryInfo = _imageDirectoryInfoFactory.Create(arguments);
-
-			imageDirectoryInfo.BuildFileSystemInfo();
-			imageDirectoryInfo.NormalizeFileSystemInfo();
-		}
-		catch (Exception ex)
-		{
-			_logger.Error(ex);
 		}
 	}
 
@@ -59,7 +56,7 @@ public class ApplicationRunner : IApplicationRunner
 
 	private readonly IArgumentsFactory _argumentsFactory;
 	private readonly IArgumentsValidator _argumentsValidator;
-	private readonly IImageDirectoryInfoFactory _imageDirectoryInfoFactory;
+	private readonly IImageDirectoryFactory _imageDirectoryFactory;
 	private readonly ILogger _logger;
 
 	#endregion

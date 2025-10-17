@@ -23,7 +23,7 @@ public class ArgumentsValidator : IArgumentsValidator
 
 		var invalidChars = invalidPathChars.Union(additionalInvalidPathChars);
 
-		InvalidChars = new HashSet<char>(invalidChars);
+		InvalidChars = [..invalidChars];
 	}
 
 	public bool AreValidArguments(Arguments arguments, out string? errorMessage)
@@ -82,8 +82,7 @@ public class ArgumentsValidator : IArgumentsValidator
 		return true;
 	}
 
-	private static bool ExistsDirectory(string directory)
-		=> Directory.Exists(directory);
+	private static bool ExistsDirectory(string directory) => Directory.Exists(directory);
 
 	private static bool AreIdenticalInputDirectoryAndOutputDirectory(
 		string inputDirectory, string outputDirectory)

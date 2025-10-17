@@ -1,6 +1,8 @@
+using System.IO;
+
 namespace ImageNormalizer.Services;
 
 public interface IImageNormalizerService
 {
-	void NormalizeImage(Arguments arguments);
+	Stream? NormalizeImage(Stream inputImageDataStream, Arguments arguments);
 }

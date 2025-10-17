@@ -1,6 +1,8 @@
+using System.IO;
+
 namespace ImageNormalizer.Adapters;
 
 public interface IImageTransformer
 {
-	void TransformImage(Arguments arguments);
+	Stream TransformImage(Stream inputImageDataStream, Arguments arguments);
 }
