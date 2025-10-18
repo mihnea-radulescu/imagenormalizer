@@ -23,6 +23,7 @@ public class ApplicationRunner : IApplicationRunner
 		string outputDirectory,
 		int outputMaximumImageSize,
 		int outputImageQuality,
+		bool shouldRemoveImageProfileData,
 		int maxDegreeOfParallelism)
 	{
 		var arguments = _argumentsFactory.Create(
@@ -30,6 +31,7 @@ public class ApplicationRunner : IApplicationRunner
 			outputDirectory,
 			outputMaximumImageSize,
 			outputImageQuality,
+			shouldRemoveImageProfileData,
 			maxDegreeOfParallelism);
 
 		var areValidArguments = _argumentsValidator.AreValidArguments(

@@ -58,6 +58,9 @@ public static class Program
 				[Range(1, 100)]
 				int outputImageQuality = 80,
 
+				[Option("remove-profile-data", ['r'], Description = "Removes image profile data")]
+				bool shouldRemoveImageProfileData = false,
+
 				[Option("max-degree-of-parallelism", ['p'], Description = "The maximum degree of parallel image processing, upper-bounded by processor count")]
 				[Range(1, 128)]
 				int maxDegreeOfParallelism = 4
@@ -70,6 +73,7 @@ public static class Program
 					outputDirectory,
 					outputMaximumImageSize,
 					outputImageQuality,
+					shouldRemoveImageProfileData,
 					maxDegreeOfParallelism);
 			});
 	}

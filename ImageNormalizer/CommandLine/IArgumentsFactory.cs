@@ -7,5 +7,6 @@ public interface IArgumentsFactory
 		string outputDirectory,
 		int outputMaximumImageSize,
 		int outputImageQuality,
+		bool shouldRemoveImageProfileData,
 		int maxDegreeOfParallelism);
 }

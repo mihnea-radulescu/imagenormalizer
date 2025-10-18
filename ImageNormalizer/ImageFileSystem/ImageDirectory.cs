@@ -165,6 +165,7 @@ public class ImageDirectory : IImageDirectory
 						$"{Path.GetFileNameWithoutExtension(aFile)}{_imageFileExtensionService.OutputImageFileExtension}"),
 					_arguments.OutputMaximumImageSize,
 					_arguments.OutputImageQuality,
+					_arguments.ShouldRemoveImageProfileData,
 					_arguments.MaxDegreeOfParallelism)
 				)
 			)
@@ -189,6 +190,7 @@ public class ImageDirectory : IImageDirectory
 					Path.Combine(_arguments.OutputPath, aDirectory),
 					_arguments.OutputMaximumImageSize,
 					_arguments.OutputImageQuality,
+					_arguments.ShouldRemoveImageProfileData,
 					_arguments.MaxDegreeOfParallelism)
 				)
 			)

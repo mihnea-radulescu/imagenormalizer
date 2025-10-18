@@ -17,8 +17,12 @@ public class ImageTransformer : IImageTransformer
 		using (var loadedImage = new MagickImage(inputImageDataStream))
 		{
 			ApplyImageOrientation(loadedImage);
-			ClearMetadata(loadedImage);
 			ResizeImage(loadedImage, arguments);
+
+			if (arguments.ShouldRemoveImageProfileData)
+			{
+				RemoveImageProfileData(loadedImage);
+			}
 
 			var outputImageDataStream = SaveImage(loadedImage, arguments);
 			return outputImageDataStream;
@@ -31,7 +35,7 @@ public class ImageTransformer : IImageTransformer
 
 	private static void ApplyImageOrientation(IMagickImage loadedImage) => loadedImage.AutoOrient();
 
-	private static void ClearMetadata(IMagickImage loadedImage)
+	private static void RemoveImageProfileData(IMagickImage loadedImage)
 	{
 		var exifProfile = loadedImage.GetExifProfile();
 		var iptcProfile = loadedImage.GetIptcProfile();

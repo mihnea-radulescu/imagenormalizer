@@ -5,4 +5,5 @@ public record Arguments(
 	string OutputPath,
 	int OutputMaximumImageSize,
 	int OutputImageQuality,
+	bool ShouldRemoveImageProfileData,
 	int MaxDegreeOfParallelism);

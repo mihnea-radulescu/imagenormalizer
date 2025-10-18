@@ -7,5 +7,6 @@ public interface IApplicationRunner
 		string outputDirectory,
 		int outputMaximumImageSize,
 		int outputImageQuality,
+		bool shouldRemoveImageProfileData,
 		int maxDegreeOfParallelism);
 }

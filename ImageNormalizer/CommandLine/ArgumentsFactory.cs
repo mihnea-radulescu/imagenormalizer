@@ -10,6 +10,7 @@ public class ArgumentsFactory : IArgumentsFactory
 		string outputDirectory,
 		int outputMaximumImageSize,
 		int outputImageQuality,
+		bool shouldRemoveImageProfileData,
 		int maxDegreeOfParallelism)
 	{
 		var inputDirectoryFullPath = Path.GetFullPath(inputDirectory);
@@ -26,6 +27,7 @@ public class ArgumentsFactory : IArgumentsFactory
 			outputDirectoryFullPath,
 			outputMaximumImageSize,
 			outputImageQuality,
+			shouldRemoveImageProfileData,
 			maxDegreeOfParallelism);
 
 		return arguments;
