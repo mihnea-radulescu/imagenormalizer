@@ -25,14 +25,15 @@ public class ImageFileTest : TestBase
 		_imageNormalizerService = new ImageNormalizerService(imageTransformer, _logger);
 	}
 
-	[InlineData("Landscape.jpg", "Landscape_normalized.jpg", 3840, 80, 16)]
-	[InlineData("Portrait.jpg", "Portrait_normalized.jpg", 3840, 80, 16)]
+	[InlineData("Landscape.jpg", "Landscape_normalized.jpg", 3840, 80, false, 16)]
+	[InlineData("Portrait.jpg", "Portrait_normalized.jpg", 3840, 80, false, 16)]
 	[Theory]
 	public void SaveTransformedImage_ValidInputImage_SavesOutputImage(
 		string inputFileName,
 		string outputFileName,
 		int outputMaximumImageSize,
 		int outputImageQuality,
+		bool shouldRemoveImageProfileData,
 		int maxDegreeOfParallelism)
 	{
 		// Arrange
@@ -44,6 +45,7 @@ public class ImageFileTest : TestBase
 			outputFilePath,
 			outputMaximumImageSize,
 			outputImageQuality,
+			shouldRemoveImageProfileData,
 			maxDegreeOfParallelism);
 
 		var imageFile = new ImageFile(_imageDataService, _imageNormalizerService, arguments);
@@ -68,6 +70,7 @@ public class ImageFileTest : TestBase
 		var outputFilePath = GetTestFilePath("InvalidImage_normalized.txt");
 		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 80;
+		const bool shouldRemoveImageProfileData = false;
 		const int maxDegreeOfParallelism = 16;
 
 		var arguments = new Arguments(
@@ -75,6 +78,7 @@ public class ImageFileTest : TestBase
 			outputFilePath,
 			outputMaximumImageSize,
 			outputImageQuality,
+			shouldRemoveImageProfileData,
 			maxDegreeOfParallelism);
 
 		var imageFile = new ImageFile(_imageDataService, _imageNormalizerService, arguments);
@@ -96,6 +100,7 @@ public class ImageFileTest : TestBase
 		var outputFilePath = GetTestFilePath("NotFoundImage_normalized.txt");
 		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 80;
+		const bool shouldRemoveImageProfileData = false;
 		const int maxDegreeOfParallelism = 16;
 
 		var arguments = new Arguments(
@@ -103,6 +108,7 @@ public class ImageFileTest : TestBase
 			outputFilePath,
 			outputMaximumImageSize,
 			outputImageQuality,
+			shouldRemoveImageProfileData,
 			maxDegreeOfParallelism);
 
 		var imageFile = new ImageFile(_imageDataService, _imageNormalizerService, arguments);

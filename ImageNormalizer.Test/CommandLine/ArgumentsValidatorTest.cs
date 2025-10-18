@@ -21,10 +21,16 @@ public class ArgumentsValidatorTest : TestBase
 		var outputDirectory = GetTestDirectoryPath("Subfolder2");
 		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 80;
+		const bool shouldRemoveImageProfileData = false;
 		const int maxDegreeOfParallelism = 16;
 
 		var arguments = new Arguments(
-			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality, maxDegreeOfParallelism);
+			inputDirectory,
+			outputDirectory,
+			outputMaximumImageSize,
+			outputImageQuality,
+			shouldRemoveImageProfileData,
+			maxDegreeOfParallelism);
 
 		// Act
 		var areValidArguments = _argumentsValidator.AreValidArguments(
@@ -43,10 +49,16 @@ public class ArgumentsValidatorTest : TestBase
 		var outputDirectory = GetTestDirectoryPath("Subfolder1_Output");
 		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 80;
+		const bool shouldRemoveImageProfileData = false;
 		const int maxDegreeOfParallelism = 16;
 
 		var arguments = new Arguments(
-			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality, maxDegreeOfParallelism);
+			inputDirectory,
+			outputDirectory,
+			outputMaximumImageSize,
+			outputImageQuality,
+			shouldRemoveImageProfileData,
+			maxDegreeOfParallelism);
 
 		// Act
 		var areValidArguments = _argumentsValidator.AreValidArguments(
@@ -65,10 +77,16 @@ public class ArgumentsValidatorTest : TestBase
 		var outputDirectory = GetTestDirectoryPath("Subfolder1_Output");
 		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 80;
+		const bool shouldRemoveImageProfileData = false;
 		const int maxDegreeOfParallelism = 16;
 
 		var arguments = new Arguments(
-			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality, maxDegreeOfParallelism);
+			inputDirectory,
+			outputDirectory,
+			outputMaximumImageSize,
+			outputImageQuality,
+			shouldRemoveImageProfileData,
+			maxDegreeOfParallelism);
 
 		// Act
 		var areValidArguments = _argumentsValidator.AreValidArguments(
@@ -90,10 +108,16 @@ public class ArgumentsValidatorTest : TestBase
 		var outputDirectory = ";";
 		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 80;
+		const bool shouldRemoveImageProfileData = false;
 		const int maxDegreeOfParallelism = 16;
 
 		var arguments = new Arguments(
-			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality, maxDegreeOfParallelism);
+			inputDirectory,
+			outputDirectory,
+			outputMaximumImageSize,
+			outputImageQuality,
+			shouldRemoveImageProfileData,
+			maxDegreeOfParallelism);
 
 		// Act
 		var areValidArguments = _argumentsValidator.AreValidArguments(
@@ -115,10 +139,16 @@ public class ArgumentsValidatorTest : TestBase
 		var outputDirectory = GetTestDirectoryPath("Subfolder1");
 		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 80;
+		const bool shouldRemoveImageProfileData = false;
 		const int maxDegreeOfParallelism = 16;
 
 		var arguments = new Arguments(
-			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality, maxDegreeOfParallelism);
+			inputDirectory,
+			outputDirectory,
+			outputMaximumImageSize,
+			outputImageQuality,
+			shouldRemoveImageProfileData,
+			maxDegreeOfParallelism);
 
 		// Act
 		var areValidArguments = _argumentsValidator.AreValidArguments(
@@ -140,10 +170,16 @@ public class ArgumentsValidatorTest : TestBase
 		var outputDirectory = GetTestDirectoryPath("Subfolder1");
 		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 80;
+		const bool shouldRemoveImageProfileData = false;
 		const int maxDegreeOfParallelism = 16;
 
 		var arguments = new Arguments(
-			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality, maxDegreeOfParallelism);
+			inputDirectory,
+			outputDirectory,
+			outputMaximumImageSize,
+			outputImageQuality,
+			shouldRemoveImageProfileData,
+			maxDegreeOfParallelism);
 
 		// Act
 		var areValidArguments = _argumentsValidator.AreValidArguments(
@@ -166,10 +202,16 @@ public class ArgumentsValidatorTest : TestBase
 		var outputDirectory = GetTestDirectoryPath("Subfolder2", "Subfolder2_1");
 		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 80;
+		const bool shouldRemoveImageProfileData = false;
 		const int maxDegreeOfParallelism = 16;
 
 		var arguments = new Arguments(
-			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality, maxDegreeOfParallelism);
+			inputDirectory,
+			outputDirectory,
+			outputMaximumImageSize,
+			outputImageQuality,
+			shouldRemoveImageProfileData,
+			maxDegreeOfParallelism);
 
 		// Act
 		var areValidArguments = _argumentsValidator.AreValidArguments(
@@ -192,10 +234,16 @@ public class ArgumentsValidatorTest : TestBase
 		var outputDirectory = GetTestDirectoryPath("Subfolder2");
 		const int outputMaximumImageSize = 3840;
 		const int outputImageQuality = 80;
+		const bool shouldRemoveImageProfileData = false;
 		const int maxDegreeOfParallelism = 16;
 
 		var arguments = new Arguments(
-			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality, maxDegreeOfParallelism);
+			inputDirectory,
+			outputDirectory,
+			outputMaximumImageSize,
+			outputImageQuality,
+			shouldRemoveImageProfileData,
+			maxDegreeOfParallelism);
 
 		// Act
 		var areValidArguments = _argumentsValidator.AreValidArguments(

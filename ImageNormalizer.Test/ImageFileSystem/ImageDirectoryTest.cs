@@ -37,10 +37,16 @@ public class ImageDirectoryTest : TestBase
 		var outputDirectory = $"{TestDataPath}_Output";
 		const int outputMaximumImageSize = 960;
 		const int outputImageQuality = 80;
+		const bool shouldRemoveImageProfileData = false;
 		const int maxDegreeOfParallelism = 16;
 
 		var arguments = new Arguments(
-			inputDirectory, outputDirectory, outputMaximumImageSize, outputImageQuality, maxDegreeOfParallelism);
+			inputDirectory,
+			outputDirectory,
+			outputMaximumImageSize,
+			outputImageQuality,
+			shouldRemoveImageProfileData,
+			maxDegreeOfParallelism);
 
 		var imageDirectory = new ImageDirectory(
 			_imageFileExtensionService,
