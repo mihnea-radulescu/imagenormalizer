@@ -6,7 +6,7 @@
 			"type": "coreclr",
 			"request": "launch",
 			"preLaunchTask": "build",
-			"program": "${workspaceFolder}/ImageNormalizer/bin/Debug/net8.0/ImageNormalizer.dll",
+			"program": "${workspaceFolder}/ImageNormalizer/bin/Debug/net10.0/ImageNormalizer.dll",
 			"args": [],
 			"cwd": "${workspaceFolder}/ImageNormalizer",
 			"console": "internalConsole",

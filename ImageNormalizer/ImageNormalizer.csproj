@@ -15,7 +15,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Cocona" Version="2.2.0" />
-		<PackageReference Include="Magick.NET-Q8-AnyCPU" Version="14.9.0" />
+		<PackageReference Include="Magick.NET-Q8-AnyCPU" Version="14.9.1" />
 	</ItemGroup>
 
 </Project>
