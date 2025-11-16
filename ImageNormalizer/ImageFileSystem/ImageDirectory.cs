@@ -90,27 +90,28 @@ public class ImageDirectory : IImageDirectory
 		var imageFilesCount = _imageFiles.Count;
 		var maxImageFilesBatchSize = _arguments.MaxDegreeOfParallelism;
 
-		try
+		_logger.Info(
+			$@"Processing images from input directory ""{_arguments.InputPath}"" to output directory ""{_arguments.OutputPath}"".");
+
+		for (var imageFilesIndex = 0;
+			 imageFilesIndex < imageFilesCount;
+			 imageFilesIndex += maxImageFilesBatchSize)
 		{
-			_logger.Info(
-				$@"Processing images from input directory ""{_arguments.InputPath}"" to output directory ""{_arguments.OutputPath}"".");
+			var imageFilesBatchSize = Math.Min(
+				maxImageFilesBatchSize, imageFilesCount - imageFilesIndex);
 
-			for (var imageFilesIndex = 0;
-				 imageFilesIndex < imageFilesCount;
-				 imageFilesIndex += maxImageFilesBatchSize)
+			var imageFilesBatch = _imageFiles
+				.Skip(imageFilesIndex)
+				.Take(imageFilesBatchSize)
+				.ToList();
+
+			try
 			{
-				var imageFilesBatchSize = Math.Min(
-					maxImageFilesBatchSize, imageFilesCount - imageFilesIndex);
-				var imageFilesBatch = _imageFiles
-					.Skip(imageFilesIndex)
-					.Take(imageFilesBatchSize)
-					.ToList();
-
 				var imageFileNormalizationTasks = new Task[imageFilesBatchSize];
 
 				for (var imageFilesBatchIndex = 0;
-					 imageFilesBatchIndex < imageFilesBatchSize;
-					 imageFilesBatchIndex++)
+					imageFilesBatchIndex < imageFilesBatchSize;
+					imageFilesBatchIndex++)
 				{
 					var currentImageFile = imageFilesBatch[imageFilesBatchIndex];
 
@@ -135,16 +136,16 @@ public class ImageDirectory : IImageDirectory
 					anImageFile.WriteImageToDisc();
 				}
 			}
-		}
-		catch (Exception ex)
-		{
-			_logger.Error(ex);
-		}
-		finally
-		{
-			foreach (var anImageFile in _imageFiles)
+			catch (Exception ex)
 			{
-				anImageFile.Dispose();
+				_logger.Error(ex);
+			}
+			finally
+			{
+				foreach (var anImageFile in imageFilesBatch)
+				{
+					anImageFile.Dispose();
+				}
 			}
 		}
 	}

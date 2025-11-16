@@ -52,6 +52,9 @@ public class ImageFile : IImageFile
 			_inputImageDataStream?.Dispose();
 			_outputImageDataStream?.Dispose();
 
+			_inputImageDataStream = null;
+			_outputImageDataStream = null;
+
 			_hasBeenDisposed = true;
 			GC.SuppressFinalize(this);
 		}
