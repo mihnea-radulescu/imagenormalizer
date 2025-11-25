@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using Cocona;
-using Microsoft.Extensions.DependencyInjection;
+using System.CommandLine;
 using ImageNormalizer.Adapters;
 using ImageNormalizer.CommandLine;
 using ImageNormalizer.Factories;
@@ -14,68 +12,130 @@ public static class Program
 {
 	public static void Main(string[] args)
 	{
-		var builder = CoconaApp.CreateBuilder(args);
-		RegisterDependencies(builder.Services);
+		var inputDirectoryArgument = new Argument<string>("inputDirectory")
+		{
+			Description = "The input directory"
+		};
+		var outputDirectoryArgument = new Argument<string>("outputDirectory")
+		{
+			Description = "The output directory, to be created, if it does not exist"
+		};
 
-		var app = builder.Build();
-		RegisterCommands(app);
+		var outputMaximumImageSizeOption = new Option<int>("--max-width-height", "-m")
+		{
+			Description = "The output maximum image width/height",
+			DefaultValueFactory = _ => 3840
+		};
+		outputMaximumImageSizeOption.Validators.Add(result =>
+		{
+			var value = result.GetValueOrDefault<int>();
 
-		app.Run();
+			if (value < 10 || value > 15360)
+			{
+				result.AddError("max-width-height must be between 10 and 15360.");
+			}
+		});
+
+		var outputImageQualityOption = new Option<int>("--quality", "-q")
+		{
+			Description = "The output image quality",
+			DefaultValueFactory = _ => 80
+		};
+		outputImageQualityOption.Validators.Add(result =>
+		{
+			var value = result.GetValueOrDefault<int>();
+
+			if (value < 10 || value > 100)
+			{
+				result.AddError("quality must be between 10 and 100.");
+			}
+		});
+
+		var shouldRemoveImageProfileDataOption = new Option<bool>("--remove-profile-data", "-r")
+		{
+			Description = "Removes image profile data",
+			DefaultValueFactory = _ => false
+		};
+
+		var maxDegreeOfParallelismOption = new Option<int>("--max-degree-of-parallelism", "-p")
+		{
+			Description = "The maximum degree of parallel image processing, upper-bounded by processor count",
+			DefaultValueFactory = _ => 4
+		};
+		maxDegreeOfParallelismOption.Validators.Add(result =>
+		{
+			var value = result.GetValueOrDefault<int>();
+
+			if (value < 1 || value > 128)
+			{
+				result.AddError("max-degree-of-parallelism must be between 1 and 128.");
+			}
+		});
+
+		var rootCommand = new RootCommand("Image Normalizer - batch-processing tool that resizes and compresses images")
+		{
+			inputDirectoryArgument,
+			outputDirectoryArgument,
+			outputMaximumImageSizeOption,
+			outputImageQualityOption,
+			shouldRemoveImageProfileDataOption,
+			maxDegreeOfParallelismOption
+		};
+
+		rootCommand.SetAction(result =>
+		{
+			var inputDirectory = result.GetValue(inputDirectoryArgument)!;
+			var outputDirectory = result.GetValue(outputDirectoryArgument)!;
+
+			var outputMaximumImageSize = result.GetValue(outputMaximumImageSizeOption);
+			var outputImageQuality = result.GetValue(outputImageQualityOption);
+			var shouldRemoveImageProfileData = result.GetValue(shouldRemoveImageProfileDataOption);
+			var maxDegreeOfParallelism = result.GetValue(maxDegreeOfParallelismOption);
+
+			var applicationRunner = BuildApplicationRunner();
+
+			applicationRunner!.Run(
+				inputDirectory,
+				outputDirectory,
+				outputMaximumImageSize,
+				outputImageQuality,
+				shouldRemoveImageProfileData,
+				maxDegreeOfParallelism);
+		});
+
+		rootCommand.Parse(args).Invoke();
 	}
 
 	#region Private
 
-	private static void RegisterDependencies(IServiceCollection services)
+	private static IApplicationRunner BuildApplicationRunner()
 	{
-		services.AddSingleton<IArgumentsFactory, ArgumentsFactory>();
-		services.AddSingleton<ILogger, ConsoleLogger>();
-		services.AddSingleton<IArgumentsValidator, ArgumentsValidator>();
-		services.AddSingleton<IImageFileExtensionService, ImageFileExtensionService>();
-		services.AddSingleton<IImageResizeCalculator, ImageResizeCalculator>();
-		services.AddSingleton<IImageTransformer, ImageTransformer>();
-		services.AddSingleton<IImageDataService, ImageDataService>();
-		services.AddSingleton<IImageNormalizerService, ImageNormalizerService>();
-		services.AddSingleton<IDirectoryService, DirectoryService>();
-		services.AddSingleton<IImageDirectoryFactory, ImageDirectoryFactory>();
-		services.AddSingleton<IApplicationRunner, ApplicationRunner>();
-	}
+		IArgumentsFactory argumentsFactory = new ArgumentsFactory();
+		IArgumentsValidator argumentsValidator = new ArgumentsValidator();
 
-	private static void RegisterCommands(CoconaApp app)
-	{
-		app.AddCommand(
-			(
-				[Argument(Description = "The input directory")]
-				string inputDirectory,
+		ILogger logger = new ConsoleLogger();
 
-				[Argument(Description = "The output directory, to be created, if it does not exist")]
-				string outputDirectory,
+		IImageFileExtensionService imageFileExtensionService = new ImageFileExtensionService();
+		IImageDataService imageDataService = new ImageDataService(logger);
 
-				[Option("max-width-height", ['m'], Description = "The output maximum image width/height")]
-				[Range(1, 15360)]
-				int outputMaximumImageSize = 3840,
+		IImageResizeCalculator imageResizeCalculator = new ImageResizeCalculator();
+		IImageTransformer imageTransformer = new ImageTransformer(imageResizeCalculator);
+		IImageNormalizerService imageNormalizerService = new ImageNormalizerService(
+			imageTransformer, logger);
 
-				[Option("quality", ['q'], Description = "The output image quality")]
-				[Range(1, 100)]
-				int outputImageQuality = 80,
+		IDirectoryService directoryService = new DirectoryService();
 
-				[Option("remove-profile-data", ['r'], Description = "Removes image profile data")]
-				bool shouldRemoveImageProfileData = false,
+		IImageDirectoryFactory imageDirectoryFactory = new ImageDirectoryFactory(
+			imageFileExtensionService,
+			imageDataService,
+			imageNormalizerService,
+			directoryService,
+			logger);
 
-				[Option("max-degree-of-parallelism", ['p'], Description = "The maximum degree of parallel image processing, upper-bounded by processor count")]
-				[Range(1, 128)]
-				int maxDegreeOfParallelism = 4
-			) =>
-			{
-				var applicationRunner = app.Services.GetService<IApplicationRunner>();
+		IApplicationRunner applicationRunner = new ApplicationRunner(
+			argumentsFactory, argumentsValidator, imageDirectoryFactory, logger);
 
-				applicationRunner!.Run(
-					inputDirectory,
-					outputDirectory,
-					outputMaximumImageSize,
-					outputImageQuality,
-					shouldRemoveImageProfileData,
-					maxDegreeOfParallelism);
-			});
+		return applicationRunner;
 	}
 
 	#endregion

@@ -12,16 +12,16 @@ Image Normalizer is intended to facilitate the storage of images produced by dig
 
 It is written in C#, and targets .NET 10 on Linux and Windows. It relies on [Magick.NET](https://github.com/dlemstra/Magick.NET), as its image manipulation library.
 
-__Usage__: ImageNormalizer [--max-width-height _value_] [--quality _value_] [--remove-profile-data] [--max-degree-of-parallelism _value_] [--help] [--version] input-directory output-directory
+__Usage__: ImageNormalizer input-directory output-directory [--max-width-height _value_] [--quality _value_] [--remove-profile-data] [--max-degree-of-parallelism _value_] [--help] [--version]
 
 Arguments:
-* 0: input-directory - The input directory (Required)
-* 1: output-directory - The output directory, to be created, if it does not exist (Required)
+* input-directory - The input directory (Required)
+* output-directory - The output directory, to be created, if it does not exist (Required)
 
 Options:
 * -m, --max-width-height _value_ - The output maximum image width/height (Default: 3840)
 * -q, --quality _value_ - The output image quality (Default: 80)
-* -r, --remove-profile-data - Removes image profile data (Default: false)
+* -r, --remove-profile-data - Removes image profile data
 * -p, --max-degree-of-parallelism _value_ - The maximum degree of parallel image processing, upper-bounded by processor count (Default: 4)
-* -h, --help - Show help message
+* -?, -h, --help - Show help and usage information
 * --version - Show version
