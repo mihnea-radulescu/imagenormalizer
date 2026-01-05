@@ -3,6 +3,4 @@ using System;
 namespace ImageNormalizer.Test.TestTypes.Attributes;
 
 [AttributeUsage(AttributeTargets.Class)]
-public class UnitTestAttribute : Attribute
-{
-}
+public class UnitTestAttribute : Attribute;

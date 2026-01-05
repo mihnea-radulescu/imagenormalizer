@@ -1,12 +1,12 @@
 using NSubstitute;
 using Xunit;
 using ImageNormalizer.Adapters;
+using ImageNormalizer.ImageFileSystem;
 using ImageNormalizer.ImageResizing;
 using ImageNormalizer.Logger;
+using ImageNormalizer.Services;
 using ImageNormalizer.Test.TestTypes;
 using ImageNormalizer.Test.TestTypes.Attributes;
-using ImageNormalizer.ImageFileSystem;
-using ImageNormalizer.Services;
 
 namespace ImageNormalizer.Test.ImageFileSystem;
 
@@ -18,8 +18,7 @@ public class ImageFileTest : TestBase
 		_logger = Substitute.For<ILogger>();
 
 		IImageResizeCalculator imageResizeCalculator = new ImageResizeCalculator();
-		IImageTransformer imageTransformer = new ImageTransformer(
-			imageResizeCalculator);
+		IImageTransformer imageTransformer = new ImageTransformer(imageResizeCalculator);
 
 		_imageDataService = new ImageDataService(_logger);
 		_imageNormalizerService = new ImageNormalizerService(imageTransformer, _logger);
@@ -122,12 +121,8 @@ public class ImageFileTest : TestBase
 		_logger.Received(1).Error(Arg.Any<string>());
 	}
 
-	#region Private
-
 	private readonly ILogger _logger;
 
 	private readonly IImageDataService _imageDataService;
 	private readonly IImageNormalizerService _imageNormalizerService;
-
-	#endregion
 }

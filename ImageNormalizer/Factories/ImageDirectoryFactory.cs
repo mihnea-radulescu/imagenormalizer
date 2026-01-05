@@ -29,13 +29,9 @@ public class ImageDirectoryFactory : IImageDirectoryFactory
 			_logger,
 			arguments);
 
-	#region Private
-
 	private readonly IImageFileExtensionService _imageFileExtensionService;
 	private readonly IImageDataService _imageDataService;
 	private readonly IImageNormalizerService _imageNormalizerService;
 	private readonly IDirectoryService _directoryService;
 	private readonly ILogger _logger;
-
-	#endregion
 }

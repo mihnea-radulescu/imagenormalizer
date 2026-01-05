@@ -13,7 +13,7 @@ public class ImageDataService : IImageDataService
 
 	public Stream? ReadImageDataFromDisc(Arguments arguments)
 	{
-		Stream? inputImageDataStream = default;
+		Stream? inputImageDataStream = null;
 
 		try
 		{
@@ -43,9 +43,5 @@ public class ImageDataService : IImageDataService
 		}
 	}
 
-	#region Private
-
 	private readonly ILogger _logger;
-
-	#endregion
 }

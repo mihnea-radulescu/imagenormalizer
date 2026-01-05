@@ -35,8 +35,7 @@ public class ApplicationRunner : IApplicationRunner
 			shouldRemoveImageProfileData,
 			maxDegreeOfParallelism);
 
-		var areValidArguments = _argumentsValidator.AreValidArguments(
-			arguments, out string? errorMessage);
+		var areValidArguments = _argumentsValidator.AreValidArguments(arguments, out string? errorMessage);
 
 		if (areValidArguments)
 		{
@@ -56,8 +55,6 @@ public class ApplicationRunner : IApplicationRunner
 		}
 	}
 
-	#region Private
-
 	private readonly IArgumentsFactory _argumentsFactory;
 	private readonly IArgumentsValidator _argumentsValidator;
 	private readonly IImageDirectoryFactory _imageDirectoryFactory;
@@ -67,10 +64,8 @@ public class ApplicationRunner : IApplicationRunner
 	{
 		var generalInformationTextBuilder = new StringBuilder();
 
-		generalInformationTextBuilder.Append(
-			$@"Normalizing images from input directory ""{arguments.InputPath}""");
-		generalInformationTextBuilder.Append(
-			$@" to output directory ""{arguments.OutputPath}""");
+		generalInformationTextBuilder.Append($@"Normalizing images from input directory ""{arguments.InputPath}""");
+		generalInformationTextBuilder.Append($@" to output directory ""{arguments.OutputPath}""");
 
 		generalInformationTextBuilder.Append(
 			$", resizing to output maximum image width/height {arguments.OutputMaximumImageSize}");
@@ -80,8 +75,7 @@ public class ApplicationRunner : IApplicationRunner
 			generalInformationTextBuilder.Append(", removing image profile data");
 		}
 
-		generalInformationTextBuilder.Append(
-			$", to output image quality {arguments.OutputImageQuality}");
+		generalInformationTextBuilder.Append($", to output image quality {arguments.OutputImageQuality}");
 
 		generalInformationTextBuilder.Append(
 			$", using maximum degree of parallelism {arguments.MaxDegreeOfParallelism}.");
@@ -89,6 +83,4 @@ public class ApplicationRunner : IApplicationRunner
 		var generalInformationText = generalInformationTextBuilder.ToString();
 		return generalInformationText;
 	}
-
-	#endregion
 }

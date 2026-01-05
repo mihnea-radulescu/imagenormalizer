@@ -7,7 +7,7 @@ public class ImageFileExtensionService : IImageFileExtensionService
 {
 	public ImageFileExtensionService()
 	{
-		_imageFileExtensions = new HashSet<string>(
+		ImageFileExtensions = new HashSet<string>(
 		[
 			".bmp",
 			".cr2",
@@ -57,13 +57,7 @@ public class ImageFileExtensionService : IImageFileExtensionService
 		StringComparer.InvariantCultureIgnoreCase);
 	}
 
-	public HashSet<string> ImageFileExtensions => _imageFileExtensions;
+	public HashSet<string> ImageFileExtensions { get; }
 
 	public string OutputImageFileExtension => ".jpg";
-
-	#region Private
-
-	private readonly HashSet<string> _imageFileExtensions;
-
-	#endregion
 }

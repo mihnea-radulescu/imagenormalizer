@@ -21,19 +21,14 @@ public class ImageResizeCalculator : IImageResizeCalculator
 
 		var imageMaxSize = GetImageMaxSize(imageSize);
 
-		var resizeRatio = (double)arguments.OutputMaximumImageSize / (double)imageMaxSize;
+		var resizeRatio = arguments.OutputMaximumImageSize / (double)imageMaxSize;
 
-		var resizedImageWidth = (double)imageSize.Width * resizeRatio;
-		var resizedImageHeight = (double)imageSize.Height * resizeRatio;
+		var resizedImageWidth = imageSize.Width * resizeRatio;
+		var resizedImageHeight = imageSize.Height * resizeRatio;
 
 		var resizedImageSize = new ImageSize((int)resizedImageWidth, (int)resizedImageHeight);
 		return resizedImageSize;
 	}
 
-	#region Private
-
-	private static int GetImageMaxSize(ImageSize imageSize)
-		=> Math.Max(imageSize.Width, imageSize.Height);
-
-	#endregion
+	private static int GetImageMaxSize(ImageSize imageSize) => Math.Max(imageSize.Width, imageSize.Height);
 }

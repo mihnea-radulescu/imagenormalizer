@@ -45,7 +45,7 @@ public static class Program
 		{
 			var value = result.GetValueOrDefault<int>();
 
-			if (value < 10 || value > 100)
+			if (value is < 10 or > 100)
 			{
 				result.AddError("quality must be between 10 and 100.");
 			}
@@ -66,13 +66,14 @@ public static class Program
 		{
 			var value = result.GetValueOrDefault<int>();
 
-			if (value < 1 || value > 128)
+			if (value is < 1 or > 128)
 			{
 				result.AddError("max-degree-of-parallelism must be between 1 and 128.");
 			}
 		});
 
-		var rootCommand = new RootCommand("Image Normalizer - batch-processing tool that resizes and compresses images")
+		var rootCommand = new RootCommand(
+			"Image Normalizer - batch-processing tool that resizes and compresses images")
 		{
 			inputDirectoryArgument,
 			outputDirectoryArgument,
@@ -94,7 +95,7 @@ public static class Program
 
 			var applicationRunner = BuildApplicationRunner();
 
-			applicationRunner!.Run(
+			applicationRunner.Run(
 				inputDirectory,
 				outputDirectory,
 				outputMaximumImageSize,
@@ -105,8 +106,6 @@ public static class Program
 
 		rootCommand.Parse(args).Invoke();
 	}
-
-	#region Private
 
 	private static IApplicationRunner BuildApplicationRunner()
 	{
@@ -120,8 +119,7 @@ public static class Program
 
 		IImageResizeCalculator imageResizeCalculator = new ImageResizeCalculator();
 		IImageTransformer imageTransformer = new ImageTransformer(imageResizeCalculator);
-		IImageNormalizerService imageNormalizerService = new ImageNormalizerService(
-			imageTransformer, logger);
+		IImageNormalizerService imageNormalizerService = new ImageNormalizerService(imageTransformer, logger);
 
 		IDirectoryService directoryService = new DirectoryService();
 
@@ -137,6 +135,4 @@ public static class Program
 
 		return applicationRunner;
 	}
-
-	#endregion
 }

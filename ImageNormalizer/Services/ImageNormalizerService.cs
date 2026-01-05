@@ -14,12 +14,11 @@ public class ImageNormalizerService : IImageNormalizerService
 
 	public Stream? NormalizeImage(Stream inputImageDataStream, Arguments arguments)
 	{
-		Stream? outputImageDataStream = default;
+		Stream? outputImageDataStream = null;
 
 		try
 		{
-			outputImageDataStream = _imageTransformer.TransformImage(
-				inputImageDataStream, arguments);
+			outputImageDataStream = _imageTransformer.TransformImage(inputImageDataStream, arguments);
 		}
 		catch
 		{
@@ -29,10 +28,6 @@ public class ImageNormalizerService : IImageNormalizerService
 		return outputImageDataStream;
 	}
 
-	#region Private
-
 	private readonly IImageTransformer _imageTransformer;
 	private readonly ILogger _logger;
-
-	#endregion
 }

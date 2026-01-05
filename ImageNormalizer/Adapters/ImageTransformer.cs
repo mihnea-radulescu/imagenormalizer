@@ -29,8 +29,6 @@ public class ImageTransformer : IImageTransformer
 		}
 	}
 
-	#region Private
-
 	private readonly IImageResizeCalculator _imageResizeCalculator;
 
 	private static void ApplyImageOrientation(IMagickImage loadedImage) => loadedImage.AutoOrient();
@@ -69,8 +67,7 @@ public class ImageTransformer : IImageTransformer
 
 		if (_imageResizeCalculator.ShouldResize(loadedImageSize, arguments))
 		{
-			var resizedImageSize = _imageResizeCalculator.GetResizedImageSize(
-			loadedImageSize, arguments);
+			var resizedImageSize = _imageResizeCalculator.GetResizedImageSize(loadedImageSize, arguments);
 
 			loadedImage.Resize((uint)resizedImageSize.Width, (uint)resizedImageSize.Height);
 		}
@@ -86,6 +83,4 @@ public class ImageTransformer : IImageTransformer
 
 		return outputImageDataStream;
 	}
-
-	#endregion
 }

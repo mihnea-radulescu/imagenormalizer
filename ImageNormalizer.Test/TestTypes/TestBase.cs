@@ -9,12 +9,10 @@ public abstract class TestBase
 	protected static string GetTestDirectoryPath(string testDirectoryName)
 		=> Path.Combine(TestDataPath, testDirectoryName);
 
-	protected static string GetTestDirectoryPath(
-		string testDirectoryParentName, string testDirectoryChildName)
-			=> Path.Combine(TestDataPath, testDirectoryParentName, testDirectoryChildName);
+	protected static string GetTestDirectoryPath(string testDirectoryParentName, string testDirectoryChildName)
+		=> Path.Combine(TestDataPath, testDirectoryParentName, testDirectoryChildName);
 
-	protected static string GetTestFilePath(string testFileName)
-		=> Path.Combine(TestDataPath, testFileName);
+	protected static string GetTestFilePath(string testFileName) => Path.Combine(TestDataPath, testFileName);
 
 	protected static bool ExistsOutputFile(string outputFilePath) => File.Exists(outputFilePath);
 

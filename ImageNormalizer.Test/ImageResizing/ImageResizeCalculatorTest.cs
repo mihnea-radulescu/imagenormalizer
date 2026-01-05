@@ -77,11 +77,7 @@ public class ImageResizeCalculatorTest
 	[InlineData(1080, 1920, 600, 337, 600)]
 	[Theory]
 	public void GetResizedImageSize_ImageMaxSizeAboveResizeThreshold_ReturnsExpectedImageSize(
-		int imageWidth,
-		int imageHeight,
-		int outputMaximumImageSize,
-		int resizedImageWidth,
-		int resizedImageHeight)
+		int imageWidth, int imageHeight, int outputMaximumImageSize, int resizedImageWidth, int resizedImageHeight)
 	{
 		// Arrange
 		var imageSize = new ImageSize(imageWidth, imageHeight);
@@ -95,9 +91,5 @@ public class ImageResizeCalculatorTest
 		Assert.Equal(resizedImageHeight, resizedImageSize.Height);
 	}
 
-	#region Private
-
 	private readonly ImageResizeCalculator _imageResizeCalculator;
-
-	#endregion
 }

@@ -65,48 +65,29 @@ public class ArgumentsValidator : IArgumentsValidator
 		return true;
 	}
 
-	#region Private
-
 	private static readonly HashSet<char> InvalidChars;
 
 	private static bool IsDirectoryPathValid(string directoryPath)
-	{
-		for (var i = 0; i < directoryPath.Length; i++)
-		{
-			if (InvalidChars.Contains(directoryPath[i]))
-			{
-				return false;
-			}
-		}
-
-		return true;
-	}
+		=> directoryPath.All(aDirectoryPathChar => !InvalidChars.Contains(aDirectoryPathChar));
 
 	private static bool ExistsDirectory(string directory) => Directory.Exists(directory);
 
-	private static bool AreIdenticalInputDirectoryAndOutputDirectory(
-		string inputDirectory, string outputDirectory)
-			=> inputDirectory.Equals(outputDirectory, StringComparison.InvariantCultureIgnoreCase);
+	private static bool AreIdenticalInputDirectoryAndOutputDirectory(string inputDirectory, string outputDirectory)
+		=> inputDirectory.Equals(outputDirectory, StringComparison.InvariantCultureIgnoreCase);
 
-	private static bool AreInParentChildRelationship(
-		string inputDirectory, string outputDirectory)
+	private static bool AreInParentChildRelationship(string inputDirectory, string outputDirectory)
 	{
 		var inputDirectoryLower = inputDirectory.ToLowerInvariant();
 		var outputDirectoryLower = outputDirectory.ToLowerInvariant();
 
 		if (outputDirectoryLower.StartsWith(inputDirectoryLower) ||
-			inputDirectoryLower.StartsWith(outputDirectoryLower))
+		    inputDirectoryLower.StartsWith(outputDirectoryLower))
 		{
-			var orderedDirectories = new List<string>
-			{
-				inputDirectoryLower,
-				outputDirectoryLower
-			}
-			.OrderByDescending(aDirectory => aDirectory)
-			.ToList();
+			var orderedDirectories = new List<string> { inputDirectoryLower, outputDirectoryLower }
+				.OrderByDescending(aDirectory => aDirectory)
+				.ToList();
 
-			var directoryPathDifference = orderedDirectories[0]
-				.Substring(orderedDirectories[1].Length);
+			var directoryPathDifference = orderedDirectories[0][orderedDirectories[1].Length..];
 
 			var areInParentChildRelationship =
 				directoryPathDifference.StartsWith(Path.DirectorySeparatorChar) ||
@@ -114,11 +95,7 @@ public class ArgumentsValidator : IArgumentsValidator
 
 			return areInParentChildRelationship;
 		}
-		else
-		{
-			return false;
-		}
-	}
 
-	#endregion
+		return false;
+	}
 }

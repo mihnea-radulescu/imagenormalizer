@@ -21,8 +21,7 @@ public class ImageDirectoryTest : TestBase
 		_imageFileExtensionService = new ImageFileExtensionService();
 
 		IImageResizeCalculator imageResizeCalculator = new ImageResizeCalculator();
-		IImageTransformer imageTransformer = new ImageTransformer(
-			imageResizeCalculator);
+		IImageTransformer imageTransformer = new ImageTransformer(imageResizeCalculator);
 
 		_imageDataService = new ImageDataService(_logger);
 		_imageNormalizerService = new ImageNormalizerService(imageTransformer, _logger);
@@ -64,10 +63,8 @@ public class ImageDirectoryTest : TestBase
 		var nestedLandscape1OutputFile = Path.Combine(outputDirectory, "Subfolder1", "Landscape.jpg");
 		var nestedLandscape2OutputFile = Path.Combine(outputDirectory, "Subfolder1", "Landscape2.jpg");
 
-		var nestedPortrait1OutputFile = Path.Combine(
-			outputDirectory, "Subfolder2", "Subfolder2_1", "Portrait.jpg");
-		var nestedPortrait2OutputFile = Path.Combine(
-			outputDirectory, "Subfolder2", "Subfolder2_1", "Portrait2.jpg");
+		var nestedPortrait1OutputFile = Path.Combine(outputDirectory, "Subfolder2", "Subfolder2_1", "Portrait.jpg");
+		var nestedPortrait2OutputFile = Path.Combine(outputDirectory, "Subfolder2", "Subfolder2_1", "Portrait2.jpg");
 
 		Assert.True(ExistsOutputFile(nestedLandscape1OutputFile));
 		Assert.True(ExistsOutputFile(nestedLandscape2OutputFile));
@@ -79,13 +76,9 @@ public class ImageDirectoryTest : TestBase
 		DeleteOutputDirectory(outputDirectory);
 	}
 
-	#region Private
-
 	private readonly IImageFileExtensionService _imageFileExtensionService;
 	private readonly IImageDataService _imageDataService;
 	private readonly IImageNormalizerService _imageNormalizerService;
 	private readonly IDirectoryService _directoryService;
 	private readonly ILogger _logger;
-
-	#endregion
 }
