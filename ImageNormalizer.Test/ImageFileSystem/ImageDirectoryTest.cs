@@ -20,11 +20,14 @@ public class ImageDirectoryTest : TestBase
 
 		_imageFileExtensionService = new ImageFileExtensionService();
 
-		IImageResizeCalculator imageResizeCalculator = new ImageResizeCalculator();
-		IImageTransformer imageTransformer = new ImageTransformer(imageResizeCalculator);
+		IImageResizeCalculator imageResizeCalculator =
+			new ImageResizeCalculator();
+		IImageTransformer imageTransformer = new ImageTransformer(
+			imageResizeCalculator);
 
 		_imageDataService = new ImageDataService(_logger);
-		_imageNormalizerService = new ImageNormalizerService(imageTransformer, _logger);
+		_imageNormalizerService = new ImageNormalizerService(
+			imageTransformer, _logger);
 		_directoryService = new DirectoryService();
 	}
 
@@ -60,11 +63,15 @@ public class ImageDirectoryTest : TestBase
 		imageDirectory.NormalizeImages();
 
 		// Assert
-		var nestedLandscape1OutputFile = Path.Combine(outputDirectory, "Subfolder1", "Landscape.jpg");
-		var nestedLandscape2OutputFile = Path.Combine(outputDirectory, "Subfolder1", "Landscape2.jpg");
+		var nestedLandscape1OutputFile = Path.Combine(
+			outputDirectory, "Subfolder1", "Landscape.jpg");
+		var nestedLandscape2OutputFile = Path.Combine(
+			outputDirectory, "Subfolder1", "Landscape2.jpg");
 
-		var nestedPortrait1OutputFile = Path.Combine(outputDirectory, "Subfolder2", "Subfolder2_1", "Portrait.jpg");
-		var nestedPortrait2OutputFile = Path.Combine(outputDirectory, "Subfolder2", "Subfolder2_1", "Portrait2.jpg");
+		var nestedPortrait1OutputFile = Path.Combine(
+			outputDirectory, "Subfolder2", "Subfolder2_1", "Portrait.jpg");
+		var nestedPortrait2OutputFile = Path.Combine(
+			outputDirectory, "Subfolder2", "Subfolder2_1", "Portrait2.jpg");
 
 		Assert.True(ExistsOutputFile(nestedLandscape1OutputFile));
 		Assert.True(ExistsOutputFile(nestedLandscape2OutputFile));

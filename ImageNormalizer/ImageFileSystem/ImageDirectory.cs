@@ -35,7 +35,8 @@ public class ImageDirectory : IImageDirectory
 		try
 		{
 			var files = _directoryService.GetFiles(_arguments.InputPath);
-			var subDirectories = _directoryService.GetSubDirectories(_arguments.InputPath);
+			var subDirectories = _directoryService.GetSubDirectories(
+				_arguments.InputPath);
 
 			AddFiles(files);
 			AddSubDirectories(subDirectories);
@@ -91,9 +92,12 @@ public class ImageDirectory : IImageDirectory
 		_logger.Info(
 			$@"Processing images from input directory ""{_arguments.InputPath}"" to output directory ""{_arguments.OutputPath}"".");
 
-		for (var imageFilesIndex = 0; imageFilesIndex < imageFilesCount; imageFilesIndex += maxImageFilesBatchSize)
+		for (var imageFilesIndex = 0;
+				 imageFilesIndex < imageFilesCount;
+				 imageFilesIndex += maxImageFilesBatchSize)
 		{
-			var imageFilesBatchSize = Math.Min(maxImageFilesBatchSize, imageFilesCount - imageFilesIndex);
+			var imageFilesBatchSize = Math.Min(
+				maxImageFilesBatchSize, imageFilesCount - imageFilesIndex);
 
 			var imageFilesBatch = _imageFiles
 				.Skip(imageFilesIndex)
@@ -104,11 +108,15 @@ public class ImageDirectory : IImageDirectory
 			{
 				var imageFileNormalizationTasks = new Task[imageFilesBatchSize];
 
-				for (var imageFilesBatchIndex = 0; imageFilesBatchIndex < imageFilesBatchSize; imageFilesBatchIndex++)
+				for (var imageFilesBatchIndex = 0;
+						 imageFilesBatchIndex < imageFilesBatchSize;
+						 imageFilesBatchIndex++)
 				{
-					var currentImageFile = imageFilesBatch[imageFilesBatchIndex];
+					var currentImageFile =
+						imageFilesBatch[imageFilesBatchIndex];
 
-					imageFileNormalizationTasks[imageFilesBatchIndex] = new Task(currentImageFile.NormalizeImage);
+					imageFileNormalizationTasks[imageFilesBatchIndex] =
+						new Task(currentImageFile.NormalizeImage);
 				}
 
 				foreach (var anImageFile in imageFilesBatch)
@@ -116,7 +124,8 @@ public class ImageDirectory : IImageDirectory
 					anImageFile.ReadImageFromDisc();
 				}
 
-				foreach (var anImageFileNormalizationTask in imageFileNormalizationTasks)
+				foreach (var anImageFileNormalizationTask in
+							 imageFileNormalizationTasks)
 				{
 					anImageFileNormalizationTask.Start();
 				}
@@ -145,7 +154,9 @@ public class ImageDirectory : IImageDirectory
 	private void AddFiles(IReadOnlyList<string> files)
 	{
 		var imageFiles = files
-			.Where(aFile => _imageFileExtensionService.ImageFileExtensions.Contains(Path.GetExtension(aFile)))
+			.Where(aFile => _imageFileExtensionService
+								.ImageFileExtensions
+								.Contains(Path.GetExtension(aFile)))
 			.OrderBy(aFile => aFile)
 			.Select(aFile => new ImageFile(
 				_imageDataService,

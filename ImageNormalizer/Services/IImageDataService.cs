@@ -6,5 +6,6 @@ public interface IImageDataService
 {
 	Stream? ReadImageDataFromDisc(Arguments arguments);
 
-	void WriteImageDataToDisc(Stream outputImageDataStream, Arguments arguments);
+	void WriteImageDataToDisc(
+		Stream outputImageDataStream, Arguments arguments);
 }

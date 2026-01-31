@@ -33,31 +33,37 @@ public class ArgumentsValidator : IArgumentsValidator
 
 		if (!IsDirectoryPathValid(inputDirectory))
 		{
-			errorMessage = $@"The directory path ""{inputDirectory}"" is invalid.";
+			errorMessage =
+				$@"The directory path ""{inputDirectory}"" is invalid.";
 			return false;
 		}
 
 		if (!IsDirectoryPathValid(outputDirectory))
 		{
-			errorMessage = $@"The directory path ""{outputDirectory}"" is invalid.";
+			errorMessage =
+				$@"The directory path ""{outputDirectory}"" is invalid.";
 			return false;
 		}
 
 		if (!ExistsDirectory(inputDirectory))
 		{
-			errorMessage = $@"The input directory ""{inputDirectory}"" does not exist.";
+			errorMessage =
+				$@"The input directory ""{inputDirectory}"" does not exist.";
 			return false;
 		}
 
-		if (AreIdenticalInputDirectoryAndOutputDirectory(inputDirectory, outputDirectory))
+		if (AreIdenticalInputDirectoryAndOutputDirectory(
+				inputDirectory, outputDirectory))
 		{
-			errorMessage = $@"The input directory ""{inputDirectory}"" and output directory ""{outputDirectory}"" are identical.";
+			errorMessage =
+				$@"The input directory ""{inputDirectory}"" and output directory ""{outputDirectory}"" are identical.";
 			return false;
 		}
 
 		if (AreInParentChildRelationship(inputDirectory, outputDirectory))
 		{
-			errorMessage = $@"The input directory ""{inputDirectory}"" and output directory ""{outputDirectory}"" are in a parent-child relationship.";
+			errorMessage =
+				$@"The input directory ""{inputDirectory}"" and output directory ""{outputDirectory}"" are in a parent-child relationship.";
 			return false;
 		}
 
@@ -68,14 +74,19 @@ public class ArgumentsValidator : IArgumentsValidator
 	private static readonly HashSet<char> InvalidChars;
 
 	private static bool IsDirectoryPathValid(string directoryPath)
-		=> directoryPath.All(aDirectoryPathChar => !InvalidChars.Contains(aDirectoryPathChar));
+		=> directoryPath.All(aDirectoryPathChar
+			=> !InvalidChars.Contains(aDirectoryPathChar));
 
-	private static bool ExistsDirectory(string directory) => Directory.Exists(directory);
+	private static bool ExistsDirectory(string directory)
+		=> Directory.Exists(directory);
 
-	private static bool AreIdenticalInputDirectoryAndOutputDirectory(string inputDirectory, string outputDirectory)
-		=> inputDirectory.Equals(outputDirectory, StringComparison.InvariantCultureIgnoreCase);
+	private static bool AreIdenticalInputDirectoryAndOutputDirectory(
+		string inputDirectory, string outputDirectory)
+		=> inputDirectory.Equals(
+			outputDirectory, StringComparison.InvariantCultureIgnoreCase);
 
-	private static bool AreInParentChildRelationship(string inputDirectory, string outputDirectory)
+	private static bool AreInParentChildRelationship(
+		string inputDirectory, string outputDirectory)
 	{
 		var inputDirectoryLower = inputDirectory.ToLowerInvariant();
 		var outputDirectoryLower = outputDirectory.ToLowerInvariant();
@@ -83,15 +94,21 @@ public class ArgumentsValidator : IArgumentsValidator
 		if (outputDirectoryLower.StartsWith(inputDirectoryLower) ||
 		    inputDirectoryLower.StartsWith(outputDirectoryLower))
 		{
-			var orderedDirectories = new List<string> { inputDirectoryLower, outputDirectoryLower }
+			var orderedDirectories = new List<string>
+				{ 
+					inputDirectoryLower, outputDirectoryLower 
+				}
 				.OrderByDescending(aDirectory => aDirectory)
 				.ToList();
 
-			var directoryPathDifference = orderedDirectories[0][orderedDirectories[1].Length..];
+			var directoryPathDifference =
+				orderedDirectories[0][orderedDirectories[1].Length..];
 
 			var areInParentChildRelationship =
-				directoryPathDifference.StartsWith(Path.DirectorySeparatorChar) ||
-				directoryPathDifference.StartsWith(Path.AltDirectorySeparatorChar);
+				directoryPathDifference.StartsWith(
+					Path.DirectorySeparatorChar) ||
+				directoryPathDifference.StartsWith(
+					Path.AltDirectorySeparatorChar);
 
 			return areInParentChildRelationship;
 		}

@@ -17,14 +17,18 @@ public class ImageFileTest : TestBase
 	{
 		_logger = Substitute.For<ILogger>();
 
-		IImageResizeCalculator imageResizeCalculator = new ImageResizeCalculator();
-		IImageTransformer imageTransformer = new ImageTransformer(imageResizeCalculator);
+		IImageResizeCalculator imageResizeCalculator =
+			new ImageResizeCalculator();
+		IImageTransformer imageTransformer = new ImageTransformer(
+			imageResizeCalculator);
 
 		_imageDataService = new ImageDataService(_logger);
-		_imageNormalizerService = new ImageNormalizerService(imageTransformer, _logger);
+		_imageNormalizerService = new ImageNormalizerService(
+			imageTransformer, _logger);
 	}
 
-	[InlineData("Landscape.jpg", "Landscape_normalized.jpg", 3840, 80, false, 16)]
+	[InlineData(
+		"Landscape.jpg", "Landscape_normalized.jpg", 3840, 80, false, 16)]
 	[InlineData("Portrait.jpg", "Portrait_normalized.jpg", 3840, 80, false, 16)]
 	[Theory]
 	public void SaveTransformedImage_ValidInputImage_SavesOutputImage(
@@ -47,7 +51,8 @@ public class ImageFileTest : TestBase
 			shouldRemoveImageProfileData,
 			maxDegreeOfParallelism);
 
-		var imageFile = new ImageFile(_imageDataService, _imageNormalizerService, arguments);
+		var imageFile = new ImageFile(
+			_imageDataService, _imageNormalizerService, arguments);
 
 		// Act
 		imageFile.ReadImageFromDisc();
@@ -80,7 +85,8 @@ public class ImageFileTest : TestBase
 			shouldRemoveImageProfileData,
 			maxDegreeOfParallelism);
 
-		var imageFile = new ImageFile(_imageDataService, _imageNormalizerService, arguments);
+		var imageFile = new ImageFile(
+			_imageDataService, _imageNormalizerService, arguments);
 
 		// Act
 		imageFile.ReadImageFromDisc();
@@ -110,7 +116,8 @@ public class ImageFileTest : TestBase
 			shouldRemoveImageProfileData,
 			maxDegreeOfParallelism);
 
-		var imageFile = new ImageFile(_imageDataService, _imageNormalizerService, arguments);
+		var imageFile = new ImageFile(
+			_imageDataService, _imageNormalizerService, arguments);
 
 		// Act
 		imageFile.ReadImageFromDisc();

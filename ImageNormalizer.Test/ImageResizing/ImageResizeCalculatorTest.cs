@@ -20,7 +20,8 @@ public class ImageResizeCalculatorTest
 		var arguments = new Arguments("a", "b", 3840, 80, false, 16);
 
 		// Act
-		var shouldResize = _imageResizeCalculator.ShouldResize(imageSize, arguments);
+		var shouldResize = _imageResizeCalculator.ShouldResize(
+			imageSize, arguments);
 
 		// Assert
 		Assert.False(shouldResize);
@@ -34,7 +35,8 @@ public class ImageResizeCalculatorTest
 		var arguments = new Arguments("a", "b", 3840, 80, false, 16);
 
 		// Act
-		var shouldResize = _imageResizeCalculator.ShouldResize(imageSize, arguments);
+		var shouldResize = _imageResizeCalculator.ShouldResize(
+			imageSize, arguments);
 
 		// Assert
 		Assert.True(shouldResize);
@@ -48,7 +50,8 @@ public class ImageResizeCalculatorTest
 		var arguments = new Arguments("a", "b", 3840, 80, false, 16);
 
 		// Act
-		var shouldResize = _imageResizeCalculator.ShouldResize(imageSize, arguments);
+		var shouldResize = _imageResizeCalculator.ShouldResize(
+			imageSize, arguments);
 
 		// Assert
 		Assert.True(shouldResize);
@@ -62,7 +65,8 @@ public class ImageResizeCalculatorTest
 		var arguments = new Arguments("a", "b", 3840, 80, false, 16);
 
 		// Act
-		var resizedImageSize = _imageResizeCalculator.GetResizedImageSize(imageSize, arguments);
+		var resizedImageSize = _imageResizeCalculator.GetResizedImageSize(
+			imageSize, arguments);
 
 		// Assert
 		Assert.Equal(1920, resizedImageSize.Width);
@@ -77,14 +81,20 @@ public class ImageResizeCalculatorTest
 	[InlineData(1080, 1920, 600, 337, 600)]
 	[Theory]
 	public void GetResizedImageSize_ImageMaxSizeAboveResizeThreshold_ReturnsExpectedImageSize(
-		int imageWidth, int imageHeight, int outputMaximumImageSize, int resizedImageWidth, int resizedImageHeight)
+		int imageWidth,
+		int imageHeight,
+		int outputMaximumImageSize,
+		int resizedImageWidth,
+		int resizedImageHeight)
 	{
 		// Arrange
 		var imageSize = new ImageSize(imageWidth, imageHeight);
-		var arguments = new Arguments("a", "b", outputMaximumImageSize, 80, false, 16);
+		var arguments = new Arguments(
+			"a", "b", outputMaximumImageSize, 80, false, 16);
 
 		// Act
-		var resizedImageSize = _imageResizeCalculator.GetResizedImageSize(imageSize, arguments);
+		var resizedImageSize = _imageResizeCalculator.GetResizedImageSize(
+			imageSize, arguments);
 
 		// Assert
 		Assert.Equal(resizedImageWidth, resizedImageSize.Width);

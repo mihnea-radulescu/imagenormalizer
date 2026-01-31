@@ -6,23 +6,27 @@ namespace ImageNormalizer.Services;
 
 public class ImageNormalizerService : IImageNormalizerService
 {
-	public ImageNormalizerService(IImageTransformer imageTransformer, ILogger logger)
+	public ImageNormalizerService(
+		IImageTransformer imageTransformer, ILogger logger)
 	{
 		_imageTransformer = imageTransformer;
 		_logger = logger;
 	}
 
-	public Stream? NormalizeImage(Stream inputImageDataStream, Arguments arguments)
+	public Stream? NormalizeImage(
+		Stream inputImageDataStream, Arguments arguments)
 	{
 		Stream? outputImageDataStream = null;
 
 		try
 		{
-			outputImageDataStream = _imageTransformer.TransformImage(inputImageDataStream, arguments);
+			outputImageDataStream = _imageTransformer.TransformImage(
+				inputImageDataStream, arguments);
 		}
 		catch
 		{
-			_logger.Error(@$"Could not normalize image ""{arguments.InputPath}"".");
+			_logger.Error(
+				@$"Could not normalize image ""{arguments.InputPath}"".");
 		}
 
 		return outputImageDataStream;

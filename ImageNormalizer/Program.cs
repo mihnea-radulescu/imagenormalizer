@@ -18,10 +18,12 @@ public static class Program
 		};
 		var outputDirectoryArgument = new Argument<string>("outputDirectory")
 		{
-			Description = "The output directory, to be created, if it does not exist"
+			Description =
+				"The output directory, to be created, if it does not exist"
 		};
 
-		var outputMaximumImageSizeOption = new Option<int>("--max-width-height", "-m")
+		var outputMaximumImageSizeOption = new Option<int>(
+			"--max-width-height", "-m")
 		{
 			Description = "The output maximum image width/height",
 			DefaultValueFactory = _ => 3840
@@ -32,7 +34,8 @@ public static class Program
 
 			if (value < 10 || value > 15360)
 			{
-				result.AddError("max-width-height must be between 10 and 15360.");
+				result.AddError(
+					"max-width-height must be between 10 and 15360.");
 			}
 		});
 
@@ -51,15 +54,18 @@ public static class Program
 			}
 		});
 
-		var shouldRemoveImageProfileDataOption = new Option<bool>("--remove-profile-data", "-r")
+		var shouldRemoveImageProfileDataOption = new Option<bool>(
+			"--remove-profile-data", "-r")
 		{
 			Description = "Removes image profile data",
 			DefaultValueFactory = _ => false
 		};
 
-		var maxDegreeOfParallelismOption = new Option<int>("--max-degree-of-parallelism", "-p")
+		var maxDegreeOfParallelismOption = new Option<int>(
+			"--max-degree-of-parallelism", "-p")
 		{
-			Description = "The maximum degree of parallel image processing, upper-bounded by processor count",
+			Description =
+				"The maximum degree of parallel image processing, upper-bounded by processor count",
 			DefaultValueFactory = _ => 4
 		};
 		maxDegreeOfParallelismOption.Validators.Add(result =>
@@ -68,7 +74,8 @@ public static class Program
 
 			if (value is < 1 or > 128)
 			{
-				result.AddError("max-degree-of-parallelism must be between 1 and 128.");
+				result.AddError(
+					"max-degree-of-parallelism must be between 1 and 128.");
 			}
 		});
 
@@ -88,10 +95,13 @@ public static class Program
 			var inputDirectory = result.GetValue(inputDirectoryArgument)!;
 			var outputDirectory = result.GetValue(outputDirectoryArgument)!;
 
-			var outputMaximumImageSize = result.GetValue(outputMaximumImageSizeOption);
+			var outputMaximumImageSize = result.GetValue(
+				outputMaximumImageSizeOption);
 			var outputImageQuality = result.GetValue(outputImageQualityOption);
-			var shouldRemoveImageProfileData = result.GetValue(shouldRemoveImageProfileDataOption);
-			var maxDegreeOfParallelism = result.GetValue(maxDegreeOfParallelismOption);
+			var shouldRemoveImageProfileData = result.GetValue(
+				shouldRemoveImageProfileDataOption);
+			var maxDegreeOfParallelism = result.GetValue(
+				maxDegreeOfParallelismOption);
 
 			var applicationRunner = BuildApplicationRunner();
 
@@ -114,24 +124,32 @@ public static class Program
 
 		ILogger logger = new ConsoleLogger();
 
-		IImageFileExtensionService imageFileExtensionService = new ImageFileExtensionService();
+		IImageFileExtensionService imageFileExtensionService =
+			new ImageFileExtensionService();
 		IImageDataService imageDataService = new ImageDataService(logger);
 
-		IImageResizeCalculator imageResizeCalculator = new ImageResizeCalculator();
-		IImageTransformer imageTransformer = new ImageTransformer(imageResizeCalculator);
-		IImageNormalizerService imageNormalizerService = new ImageNormalizerService(imageTransformer, logger);
+		IImageResizeCalculator imageResizeCalculator =
+			new ImageResizeCalculator();
+		IImageTransformer imageTransformer =
+			new ImageTransformer(imageResizeCalculator);
+		IImageNormalizerService imageNormalizerService =
+			new ImageNormalizerService(imageTransformer, logger);
 
 		IDirectoryService directoryService = new DirectoryService();
 
-		IImageDirectoryFactory imageDirectoryFactory = new ImageDirectoryFactory(
-			imageFileExtensionService,
-			imageDataService,
-			imageNormalizerService,
-			directoryService,
-			logger);
+		IImageDirectoryFactory imageDirectoryFactory =
+			new ImageDirectoryFactory(
+				imageFileExtensionService,
+				imageDataService,
+				imageNormalizerService,
+				directoryService,
+				logger);
 
 		IApplicationRunner applicationRunner = new ApplicationRunner(
-			argumentsFactory, argumentsValidator, imageDirectoryFactory, logger);
+			argumentsFactory,
+			argumentsValidator,
+			imageDirectoryFactory,
+			logger);
 
 		return applicationRunner;
 	}

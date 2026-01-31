@@ -33,7 +33,8 @@ public class ArgumentsValidatorTest : TestBase
 			maxDegreeOfParallelism);
 
 		// Act
-		var areValidArguments = _argumentsValidator.AreValidArguments(arguments, out string? errorMessage);
+		var areValidArguments = _argumentsValidator.AreValidArguments(
+			arguments, out string? errorMessage);
 
 		// Assert
 		Assert.True(areValidArguments);
@@ -60,7 +61,8 @@ public class ArgumentsValidatorTest : TestBase
 			maxDegreeOfParallelism);
 
 		// Act
-		var areValidArguments = _argumentsValidator.AreValidArguments(arguments, out string? errorMessage);
+		var areValidArguments = _argumentsValidator.AreValidArguments(
+			arguments, out string? errorMessage);
 
 		// Assert
 		Assert.True(areValidArguments);
@@ -87,12 +89,14 @@ public class ArgumentsValidatorTest : TestBase
 			maxDegreeOfParallelism);
 
 		// Act
-		var areValidArguments = _argumentsValidator.AreValidArguments(arguments, out string? errorMessage);
+		var areValidArguments = _argumentsValidator.AreValidArguments(
+			arguments, out string? errorMessage);
 
 		// Assert
 		Assert.False(areValidArguments);
 		Assert.NotNull(errorMessage);
-		Assert.True(errorMessage.Contains("The directory path") && errorMessage.Contains("is invalid."));
+		Assert.True(errorMessage.Contains("The directory path") &&
+					errorMessage.Contains("is invalid."));
 	}
 
 	[Fact]
@@ -115,12 +119,14 @@ public class ArgumentsValidatorTest : TestBase
 			maxDegreeOfParallelism);
 
 		// Act
-		var areValidArguments = _argumentsValidator.AreValidArguments(arguments, out string? errorMessage);
+		var areValidArguments = _argumentsValidator.AreValidArguments(
+			arguments, out string? errorMessage);
 
 		// Assert
 		Assert.False(areValidArguments);
 		Assert.NotNull(errorMessage);
-		Assert.True(errorMessage.Contains("The directory path") && errorMessage.Contains("is invalid."));
+		Assert.True(errorMessage.Contains("The directory path") &&
+					errorMessage.Contains("is invalid."));
 	}
 
 	[Fact]
@@ -143,12 +149,14 @@ public class ArgumentsValidatorTest : TestBase
 			maxDegreeOfParallelism);
 
 		// Act
-		var areValidArguments = _argumentsValidator.AreValidArguments(arguments, out string? errorMessage);
+		var areValidArguments = _argumentsValidator.AreValidArguments(
+			arguments, out string? errorMessage);
 
 		// Assert
 		Assert.False(areValidArguments);
 		Assert.NotNull(errorMessage);
-		Assert.True(errorMessage.Contains("The input directory") && errorMessage.Contains("does not exist."));
+		Assert.True(errorMessage.Contains("The input directory") &&
+					errorMessage.Contains("does not exist."));
 	}
 
 	[Fact]
@@ -171,7 +179,8 @@ public class ArgumentsValidatorTest : TestBase
 			maxDegreeOfParallelism);
 
 		// Act
-		var areValidArguments = _argumentsValidator.AreValidArguments(arguments, out string? errorMessage);
+		var areValidArguments = _argumentsValidator.AreValidArguments(
+			arguments, out string? errorMessage);
 
 		// Assert
 		Assert.False(areValidArguments);
@@ -202,7 +211,8 @@ public class ArgumentsValidatorTest : TestBase
 			maxDegreeOfParallelism);
 
 		// Act
-		var areValidArguments = _argumentsValidator.AreValidArguments(arguments, out string? errorMessage);
+		var areValidArguments = _argumentsValidator.AreValidArguments(
+			arguments, out string? errorMessage);
 
 		// Assert
 		Assert.False(areValidArguments);
@@ -233,7 +243,8 @@ public class ArgumentsValidatorTest : TestBase
 			maxDegreeOfParallelism);
 
 		// Act
-		var areValidArguments = _argumentsValidator.AreValidArguments(arguments, out string? errorMessage);
+		var areValidArguments = _argumentsValidator.AreValidArguments(
+			arguments, out string? errorMessage);
 
 		// Assert
 		Assert.False(areValidArguments);

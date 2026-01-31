@@ -24,13 +24,15 @@ public class ImageDataService : IImageDataService
 		}
 		catch
 		{
-			_logger.Error(@$"Could not read image file ""{arguments.InputPath}"" from disc.");
+			_logger.Error(
+				@$"Could not read image file ""{arguments.InputPath}"" from disc.");
 		}
 
 		return inputImageDataStream;
 	}
 
-	public void WriteImageDataToDisc(Stream outputImageDataStream, Arguments arguments)
+	public void WriteImageDataToDisc(
+		Stream outputImageDataStream, Arguments arguments)
 	{
 		try
 		{
@@ -39,7 +41,8 @@ public class ImageDataService : IImageDataService
 		}
 		catch
 		{
-			_logger.Error(@$"Could not write image file ""{arguments.OutputPath}"" to disc.");
+			_logger.Error(
+				@$"Could not write image file ""{arguments.OutputPath}"" to disc.");
 		}
 	}
 

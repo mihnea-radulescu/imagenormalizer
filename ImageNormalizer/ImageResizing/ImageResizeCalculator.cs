@@ -12,7 +12,8 @@ public class ImageResizeCalculator : IImageResizeCalculator
 		return shouldResize;
 	}
 
-	public ImageSize GetResizedImageSize(ImageSize imageSize, Arguments arguments)
+	public ImageSize GetResizedImageSize(
+		ImageSize imageSize, Arguments arguments)
 	{
 		if (!ShouldResize(imageSize, arguments))
 		{
@@ -21,14 +22,17 @@ public class ImageResizeCalculator : IImageResizeCalculator
 
 		var imageMaxSize = GetImageMaxSize(imageSize);
 
-		var resizeRatio = arguments.OutputMaximumImageSize / (double)imageMaxSize;
+		var resizeRatio = arguments.OutputMaximumImageSize /
+						  (double)imageMaxSize;
 
 		var resizedImageWidth = imageSize.Width * resizeRatio;
 		var resizedImageHeight = imageSize.Height * resizeRatio;
 
-		var resizedImageSize = new ImageSize((int)resizedImageWidth, (int)resizedImageHeight);
+		var resizedImageSize = new ImageSize(
+			(int)resizedImageWidth, (int)resizedImageHeight);
 		return resizedImageSize;
 	}
 
-	private static int GetImageMaxSize(ImageSize imageSize) => Math.Max(imageSize.Width, imageSize.Height);
+	private static int GetImageMaxSize(ImageSize imageSize)
+		=> Math.Max(imageSize.Width, imageSize.Height);
 }

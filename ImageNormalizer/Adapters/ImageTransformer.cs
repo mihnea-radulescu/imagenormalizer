@@ -12,7 +12,8 @@ public class ImageTransformer : IImageTransformer
 		_imageResizeCalculator = imageResizeCalculator;
 	}
 
-	public Stream TransformImage(Stream inputImageDataStream, Arguments arguments)
+	public Stream TransformImage(
+		Stream inputImageDataStream, Arguments arguments)
 	{
 		using (var loadedImage = new MagickImage(inputImageDataStream))
 		{
@@ -31,7 +32,8 @@ public class ImageTransformer : IImageTransformer
 
 	private readonly IImageResizeCalculator _imageResizeCalculator;
 
-	private static void ApplyImageOrientation(IMagickImage loadedImage) => loadedImage.AutoOrient();
+	private static void ApplyImageOrientation(IMagickImage loadedImage)
+		=> loadedImage.AutoOrient();
 
 	private static void RemoveImageProfileData(IMagickImage loadedImage)
 	{
@@ -63,17 +65,21 @@ public class ImageTransformer : IImageTransformer
 
 	private void ResizeImage(IMagickImage loadedImage, Arguments arguments)
 	{
-		var loadedImageSize = new ImageSize((int)loadedImage.Width, (int)loadedImage.Height);
+		var loadedImageSize = new ImageSize(
+			(int)loadedImage.Width, (int)loadedImage.Height);
 
 		if (_imageResizeCalculator.ShouldResize(loadedImageSize, arguments))
 		{
-			var resizedImageSize = _imageResizeCalculator.GetResizedImageSize(loadedImageSize, arguments);
+			var resizedImageSize = _imageResizeCalculator.GetResizedImageSize(
+				loadedImageSize, arguments);
 
-			loadedImage.Resize((uint)resizedImageSize.Width, (uint)resizedImageSize.Height);
+			loadedImage.Resize(
+				(uint)resizedImageSize.Width, (uint)resizedImageSize.Height);
 		}
 	}
 
-	private static Stream SaveImage(IMagickImage loadedImage, Arguments arguments)
+	private static Stream SaveImage(
+		IMagickImage loadedImage, Arguments arguments)
 	{
 		loadedImage.Quality = (uint)arguments.OutputImageQuality;
 

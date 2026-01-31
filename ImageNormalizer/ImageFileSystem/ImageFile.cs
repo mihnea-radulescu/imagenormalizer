@@ -7,7 +7,9 @@ namespace ImageNormalizer.ImageFileSystem;
 public class ImageFile : IImageFile
 {
 	public ImageFile(
-		IImageDataService imageDataService, IImageNormalizerService imageNormalizerService, Arguments arguments)
+		IImageDataService imageDataService,
+		IImageNormalizerService imageNormalizerService,
+		Arguments arguments)
 	{
 		_imageDataService = imageDataService;
 		_imageNormalizerService = imageNormalizerService;
@@ -19,7 +21,8 @@ public class ImageFile : IImageFile
 	{
 		ThrowObjectDisposedExceptionIfNecessary();
 
-		_inputImageDataStream = _imageDataService.ReadImageDataFromDisc(_arguments);
+		_inputImageDataStream = _imageDataService.ReadImageDataFromDisc(
+			_arguments);
 	}
 
 	public void NormalizeImage()
@@ -28,7 +31,8 @@ public class ImageFile : IImageFile
 
 		if (_inputImageDataStream is not null)
 		{
-			_outputImageDataStream = _imageNormalizerService.NormalizeImage(_inputImageDataStream, _arguments);
+			_outputImageDataStream = _imageNormalizerService.NormalizeImage(
+				_inputImageDataStream, _arguments);
 		}
 	}
 
@@ -38,7 +42,8 @@ public class ImageFile : IImageFile
 
 		if (_outputImageDataStream is not null)
 		{
-			_imageDataService.WriteImageDataToDisc(_outputImageDataStream, _arguments);
+			_imageDataService.WriteImageDataToDisc(
+				_outputImageDataStream, _arguments);
 		}
 	}
 
@@ -67,5 +72,6 @@ public class ImageFile : IImageFile
 
 	private bool _hasBeenDisposed;
 
-	private void ThrowObjectDisposedExceptionIfNecessary() => ObjectDisposedException.ThrowIf(_hasBeenDisposed, this);
+	private void ThrowObjectDisposedExceptionIfNecessary()
+		=> ObjectDisposedException.ThrowIf(_hasBeenDisposed, this);
 }
