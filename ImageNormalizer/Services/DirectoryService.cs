@@ -33,10 +33,5 @@ public class DirectoryService : IDirectoryService
 	}
 
 	public void CreateDirectory(string directoryPath)
-	{
-		if (!Directory.Exists(directoryPath))
-		{
-			Directory.CreateDirectory(directoryPath);
-		}
-	}
+		=> Directory.CreateDirectory(directoryPath);
 }

@@ -86,40 +86,24 @@ public class ImageDirectory : IImageDirectory
 
 	private void NormalizeImagesInCurrentDirectory()
 	{
-		var imageFilesCount = _imageFiles.Count;
 		var maxImageFilesBatchSize = _arguments.MaxDegreeOfParallelism;
 
 		_logger.Info(
 			$@"Processing images from input directory ""{_arguments.InputPath}"" to output directory ""{_arguments.OutputPath}"".");
 
-		for (var imageFilesIndex = 0;
-				 imageFilesIndex < imageFilesCount;
-				 imageFilesIndex += maxImageFilesBatchSize)
+		var imageFileCollections = _imageFiles
+			.Chunk(maxImageFilesBatchSize)
+			.ToArray();
+
+		foreach (var anImageFileCollection in imageFileCollections)
 		{
-			var imageFilesBatchSize = Math.Min(
-				maxImageFilesBatchSize, imageFilesCount - imageFilesIndex);
-
-			var imageFilesBatch = _imageFiles
-				.Skip(imageFilesIndex)
-				.Take(imageFilesBatchSize)
-				.ToList();
-
 			try
 			{
-				var imageFileNormalizationTasks = new Task[imageFilesBatchSize];
+				var imageFileNormalizationTasks = anImageFileCollection
+					.Select(anImageFile => new Task(anImageFile.NormalizeImage))
+					.ToArray();
 
-				for (var imageFilesBatchIndex = 0;
-						 imageFilesBatchIndex < imageFilesBatchSize;
-						 imageFilesBatchIndex++)
-				{
-					var currentImageFile =
-						imageFilesBatch[imageFilesBatchIndex];
-
-					imageFileNormalizationTasks[imageFilesBatchIndex] =
-						new Task(currentImageFile.NormalizeImage);
-				}
-
-				foreach (var anImageFile in imageFilesBatch)
+				foreach (var anImageFile in anImageFileCollection)
 				{
 					anImageFile.ReadImageFromDisc();
 				}
@@ -132,7 +116,7 @@ public class ImageDirectory : IImageDirectory
 
 				Task.WaitAll(imageFileNormalizationTasks);
 
-				foreach (var anImageFile in imageFilesBatch)
+				foreach (var anImageFile in anImageFileCollection)
 				{
 					anImageFile.WriteImageToDisc();
 				}
@@ -143,7 +127,7 @@ public class ImageDirectory : IImageDirectory
 			}
 			finally
 			{
-				foreach (var anImageFile in imageFilesBatch)
+				foreach (var anImageFile in anImageFileCollection)
 				{
 					anImageFile.Dispose();
 				}
