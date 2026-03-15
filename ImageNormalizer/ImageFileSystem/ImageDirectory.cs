@@ -38,8 +38,8 @@ public class ImageDirectory : IImageDirectory
 			var subDirectories = _directoryService.GetSubDirectories(
 				_arguments.InputPath);
 
-			AddFiles(files);
-			AddSubDirectories(subDirectories);
+			_imageFiles = GetImageFiles(files);
+			_imageSubDirectories = GetImageSubDirectories(subDirectories);
 
 			foreach (var anImageSubDirectory in _imageSubDirectories)
 			{
@@ -56,9 +56,12 @@ public class ImageDirectory : IImageDirectory
 	{
 		try
 		{
-			_directoryService.CreateDirectory(_arguments.OutputPath);
+			if (HasImageFiles)
+			{
+				_directoryService.CreateDirectory(_arguments.OutputPath);
 
-			NormalizeImagesInCurrentDirectory();
+				NormalizeImagesInCurrentDirectory();
+			}
 
 			foreach (var anImageSubDirectory in _imageSubDirectories)
 			{
@@ -81,8 +84,8 @@ public class ImageDirectory : IImageDirectory
 
 	private readonly Arguments _arguments;
 
-	private readonly List<IImageFile> _imageFiles;
-	private readonly List<IImageDirectory> _imageSubDirectories;
+	private IReadOnlyList<IImageFile> _imageFiles;
+	private IReadOnlyList<IImageDirectory> _imageSubDirectories;
 
 	private void NormalizeImagesInCurrentDirectory()
 	{
@@ -135,21 +138,21 @@ public class ImageDirectory : IImageDirectory
 		}
 	}
 
-	private void AddFiles(IReadOnlyList<string> files)
+	private IReadOnlyList<ImageFile> GetImageFiles(IReadOnlyList<string> files)
 	{
 		var imageFiles = files
 			.Where(aFile => _imageFileExtensionService
 								.ImageFileExtensions
 								.Contains(Path.GetExtension(aFile)))
-			.OrderBy(aFile => aFile)
-			.Select(aFile => new ImageFile(
+			.OrderBy(anImageFile => anImageFile)
+			.Select(anImageFile => new ImageFile(
 				_imageDataService,
 				_imageNormalizerService,
 				new Arguments(
-					Path.Combine(_arguments.InputPath, aFile),
+					Path.Combine(_arguments.InputPath, anImageFile),
 					Path.Combine(
 						_arguments.OutputPath,
-						$"{Path.GetFileNameWithoutExtension(aFile)}{_imageFileExtensionService.OutputImageFileExtension}"),
+						$"{Path.GetFileNameWithoutExtension(anImageFile)}{_imageFileExtensionService.OutputImageFileExtension}"),
 					_arguments.OutputMaximumImageSize,
 					_arguments.OutputImageQuality,
 					_arguments.ShouldRemoveImageProfileData,
@@ -158,10 +161,11 @@ public class ImageDirectory : IImageDirectory
 			)
 			.ToList();
 
-		_imageFiles.AddRange(imageFiles);
+		return imageFiles;
 	}
 
-	private void AddSubDirectories(IReadOnlyList<string> subDirectories)
+	private IReadOnlyList<ImageDirectory> GetImageSubDirectories(
+		IReadOnlyList<string> subDirectories)
 	{
 		var imageSubDirectories = subDirectories
 			.Where(aDirectory => !ExcludedDirectories.Contains(aDirectory))
@@ -183,6 +187,8 @@ public class ImageDirectory : IImageDirectory
 			)
 			.ToList();
 
-		_imageSubDirectories.AddRange(imageSubDirectories);
+		return imageSubDirectories;
 	}
+
+	private bool HasImageFiles => _imageFiles.Any();
 }

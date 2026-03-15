@@ -148,6 +148,7 @@ public static class Program
 		IApplicationRunner applicationRunner = new ApplicationRunner(
 			argumentsFactory,
 			argumentsValidator,
+			directoryService,
 			imageDirectoryFactory,
 			logger);
 

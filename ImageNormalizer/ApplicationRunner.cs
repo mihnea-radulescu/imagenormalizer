@@ -2,6 +2,7 @@ using System.Text;
 using ImageNormalizer.CommandLine;
 using ImageNormalizer.Factories;
 using ImageNormalizer.Logger;
+using ImageNormalizer.Services;
 
 namespace ImageNormalizer;
 
@@ -10,11 +11,13 @@ public class ApplicationRunner : IApplicationRunner
 	public ApplicationRunner(
 		IArgumentsFactory argumentsFactory,
 		IArgumentsValidator argumentsValidator,
+		IDirectoryService directoryService,
 		IImageDirectoryFactory imageDirectoryFactory,
 		ILogger logger)
 	{
 		_argumentsFactory = argumentsFactory;
 		_argumentsValidator = argumentsValidator;
+		_directoryService = directoryService;
 		_imageDirectoryFactory = imageDirectoryFactory;
 		_logger = logger;
 	}
@@ -46,6 +49,7 @@ public class ApplicationRunner : IApplicationRunner
 			_logger.NewLine();
 
 			var imageDirectory = _imageDirectoryFactory.Create(arguments);
+			_directoryService.CreateDirectory(arguments.OutputPath);
 
 			imageDirectory.BuildImageDirectory();
 			imageDirectory.NormalizeImages();
@@ -58,6 +62,7 @@ public class ApplicationRunner : IApplicationRunner
 
 	private readonly IArgumentsFactory _argumentsFactory;
 	private readonly IArgumentsValidator _argumentsValidator;
+	private readonly IDirectoryService _directoryService;
 	private readonly IImageDirectoryFactory _imageDirectoryFactory;
 	private readonly ILogger _logger;
 
