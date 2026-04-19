@@ -6,7 +6,7 @@ Image Normalizer is a cross-platform command-line batch-processing tool that res
 * removing its EXIF, IPTC, XMP and Color profile data, if option set and data present
 * saving it in the JPEG format with the .jpg file extension
 
-The supported image formats are: bmp, cr2, cur, dds, dng, exr, fts, gif, hdr, heic, heif, ico, jfif, jp2, jpe/jpeg/jpg, jps, mng, nef, nrw, orf, pam, pbm, pcd, pcx, pef, pes, pfm, pgm, picon, pict, png, ppm, psd, qoi, raf, rw2, sgi, svg, tga, tif/tiff, wbmp, webp, xbm, xpm.
+There are 45 supported image formats: avif, bmp, cr2, cur, dds, dng, exr, fts, gif, hdr, heic, heif, ico, jfif, jp2, jpe/jpeg/jpg, jps, mng, nef, nrw, orf, pam, pbm, pcd, pcx, pef, pes, pfm, pgm, picon, pict, png, ppm, psd, qoi, raf, rw2, sgi, svg, tga, tif/tiff, wbmp, webp, xbm, xpm.
 
 Image Normalizer is intended to facilitate the storage of images produced by digital cameras in a consistent and disc space conserving manner.
 

@@ -9,6 +9,7 @@ public class ImageFileExtensionService : IImageFileExtensionService
 	{
 		ImageFileExtensions = new HashSet<string>(
 		[
+			".avif",
 			".bmp",
 			".cr2",
 			".cur",
