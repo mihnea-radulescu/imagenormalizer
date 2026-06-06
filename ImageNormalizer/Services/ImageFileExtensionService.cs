@@ -26,6 +26,7 @@ public class ImageFileExtensionService : IImageFileExtensionService
 			".jp2",
 			".jpe", ".jpeg", ".jpg",
 			".jps",
+			".jxl",
 			".mng",
 			".nef",
 			".nrw",
