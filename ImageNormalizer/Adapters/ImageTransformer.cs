@@ -15,7 +15,10 @@ public class ImageTransformer : IImageTransformer
 	public Stream TransformImage(
 		Stream inputImageDataStream, Arguments arguments)
 	{
-		using (var loadedImage = new MagickImage(inputImageDataStream))
+		var magickFormat = GetMagickFormat(arguments.InputPath);
+
+		using (var loadedImage = new MagickImage(
+					inputImageDataStream, magickFormat))
 		{
 			ApplyImageOrientation(loadedImage);
 			ResizeImage(loadedImage, arguments);
@@ -31,6 +34,25 @@ public class ImageTransformer : IImageTransformer
 	}
 
 	private readonly IImageResizeCalculator _imageResizeCalculator;
+
+	private static MagickFormat GetMagickFormat(string filePath)
+	{
+		var normalizedFileExtension =
+			Path.GetExtension(filePath).ToLowerInvariant();
+
+		return normalizedFileExtension switch
+		{
+			".cur" => MagickFormat.Cur,
+			".dng" => MagickFormat.Dng,
+			".ico" => MagickFormat.Ico,
+			".nrw" => MagickFormat.Nrw,
+			".pef" => MagickFormat.Pef,
+			".pict" => MagickFormat.Pict,
+			".tga" => MagickFormat.Tga,
+			".wbmp" => MagickFormat.Wbmp,
+			_ => MagickFormat.Unknown
+		};
+	}
 
 	private static void ApplyImageOrientation(IMagickImage loadedImage)
 		=> loadedImage.AutoOrient();
