@@ -25,7 +25,7 @@ public static class Program
 		var outputMaximumImageSizeOption = new Option<int>(
 			"--max-width-height", "-m")
 		{
-			Description = "The output maximum image width/height",
+			Description = "The output image maximum width or height, whichever is higher",
 			DefaultValueFactory = _ => 3840
 		};
 		outputMaximumImageSizeOption.Validators.Add(result =>

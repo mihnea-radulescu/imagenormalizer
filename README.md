@@ -19,7 +19,7 @@ Arguments:
 * output-directory - The output directory, to be created, if it does not exist (Required)
 
 Options:
-* -m, --max-width-height _value_ - The output maximum image width/height (Default: 3840)
+* -m, --max-width-height _value_ - The output image maximum width or height, whichever is higher (Default: 3840)
 * -q, --quality _value_ - The output image quality (Default: 80)
 * -r, --remove-profile-data - Removes image profile data
 * -p, --max-degree-of-parallelism _value_ - The maximum degree of parallel image processing, upper-bounded by processor count (Default: 4)
