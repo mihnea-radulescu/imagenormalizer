@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using ImageNormalizer.Logger;
 using ImageNormalizer.Services;
@@ -16,7 +17,8 @@ public class ImageDirectory : IImageDirectory
 		IImageNormalizerService imageNormalizerService,
 		IDirectoryService directoryService,
 		ILogger logger,
-		Arguments arguments)
+		Arguments arguments,
+		CancellationTokenSource cancellationTokenSource)
 	{
 		_imageFileExtensionService = imageFileExtensionService;
 		_imageDataService = imageDataService;
@@ -26,12 +28,19 @@ public class ImageDirectory : IImageDirectory
 
 		_arguments = arguments;
 
+		_cancellationTokenSource = cancellationTokenSource;
+
 		_imageFiles = [];
 		_imageSubDirectories = [];
 	}
 
-	public void BuildImageDirectory()
+	public ExitCode BuildImageDirectory()
 	{
+		if (_cancellationTokenSource.IsCancellationRequested)
+		{
+			return ExitCode.Aborted;
+		}
+
 		try
 		{
 			var files = _directoryService.GetFiles(_arguments.InputPath);
@@ -43,35 +52,56 @@ public class ImageDirectory : IImageDirectory
 
 			foreach (var anImageSubDirectory in _imageSubDirectories)
 			{
-				anImageSubDirectory.BuildImageDirectory();
+				var exitCode = anImageSubDirectory.BuildImageDirectory();
+				if (exitCode == ExitCode.Aborted)
+				{
+					return ExitCode.Aborted;
+				}
 			}
 		}
 		catch (Exception ex)
 		{
 			_logger.Error(ex);
 		}
+
+		return ExitCode.Successful;
 	}
 
-	public void NormalizeImages()
+	public ExitCode NormalizeImages()
 	{
+		if (_cancellationTokenSource.IsCancellationRequested)
+		{
+			return ExitCode.Aborted;
+		}
+
 		try
 		{
-			if (HasImageFiles)
+			if (_imageFiles.Any())
 			{
 				_directoryService.CreateDirectory(_arguments.OutputPath);
 
-				NormalizeImagesInCurrentDirectory();
+				var exitCode = NormalizeImagesInCurrentDirectory();
+				if (exitCode == ExitCode.Aborted)
+				{
+					return ExitCode.Aborted;
+				}
 			}
 
 			foreach (var anImageSubDirectory in _imageSubDirectories)
 			{
-				anImageSubDirectory.NormalizeImages();
+				var exitCode = anImageSubDirectory.NormalizeImages();
+				if (exitCode == ExitCode.Aborted)
+				{
+					return ExitCode.Aborted;
+				}
 			}
 		}
 		catch (Exception ex)
 		{
 			_logger.Error(ex);
 		}
+
+		return ExitCode.Successful;
 	}
 
 	private static readonly HashSet<string> ExcludedDirectories = ["__MACOSX"];
@@ -84,11 +114,18 @@ public class ImageDirectory : IImageDirectory
 
 	private readonly Arguments _arguments;
 
+	private readonly CancellationTokenSource _cancellationTokenSource;
+
 	private IReadOnlyList<IImageFile> _imageFiles;
 	private IReadOnlyList<IImageDirectory> _imageSubDirectories;
 
-	private void NormalizeImagesInCurrentDirectory()
+	private ExitCode NormalizeImagesInCurrentDirectory()
 	{
+		if (_cancellationTokenSource.IsCancellationRequested)
+		{
+			return ExitCode.Aborted;
+		}
+
 		var maxImageFilesBatchSize = _arguments.MaxDegreeOfParallelism;
 
 		_logger.Info(
@@ -100,29 +137,18 @@ public class ImageDirectory : IImageDirectory
 
 		foreach (var anImageFileCollection in imageFileCollections)
 		{
+			if (_cancellationTokenSource.IsCancellationRequested)
+			{
+				return ExitCode.Aborted;
+			}
+
 			try
 			{
-				var imageFileNormalizationTasks = anImageFileCollection
-					.Select(anImageFile => new Task(anImageFile.NormalizeImage))
-					.ToArray();
+				ReadImagesFromDisc(anImageFileCollection);
 
-				foreach (var anImageFile in anImageFileCollection)
-				{
-					anImageFile.ReadImageFromDisc();
-				}
+				NormalizeImages(anImageFileCollection);
 
-				foreach (var anImageFileNormalizationTask in
-							 imageFileNormalizationTasks)
-				{
-					anImageFileNormalizationTask.Start();
-				}
-
-				Task.WaitAll(imageFileNormalizationTasks);
-
-				foreach (var anImageFile in anImageFileCollection)
-				{
-					anImageFile.WriteImageToDisc();
-				}
+				WriteImagesToDisc(anImageFileCollection);
 			}
 			catch (Exception ex)
 			{
@@ -130,11 +156,53 @@ public class ImageDirectory : IImageDirectory
 			}
 			finally
 			{
-				foreach (var anImageFile in anImageFileCollection)
-				{
-					anImageFile.Dispose();
-				}
+				DisposeImages(anImageFileCollection);
 			}
+		}
+
+		return ExitCode.Successful;
+	}
+
+	private static void ReadImagesFromDisc(
+		IReadOnlyList<IImageFile> anImageFileCollection)
+	{
+		foreach (var anImageFile in anImageFileCollection)
+		{
+			anImageFile.ReadImageFromDisc();
+		}
+	}
+
+	private static void NormalizeImages(
+		IReadOnlyList<IImageFile> anImageFileCollection)
+	{
+		var imageFileNormalizationTasks = anImageFileCollection
+			.Select(anImageFile => new Task(anImageFile.NormalizeImage))
+			.ToArray();
+
+		foreach (var anImageFileNormalizationTask in
+		         imageFileNormalizationTasks)
+		{
+			anImageFileNormalizationTask.Start();
+		}
+
+		Task.WaitAll(imageFileNormalizationTasks);
+	}
+
+	private static void WriteImagesToDisc(
+		IReadOnlyList<IImageFile> anImageFileCollection)
+	{
+		foreach (var anImageFile in anImageFileCollection)
+		{
+			anImageFile.WriteImageToDisc();
+		}
+	}
+
+	private static void DisposeImages(
+		IReadOnlyList<IImageFile> anImageFileCollection)
+	{
+		foreach (var anImageFile in anImageFileCollection)
+		{
+			anImageFile.Dispose();
 		}
 	}
 
@@ -182,13 +250,10 @@ public class ImageDirectory : IImageDirectory
 					_arguments.OutputMaximumImageSize,
 					_arguments.OutputImageQuality,
 					_arguments.ShouldRemoveImageProfileData,
-					_arguments.MaxDegreeOfParallelism)
-				)
-			)
+					_arguments.MaxDegreeOfParallelism),
+				_cancellationTokenSource))
 			.ToList();
 
 		return imageSubDirectories;
 	}
-
-	private bool HasImageFiles => _imageFiles.Any();
 }

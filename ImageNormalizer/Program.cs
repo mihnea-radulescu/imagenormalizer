@@ -1,4 +1,8 @@
+using System;
 using System.CommandLine;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using ImageNormalizer.Adapters;
 using ImageNormalizer.CommandLine;
 using ImageNormalizer.Factories;
@@ -10,8 +14,16 @@ namespace ImageNormalizer;
 
 public static class Program
 {
-	public static void Main(string[] args)
+	public static int Main(string[] args)
 	{
+		Console.TreatControlCAsInput = true;
+
+		var exitCode = ExitCode.Successful;
+		var cancellationTokenSource = new CancellationTokenSource();
+
+		var applicationRunnerTaskPollingInterval =
+			TimeSpan.FromMilliseconds(250);
+
 		var inputDirectoryArgument = new Argument<string>("inputDirectory")
 		{
 			Description = "The input directory"
@@ -32,10 +44,11 @@ public static class Program
 		{
 			var value = result.GetValueOrDefault<int>();
 
-			if (value < 10 || value > 15360)
+			if (value is < 10 or > 15360)
 			{
 				result.AddError(
 					"max-width-height must be between 10 and 15360.");
+				exitCode = ExitCode.InvalidArguments;
 			}
 		});
 
@@ -51,6 +64,7 @@ public static class Program
 			if (value is < 10 or > 100)
 			{
 				result.AddError("quality must be between 10 and 100.");
+				exitCode = ExitCode.InvalidArguments;
 			}
 		});
 
@@ -76,6 +90,7 @@ public static class Program
 			{
 				result.AddError(
 					"max-degree-of-parallelism must be between 1 and 128.");
+				exitCode = ExitCode.InvalidArguments;
 			}
 		});
 
@@ -90,34 +105,53 @@ public static class Program
 			maxDegreeOfParallelismOption
 		};
 
-		rootCommand.SetAction(result =>
+		rootCommand.SetAction(parseResult =>
 		{
-			var inputDirectory = result.GetValue(inputDirectoryArgument)!;
-			var outputDirectory = result.GetValue(outputDirectoryArgument)!;
+			var inputDirectory = parseResult.GetValue(inputDirectoryArgument)!;
+			var outputDirectory = parseResult.GetValue(
+				outputDirectoryArgument)!;
 
-			var outputMaximumImageSize = result.GetValue(
+			var outputMaximumImageSize = parseResult.GetValue(
 				outputMaximumImageSizeOption);
-			var outputImageQuality = result.GetValue(outputImageQualityOption);
-			var shouldRemoveImageProfileData = result.GetValue(
+			var outputImageQuality = parseResult.GetValue(
+				outputImageQualityOption);
+			var shouldRemoveImageProfileData = parseResult.GetValue(
 				shouldRemoveImageProfileDataOption);
-			var maxDegreeOfParallelism = result.GetValue(
+			var maxDegreeOfParallelism = parseResult.GetValue(
 				maxDegreeOfParallelismOption);
 
-			var applicationRunner = BuildApplicationRunner();
+			var applicationRunner = BuildApplicationRunner(
+				cancellationTokenSource);
 
-			applicationRunner.Run(
-				inputDirectory,
-				outputDirectory,
-				outputMaximumImageSize,
-				outputImageQuality,
-				shouldRemoveImageProfileData,
-				maxDegreeOfParallelism);
+			var applicationRunnerTask = Task.Run(() =>
+				{
+					exitCode = applicationRunner.Run(
+						inputDirectory,
+						outputDirectory,
+						outputMaximumImageSize,
+						outputImageQuality,
+						shouldRemoveImageProfileData,
+						maxDegreeOfParallelism);
+				});
+
+			HandleApplicationRunnerTaskExecution(
+				applicationRunnerTask,
+				cancellationTokenSource,
+				applicationRunnerTaskPollingInterval);
 		});
 
-		rootCommand.Parse(args).Invoke();
+		var rootCommandParseResult = rootCommand.Parse(args);
+		if (rootCommandParseResult.Errors.Any())
+		{
+			exitCode = ExitCode.InvalidArguments;
+		}
+		rootCommandParseResult.Invoke();
+
+		return (int)exitCode;
 	}
 
-	private static IApplicationRunner BuildApplicationRunner()
+	private static IApplicationRunner BuildApplicationRunner(
+		CancellationTokenSource cancellationTokenSource)
 	{
 		IArgumentsFactory argumentsFactory = new ArgumentsFactory();
 		IArgumentsValidator argumentsValidator = new ArgumentsValidator();
@@ -143,7 +177,8 @@ public static class Program
 				imageDataService,
 				imageNormalizerService,
 				directoryService,
-				logger);
+				logger,
+				cancellationTokenSource);
 
 		IApplicationRunner applicationRunner = new ApplicationRunner(
 			argumentsFactory,
@@ -153,5 +188,30 @@ public static class Program
 			logger);
 
 		return applicationRunner;
+	}
+
+	private static void HandleApplicationRunnerTaskExecution(
+		Task applicationRunnerTask,
+		CancellationTokenSource cancellationTokenSource,
+		TimeSpan applicationRunnerTaskPollingInterval)
+	{
+		do
+		{
+			if (!cancellationTokenSource.IsCancellationRequested &&
+			    Console.KeyAvailable)
+			{
+				var keyPressed = Console.ReadKey();
+				if (keyPressed is
+				    {
+					    Modifiers: ConsoleModifiers.Control,
+					    Key: ConsoleKey.C
+				    })
+				{
+					cancellationTokenSource.Cancel();
+				}
+			}
+
+			Thread.Sleep(applicationRunnerTaskPollingInterval);
+		} while (!applicationRunnerTask.IsCompleted);
 	}
 }

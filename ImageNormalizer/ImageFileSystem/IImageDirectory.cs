@@ -2,7 +2,7 @@ namespace ImageNormalizer.ImageFileSystem;
 
 public interface IImageDirectory
 {
-	void BuildImageDirectory();
+	ExitCode BuildImageDirectory();
 
-	void NormalizeImages();
+	ExitCode NormalizeImages();
 }

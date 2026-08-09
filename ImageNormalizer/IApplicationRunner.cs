@@ -2,7 +2,7 @@ namespace ImageNormalizer;
 
 public interface IApplicationRunner
 {
-	void Run(
+	ExitCode Run(
 		string inputDirectory,
 		string outputDirectory,
 		int outputMaximumImageSize,

@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading;
 using NSubstitute;
 using Xunit;
 using ImageNormalizer.Adapters;
@@ -50,13 +51,16 @@ public class ImageDirectoryTest : TestBase
 			shouldRemoveImageProfileData,
 			maxDegreeOfParallelism);
 
+		var cancellationTokenSource = new CancellationTokenSource();
+
 		var imageDirectory = new ImageDirectory(
 			_imageFileExtensionService,
 			_imageDataService,
 			_imageNormalizerService,
 			_directoryService,
 			_logger,
-			arguments);
+			arguments,
+			cancellationTokenSource);
 
 		// Act
 		imageDirectory.BuildImageDirectory();

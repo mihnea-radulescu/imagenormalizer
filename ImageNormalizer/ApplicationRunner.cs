@@ -22,7 +22,7 @@ public class ApplicationRunner : IApplicationRunner
 		_logger = logger;
 	}
 
-	public void Run(
+	public ExitCode Run(
 		string inputDirectory,
 		string outputDirectory,
 		int outputMaximumImageSize,
@@ -30,6 +30,8 @@ public class ApplicationRunner : IApplicationRunner
 		bool shouldRemoveImageProfileData,
 		int maxDegreeOfParallelism)
 	{
+		ExitCode exitCode;
+
 		var arguments = _argumentsFactory.Create(
 			inputDirectory,
 			outputDirectory,
@@ -39,7 +41,7 @@ public class ApplicationRunner : IApplicationRunner
 			maxDegreeOfParallelism);
 
 		var areValidArguments = _argumentsValidator.AreValidArguments(
-			arguments, out string? errorMessage);
+			arguments, out string? invalidArgumentsErrorMessage);
 
 		if (areValidArguments)
 		{
@@ -51,13 +53,21 @@ public class ApplicationRunner : IApplicationRunner
 			var imageDirectory = _imageDirectoryFactory.Create(arguments);
 			_directoryService.CreateDirectory(arguments.OutputPath);
 
-			imageDirectory.BuildImageDirectory();
-			imageDirectory.NormalizeImages();
+			exitCode = imageDirectory.BuildImageDirectory();
+
+			if (exitCode == ExitCode.Successful)
+			{
+				exitCode = imageDirectory.NormalizeImages();
+			}
 		}
 		else
 		{
-			_logger.Error(errorMessage!);
+			exitCode = ExitCode.InvalidArguments;
 		}
+
+		LogRunInformation(exitCode, invalidArgumentsErrorMessage);
+
+		return exitCode;
 	}
 
 	private readonly IArgumentsFactory _argumentsFactory;
@@ -92,5 +102,26 @@ public class ApplicationRunner : IApplicationRunner
 
 		var generalInformationText = generalInformationTextBuilder.ToString();
 		return generalInformationText;
+	}
+
+	private void LogRunInformation(
+		ExitCode exitCode, string? invalidArgumentsErrorMessage)
+	{
+		switch (exitCode)
+		{
+			case ExitCode.Successful:
+				_logger.NewLine();
+				_logger.Info("Execution successful.");
+				break;
+
+			case ExitCode.InvalidArguments:
+				_logger.Error(invalidArgumentsErrorMessage!);
+				break;
+
+			case ExitCode.Aborted:
+				_logger.NewLine();
+				_logger.Error("Execution aborted.");
+				break;
+		}
 	}
 }
