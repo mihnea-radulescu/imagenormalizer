@@ -22,7 +22,7 @@ public static class Program
 		var cancellationTokenSource = new CancellationTokenSource();
 
 		var applicationRunnerTaskPollingInterval =
-			TimeSpan.FromMilliseconds(250);
+			TimeSpan.FromMilliseconds(100);
 
 		var inputDirectoryArgument = new Argument<string>("inputDirectory")
 		{
@@ -197,10 +197,10 @@ public static class Program
 	{
 		do
 		{
-			if (!cancellationTokenSource.IsCancellationRequested &&
-			    Console.KeyAvailable)
+			while (!cancellationTokenSource.IsCancellationRequested &&
+			       Console.KeyAvailable)
 			{
-				var keyPressed = Console.ReadKey();
+				var keyPressed = Console.ReadKey(true);
 				if (keyPressed is
 				    {
 					    Modifiers: ConsoleModifiers.Control,
