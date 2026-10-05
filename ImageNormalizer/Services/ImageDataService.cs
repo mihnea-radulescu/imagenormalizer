@@ -11,6 +11,9 @@ public class ImageDataService : IImageDataService
 		_logger = logger;
 	}
 
+	public bool ExistsOutputImageDataOnDisc(Arguments arguments)
+		=> File.Exists(arguments.OutputPath);
+
 	public Stream? ReadImageDataFromDisc(Arguments arguments)
 	{
 		Stream? inputImageDataStream = null;

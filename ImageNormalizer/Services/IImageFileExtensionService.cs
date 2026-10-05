@@ -1,10 +1,8 @@
-using System.Collections.Generic;
-
 namespace ImageNormalizer.Services;
 
 public interface IImageFileExtensionService
 {
-	HashSet<string> ImageFileExtensions { get; }
+	bool IsSupportedImageFileExtension(string fileExtension);
 
 	string OutputImageFileExtension { get; }
 }

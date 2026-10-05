@@ -43,12 +43,13 @@ public class ImageDirectory : IImageDirectory
 
 		try
 		{
-			var files = _directoryService.GetFiles(_arguments.InputPath);
-			var subDirectories = _directoryService.GetSubDirectories(
+			var fileNames = _directoryService.GetFileNames(
+				_arguments.InputPath);
+			var subDirectoryNames = _directoryService.GetSubDirectoryNames(
 				_arguments.InputPath);
 
-			_imageFiles = GetImageFiles(files);
-			_imageSubDirectories = GetImageSubDirectories(subDirectories);
+			_imageFiles = GetImageFiles(fileNames);
+			_imageSubDirectories = GetImageSubDirectories(subDirectoryNames);
 
 			foreach (var anImageSubDirectory in _imageSubDirectories)
 			{
@@ -104,7 +105,7 @@ public class ImageDirectory : IImageDirectory
 		return ExitCode.Successful;
 	}
 
-	private static readonly HashSet<string> ExcludedDirectories = ["__MACOSX"];
+	private static readonly HashSet<string> ExcludedDirectoryNames = ["__MACOSX"];
 
 	private readonly IImageFileExtensionService _imageFileExtensionService;
 	private readonly IImageNormalizerService _imageNormalizerService;
@@ -206,51 +207,51 @@ public class ImageDirectory : IImageDirectory
 		}
 	}
 
-	private IReadOnlyList<ImageFile> GetImageFiles(IReadOnlyList<string> files)
+	private IReadOnlyList<ImageFile> GetImageFiles(
+		IReadOnlyList<string> fileNames)
 	{
-		var imageFiles = files
-			.Where(aFile => _imageFileExtensionService
-								.ImageFileExtensions
-								.Contains(Path.GetExtension(aFile)))
-			.OrderBy(anImageFile => anImageFile)
-			.Select(anImageFile => new ImageFile(
+		var imageFiles = fileNames
+			.Where(aFileName => _imageFileExtensionService
+									.IsSupportedImageFileExtension(
+										Path.GetExtension(aFileName)))
+			.OrderBy(anImageFileName => anImageFileName)
+			.Select(anImageFileName => new ImageFile(
 				_imageDataService,
 				_imageNormalizerService,
-				new Arguments(
-					Path.Combine(_arguments.InputPath, anImageFile),
-					Path.Combine(
+				_arguments with
+				{
+					InputPath = Path.Combine(_arguments.InputPath, anImageFileName),
+					OutputPath = Path.Combine(
 						_arguments.OutputPath,
-						$"{Path.GetFileNameWithoutExtension(anImageFile)}{_imageFileExtensionService.OutputImageFileExtension}"),
-					_arguments.OutputMaximumImageSize,
-					_arguments.OutputImageQuality,
-					_arguments.ShouldRemoveImageProfileData,
-					_arguments.MaxDegreeOfParallelism)
-				)
+						$"{Path.GetFileNameWithoutExtension(anImageFileName)}{_imageFileExtensionService.OutputImageFileExtension}")
+				})
 			)
+			.Where(anImageFile => !anImageFile.ExistsOutputImageOnDisc())
 			.ToList();
 
 		return imageFiles;
 	}
 
 	private IReadOnlyList<ImageDirectory> GetImageSubDirectories(
-		IReadOnlyList<string> subDirectories)
+		IReadOnlyList<string> subDirectoryNames)
 	{
-		var imageSubDirectories = subDirectories
-			.Where(aDirectory => !ExcludedDirectories.Contains(aDirectory))
-			.OrderBy(aDirectory => aDirectory)
-			.Select(aDirectory => new ImageDirectory(
+		var imageSubDirectories = subDirectoryNames
+			.Where(aDirectoryName =>
+				!ExcludedDirectoryNames.Contains(aDirectoryName))
+			.OrderBy(aDirectoryName => aDirectoryName)
+			.Select(aDirectoryName => new ImageDirectory(
 				_imageFileExtensionService,
 				_imageDataService,
 				_imageNormalizerService,
 				_directoryService,
 				_logger,
-				new Arguments(
-					Path.Combine(_arguments.InputPath, aDirectory),
-					Path.Combine(_arguments.OutputPath, aDirectory),
-					_arguments.OutputMaximumImageSize,
-					_arguments.OutputImageQuality,
-					_arguments.ShouldRemoveImageProfileData,
-					_arguments.MaxDegreeOfParallelism),
+				_arguments with
+				{
+					InputPath = Path.Combine(
+						_arguments.InputPath, aDirectoryName),
+					OutputPath = Path.Combine(
+						_arguments.OutputPath, aDirectoryName)
+				},
 				_cancellationTokenSource))
 			.ToList();
 

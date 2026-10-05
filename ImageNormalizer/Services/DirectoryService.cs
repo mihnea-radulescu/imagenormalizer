@@ -6,30 +6,30 @@ namespace ImageNormalizer.Services;
 
 public class DirectoryService : IDirectoryService
 {
-	public IReadOnlyList<string> GetFiles(string directory)
+	public IReadOnlyList<string> GetFileNames(string directoryPath)
 	{
-		var directoryInfo = new DirectoryInfo(directory);
+		var directoryInfo = new DirectoryInfo(directoryPath);
 
-		var files = directoryInfo
+		var fileNames = directoryInfo
 			.GetFiles()
 			.Select(aFile => aFile.Name)
 			.OrderBy(aFileName => aFileName)
 			.ToList();
 
-		return files;
+		return fileNames;
 	}
 
-	public IReadOnlyList<string> GetSubDirectories(string directory)
+	public IReadOnlyList<string> GetSubDirectoryNames(string directoryPath)
 	{
-		var directoryInfo = new DirectoryInfo(directory);
+		var directoryInfo = new DirectoryInfo(directoryPath);
 
-		var subDirectories = directoryInfo
+		var subDirectoryNames = directoryInfo
 			.GetDirectories()
 			.Select(aSubDirectory => aSubDirectory.Name)
 			.OrderBy(aSubDirectoryName => aSubDirectoryName)
 			.ToList();
 
-		return subDirectories;
+		return subDirectoryNames;
 	}
 
 	public void CreateDirectory(string directoryPath)

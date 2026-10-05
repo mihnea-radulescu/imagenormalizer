@@ -5,9 +5,13 @@ namespace ImageNormalizer.Services;
 
 public class ImageFileExtensionService : IImageFileExtensionService
 {
-	public ImageFileExtensionService()
-	{
-		ImageFileExtensions = new HashSet<string>(
+	public bool IsSupportedImageFileExtension(string fileExtension)
+		=> SupportedImageFileExtensions.Contains(fileExtension);
+
+	public string OutputImageFileExtension => ".jpg";
+
+	private static readonly HashSet<string> SupportedImageFileExtensions =
+		new(
 		[
 			".avif",
 			".bmp",
@@ -57,9 +61,4 @@ public class ImageFileExtensionService : IImageFileExtensionService
 			".xpm"
 		],
 		StringComparer.InvariantCultureIgnoreCase);
-	}
-
-	public HashSet<string> ImageFileExtensions { get; }
-
-	public string OutputImageFileExtension => ".jpg";
 }

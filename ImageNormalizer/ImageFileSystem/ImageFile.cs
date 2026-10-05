@@ -17,6 +17,13 @@ public class ImageFile : IImageFile
 		_arguments = arguments;
 	}
 
+	public bool ExistsOutputImageOnDisc()
+	{
+		ThrowObjectDisposedExceptionIfNecessary();
+
+		return _imageDataService.ExistsOutputImageDataOnDisc(_arguments);
+	}
+
 	public void ReadImageFromDisc()
 	{
 		ThrowObjectDisposedExceptionIfNecessary();

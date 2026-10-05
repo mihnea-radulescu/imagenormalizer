@@ -4,8 +4,8 @@ namespace ImageNormalizer.Services;
 
 public interface IDirectoryService
 {
-	IReadOnlyList<string> GetFiles(string directory);
-	IReadOnlyList<string> GetSubDirectories(string directory);
+	IReadOnlyList<string> GetFileNames(string directoryPath);
+	IReadOnlyList<string> GetSubDirectoryNames(string directoryPath);
 
 	void CreateDirectory(string directoryPath);
 }
