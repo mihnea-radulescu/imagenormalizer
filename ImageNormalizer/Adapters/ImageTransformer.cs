@@ -39,6 +39,7 @@ public class ImageTransformer : IImageTransformer
 
 		return normalizedFileExtension switch
 		{
+			".cr2" => MagickFormat.Cr2,
 			".cur" => MagickFormat.Cur,
 			".dng" => MagickFormat.Dng,
 			".ico" => MagickFormat.Ico,
