@@ -14,8 +14,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Magick.NET-Q8-AnyCPU" Version="15.0.0" />
-		<PackageReference Include="System.CommandLine" Version="2.0.13" />
+		<PackageReference Include="Magick.NET-Q8-AnyCPU" Version="15.1.0" />
+		<PackageReference Include="System.CommandLine" Version="3.0.0" />
 	</ItemGroup>
 
 </Project>

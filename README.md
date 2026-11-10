@@ -10,7 +10,7 @@ There are 46 supported image formats: avif, bmp, cr2, cur, dds, dng, exr, fts, g
 
 Image Normalizer is intended to facilitate the storage of images produced by digital cameras in a consistent and disc space conserving manner.
 
-It is written in C#, and targets .NET 10 on Linux and Windows. It relies on [Magick.NET](https://github.com/dlemstra/Magick.NET), as its image processing library.
+It is written in C#, and targets .NET 11 on Linux and Windows. It relies on [Magick.NET](https://github.com/dlemstra/Magick.NET), as its image processing library.
 
 __Usage__: ImageNormalizer input-directory output-directory [--max-width-height _value_] [--quality _value_] [--remove-profile-data] [--max-degree-of-parallelism _value_] [--help] [--version]
 
